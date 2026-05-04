@@ -1,0 +1,55 @@
+[
+  {
+    "rule_id": "partner_wuxing_complement",
+    "name": "合伙人五行互补",
+    "version": "1.0.0",
+    "module": "partner",
+    "priority": 200,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "wuxing_complement", "operator": "eq", "value": true}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "partner_complement"},
+      {"type": "set_score", "field": "partner_match", "value": 85},
+      {"type": "generate_text", "template": "双方五行互补，能力互补性强，是理想的合作搭档"}
+    ]
+  },
+  {
+    "rule_id": "partner_leadership_balance",
+    "name": "合伙人领导力平衡",
+    "version": "1.0.0",
+    "module": "partner",
+    "priority": 180,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "leadership_balance", "operator": "eq", "value": true}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "leadership_balanced"},
+      {"type": "set_score", "field": "partner_leadership", "value": 80}
+    ]
+  },
+  {
+    "rule_id": "partner_timing",
+    "name": "合伙最佳时机",
+    "version": "1.0.0",
+    "module": "partner",
+    "priority": 150,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "both_in_wealth_dayun", "operator": "eq", "value": true}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "best_partnership_timing"},
+      {"type": "set_score", "field": "timing_score", "value": 90},
+      {"type": "generate_text", "template": "双方同步进入财运大运期，是合伙创业的最佳时机"}
+    ]
+  }
+]

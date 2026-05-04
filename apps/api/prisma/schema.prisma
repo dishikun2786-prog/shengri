@@ -1,0 +1,945 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== 用户系统 ====================
+
+model User {
+  id             Int       @id @default(autoincrement())
+  uuid           String    @unique @default(uuid())
+  username       String?   @unique @map("username")
+  phone          String?   @unique
+  email          String?   @unique
+  passwordHash   String?   @map("password_hash")
+  nickname       String?
+  bio            String?   @db.Text
+  avatarUrl      String?   @map("avatar_url")
+  gender         Int       @default(0) // 0未知 1男 2女
+  birthDate      DateTime? @map("birth_date") @db.Date
+  birthTime      String?   @map("birth_time") // HH:mm
+  birthCity      String?   @map("birth_city")
+  birthProvince  String?   @map("birth_province")
+  birthCountry   String    @default("CN") @map("birth_country")
+  birthLongitude Float?    @map("birth_longitude")
+  birthLatitude  Float?    @map("birth_latitude")
+  timezone       String?
+  language       String    @default("zh-CN")
+  identityType   Int       @default(0) @map("identity_type") // 0普通 1企业老板 2投资人 3高净值
+  vipLevel       Int       @default(0) @map("vip_level") // 0免费 1基础 2高级 3企业
+  vipExpireAt    DateTime? @map("vip_expire_at")
+  totalSpent     Decimal   @default(0) @map("total_spent") @db.Decimal(12, 2)
+  balance        Decimal   @default(0) @map("balance") @db.Decimal(12, 2)
+  referrerId     Int?      @map("referrer_id")
+  agentId        Int?      @map("agent_id")
+  wechatOpenid   String?   @unique @map("wechat_openid")
+  wechatUnionid  String?   @map("wechat_unionid")
+  googleId       String?   @unique @map("google_id")
+  appleId        String?   @unique @map("apple_id")
+  sourceChannel     String?   @map("source_channel")
+  lastLoginAt       DateTime? @map("last_login_at")
+  mem0ProfileSynced Boolean   @default(false) @map("mem0_profile_synced")
+  role              String    @default("user") // "admin" | "user"
+  status            Int       @default(1) // 0禁用 1正常
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  referrer       User?     @relation("UserReferral", fields: [referrerId], references: [id])
+  referrals      User[]    @relation("UserReferral")
+  tags           UserTag[]
+  charts         BaziChart[]
+  orders         Order[]
+  reports        AnalysisReport[]
+  reportShares   ReportShare[]
+  chatSessions   ChatSession[]
+  cardKeys       CardKey[]    @relation("CardKeyUsedBy")
+  createdCardKeys CardKey[]   @relation("CardKeyCreator")
+  balanceTransactions BalanceTransaction[]
+  withdrawalRequests WithdrawalRequest[]
+  moments        Moment[]
+  momentLikes    MomentLike[]
+  momentComments MomentComment[]
+  freeQuota      UserFreeQuota?
+  tokenUsages    TokenUsage[]
+  initiatedPairings   PairingRequest[] @relation("PairingInitiator")
+  receivedPairings    PairingRequest[] @relation("PairingReceiver")
+  pairingFreeTrials   PairingFreeTrial[]
+  notifications       Notification[]
+
+  @@index([phone])
+  @@index([username])
+  @@index([referrerId])
+  @@index([vipLevel, vipExpireAt])
+  @@index([identityType])
+  @@map("users")
+}
+
+model UserTag {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @map("user_id")
+  tagCategory String   @map("tag_category") // behavior/consume/bazi/custom
+  tagKey      String   @map("tag_key")
+  tagValue    String?  @map("tag_value")
+  source      String?  // auto/manual
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, tagCategory, tagKey])
+  @@map("user_tags")
+}
+
+// ==================== 命盘系统 ====================
+
+model BaziChart {
+  id                Int       @id @default(autoincrement())
+  uuid              String    @unique @default(uuid())
+  userId            Int?      @map("user_id")
+  name              String?
+  relation          String?   // self/spouse/child/partner/other
+  gender            Int       // 1男 2女
+
+  // 原始输入
+  solarDate         DateTime  @map("solar_date") @db.Date
+  solarTime         String?   @map("solar_time") // HH:mm
+  birthCity         String?   @map("birth_city")
+  birthCountry      String    @default("CN") @map("birth_country")
+  longitude         Float?
+  latitude          Float?
+
+  // 真太阳时
+  trueSolarTime     DateTime? @map("true_solar_time")
+  timeCorrectionMin Float?    @map("time_correction_min")
+
+  // 四柱
+  yearGan           String    @map("year_gan")
+  yearZhi           String    @map("year_zhi")
+  monthGan          String    @map("month_gan")
+  monthZhi          String    @map("month_zhi")
+  dayGan            String    @map("day_gan")
+  dayZhi            String    @map("day_zhi")
+  hourGan           String?   @map("hour_gan")
+  hourZhi           String?   @map("hour_zhi")
+
+  // 藏干
+  yearHidden        Json?     @map("year_hidden")
+  monthHidden       Json?     @map("month_hidden")
+  dayHidden         Json?     @map("day_hidden")
+  hourHidden        Json?     @map("hour_hidden")
+
+  // 十神
+  tenGodsMap        Json?     @map("ten_gods_map")
+
+  // 纳音
+  yearNayin         String?   @map("year_nayin")
+  monthNayin        String?   @map("month_nayin")
+  dayNayin          String?   @map("day_nayin")
+  hourNayin         String?   @map("hour_nayin")
+
+  // 五行
+  wuxingCounts      Json?     @map("wuxing_counts")
+  wuxingScore       Json?     @map("wuxing_score")
+
+  // 日主
+  dayMasterStrength Float?    @map("day_master_strength")
+  strengthLevel     String?   @map("strength_level")
+
+  // 格局
+  patternType       String?   @map("pattern_type")
+  patternName       String?   @map("pattern_name")
+  patternScore      Float?    @map("pattern_score")
+
+  // 用神
+  yongShen          String?   @map("yong_shen")
+  xiShen            String?   @map("xi_shen")
+  jiShen            Json?     @map("ji_shen")
+
+  // 调候
+  tiaohuoNeed       Json?     @map("tiaohuo_need")
+
+  // 神煞
+  shenshaList       Json?     @map("shensha_list")
+
+  // 大运
+  dayunDirection    Int?      @map("dayun_direction")
+  dayunStartAge     Float?    @map("dayun_start_age")
+  dayunList         Json?     @map("dayun_list")
+
+  // 流年
+  liunianList       Json?     @map("liunian_list")
+
+  // 空亡
+  kongWang          Json?     @map("kong_wang")
+
+  // 十二长生
+  changSheng        Json?     @map("chang_sheng")
+
+  // 胎元/命宫/身宫
+  taiYuan           String?   @map("tai_yuan")
+  mingGong          String?   @map("ming_gong")
+  shenGong          String?   @map("shen_gong")
+
+  // 干支关系
+  relations         Json?     @map("relations")
+
+  // 节气
+  jieqiInfo         String?   @map("jieqi_info")
+
+  // 农历日期
+  lunarDate         String?   @map("lunar_date")
+
+  // 元数据
+  algorithmVersion  String?   @map("algorithm_version")
+  engineVersion     String?   @map("engine_version")
+  midnightRule      String?   @map("midnight_rule")
+
+  isPrimary         Boolean   @default(false) @map("is_primary")
+  status            Int       @default(1)
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  user    User?            @relation(fields: [userId], references: [id])
+  reports AnalysisReport[]
+  pairingAsInitiator PairingRequest[] @relation("PairingInitiatorChart")
+  pairingAsReceiver  PairingRequest[] @relation("PairingReceiverChart")
+
+  @@index([userId])
+  @@index([dayGan])
+  @@index([patternType])
+  @@map("bazi_charts")
+}
+
+// ==================== 规则系统 ====================
+
+model Rule {
+  id           Int      @id @default(autoincrement())
+  ruleId       String   @unique @map("rule_id")
+  module       String   // ten_gods/pattern/yongshen/dayun/wealth/risk/hehun/partner
+  name         String
+  description  String?
+  version      String
+  priority     Int      @default(100)
+  conditions   Json
+  actions      Json
+  abGroup      String   @default("ALL") @map("ab_group")
+  isActive     Boolean  @default(true) @map("is_active")
+  hitCount     BigInt   @default(0) @map("hit_count")
+  accuracyRate Float?   @map("accuracy_rate")
+  author       String?
+  reviewStatus Int      @default(0) @map("review_status")
+  reviewerId   Int?     @map("reviewer_id")
+  metadata     Json?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@index([module, isActive])
+  @@index([abGroup])
+  @@map("rules")
+}
+
+// ==================== Prompt系统 ====================
+
+model Prompt {
+  id              Int      @id @default(autoincrement())
+  promptId        String   @map("prompt_id")
+  module          String
+  name            String
+  version         String
+  content         String   @db.Text
+  systemPrompt    String?  @map("system_prompt") @db.Text
+  variables       Json?
+  modelProvider   String   @default("minimax") @map("model_provider")
+  modelName       String   @default("MiniMax-M2.5") @map("model_name")
+  temperature     Float    @default(0.7)
+  maxTokens       Int      @default(4000) @map("max_tokens")
+  abGroup         String   @default("ALL") @map("ab_group")
+  conversionRate  Float?   @map("conversion_rate")
+  avgSatisfaction Float?   @map("avg_satisfaction")
+  avgTokenCost    Int?     @map("avg_token_cost")
+  isActive        Boolean  @default(true) @map("is_active")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@unique([promptId, version])
+  @@map("prompts")
+}
+
+// ==================== 产品系统 ====================
+
+model Product {
+  id              Int      @id @default(autoincrement())
+  productCode     String   @unique @map("product_code")
+  name            String
+  subtitle        String?
+  description     String?  @db.Text
+  category        String   // free/lead/standard/premium/enterprise/vip
+  reportType      String?  @map("report_type")
+  originalPrice   Decimal  @map("original_price") @db.Decimal(10, 2)
+  currentPrice    Decimal  @map("current_price") @db.Decimal(10, 2)
+  agentPrice      Decimal? @map("agent_price") @db.Decimal(10, 2)
+  config          Json?
+  commissionRateL1 Decimal @default(0) @map("commission_rate_l1") @db.Decimal(4, 2)
+  commissionRateL2 Decimal @default(0) @map("commission_rate_l2") @db.Decimal(4, 2)
+  sortOrder       Int      @default(0) @map("sort_order")
+  isActive        Boolean  @default(true) @map("is_active")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  orders Order[]
+
+  @@map("products")
+}
+
+// ==================== 订单系统 ====================
+
+model Order {
+  id              Int       @id @default(autoincrement())
+  orderNo         String    @unique @map("order_no")
+  userId          Int       @map("user_id")
+  productId       Int       @map("product_id")
+  chartId         Int?      @map("chart_id")
+  reportId        Int?      @map("report_id")
+
+  originalAmount  Decimal   @map("original_amount") @db.Decimal(10, 2)
+  discountAmount  Decimal   @default(0) @map("discount_amount") @db.Decimal(10, 2)
+  paidAmount      Decimal   @map("paid_amount") @db.Decimal(10, 2)
+
+  couponId        Int?      @map("coupon_id")
+  couponDiscount  Decimal   @default(0) @map("coupon_discount") @db.Decimal(10, 2)
+
+  paymentMethod   String?   @map("payment_method")
+  paymentNo       String?   @map("payment_no")
+  paidAt          DateTime? @map("paid_at")
+
+  referrerId      Int?      @map("referrer_id")
+  commissionL1    Decimal   @default(0) @map("commission_l1") @db.Decimal(10, 2)
+  commissionL2    Decimal   @default(0) @map("commission_l2") @db.Decimal(10, 2)
+
+  status          Int       @default(0) // 0待付 1已付 2已完成 3退款中 4已退 5已取消
+  refundAmount    Decimal?  @map("refund_amount") @db.Decimal(10, 2)
+  refundReason    String?   @map("refund_reason")
+  refundAt        DateTime? @map("refund_at")
+
+  sourceChannel   String?   @map("source_channel")
+  sourceUrl       String?   @map("source_url")
+  clientType      String?   @map("client_type")
+  ipAddress       String?   @map("ip_address")
+  userAgent       String?   @map("user_agent")
+
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  user    User    @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+  pairingRequests PairingRequest[]
+
+  @@index([userId, status])
+  @@index([orderNo])
+  @@index([referrerId])
+  @@map("orders")
+}
+
+// ==================== 分析报告 ====================
+
+model AnalysisReport {
+  id              Int      @id @default(autoincrement())
+  uuid            String   @unique @default(uuid())
+  userId          Int      @map("user_id")
+  chartId         Int      @map("chart_id")
+  reportType      String   @map("report_type")
+  productId       Int?     @map("product_id")
+  orderId         Int?     @map("order_id")
+
+  ruleResults     Json?    @map("rule_results")
+  ruleScores      Json?    @map("rule_scores")
+  ruleTags        Json?    @map("rule_tags")
+
+  aiProvider      String?  @map("ai_provider")
+  promptVersion   String?  @map("prompt_version")
+  aiContent       String?  @map("ai_content") @db.Text
+  aiSummary       String?  @map("ai_summary")
+  aiTokenUsed     Int?     @map("ai_token_used")
+  aiCost          Decimal? @map("ai_cost") @db.Decimal(8, 4)
+
+  upsellHook      String?  @map("upsell_hook") @db.Text
+  upsellProductId Int?     @map("upsell_product_id")
+
+  qualityScore    Float?   @map("quality_score")
+  userRating      Int?     @map("user_rating")
+  userFeedback    String?  @map("user_feedback") @db.Text
+
+  viewCount       Int      @default(0) @map("view_count")
+  shareCount      Int      @default(0) @map("share_count")
+  isPaid          Boolean  @default(false) @map("is_paid")
+  status          Int      @default(1)
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  user   User          @relation(fields: [userId], references: [id])
+  chart  BaziChart     @relation(fields: [chartId], references: [id])
+  shares ReportShare[]
+  chatSessions ChatSession[]
+
+  @@index([userId, reportType])
+  @@index([chartId])
+  @@map("analysis_reports")
+}
+
+// ==================== 报告分享 ====================
+
+model ReportShare {
+  id          Int       @id @default(autoincrement())
+  shareToken  String    @unique @default(uuid()) @map("share_token")
+  reportId    Int       @map("report_id")
+  userId      Int       @map("user_id")
+  viewCount   Int       @default(0) @map("view_count")
+  shareCount  Int       @default(0) @map("share_count")
+  isActive    Boolean   @default(true) @map("is_active")
+  expiresAt   DateTime? @map("expires_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  user   User           @relation(fields: [userId], references: [id])
+  report AnalysisReport @relation(fields: [reportId], references: [id])
+
+  @@index([reportId])
+  @@index([userId])
+  @@map("report_shares")
+}
+
+// ==================== 分销系统 ====================
+
+model Distributor {
+  id              Int       @id @default(autoincrement())
+  userId          Int       @unique @map("user_id")
+  level           Int       @default(1) // 1普通 2金牌 3钻石
+  parentId        Int?      @map("parent_id")
+  totalEarnings   Decimal   @default(0) @map("total_earnings") @db.Decimal(12, 2)
+  withdrawnAmount Decimal   @default(0) @map("withdrawn_amount") @db.Decimal(12, 2)
+  pendingAmount   Decimal   @default(0) @map("pending_amount") @db.Decimal(12, 2)
+  totalOrders     Int       @default(0) @map("total_orders")
+  totalTeamSize   Int       @default(0) @map("total_team_size")
+  commissionRate  Decimal?  @map("commission_rate") @db.Decimal(4, 2)
+  status          Int       @default(1)
+  approvedAt      DateTime? @map("approved_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  parent   Distributor?  @relation("DistributorTree", fields: [parentId], references: [id])
+  children Distributor[] @relation("DistributorTree")
+  commissions CommissionRecord[]
+  withdrawalRequests WithdrawalRequest[]
+
+  @@map("distributors")
+}
+
+model CommissionRecord {
+  id              Int      @id @default(autoincrement())
+  distributorId   Int      @map("distributor_id")
+  orderId         Int      @map("order_id")
+  buyerId         Int      @map("buyer_id")
+  commissionLevel Int      @map("commission_level") // 1一级 2二级
+  commissionRate  Decimal  @map("commission_rate") @db.Decimal(4, 2)
+  commissionAmount Decimal @map("commission_amount") @db.Decimal(10, 2)
+  orderAmount     Decimal  @map("order_amount") @db.Decimal(10, 2)
+  status          Int      @default(0) // 0待结算 1已结算 2已提现
+  settledAt       DateTime? @map("settled_at")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  distributor Distributor @relation(fields: [distributorId], references: [id])
+
+  @@map("commission_records")
+}
+
+// ==================== 提现审核 ====================
+
+model WithdrawalRequest {
+  id            Int       @id @default(autoincrement())
+  userId        Int       @map("user_id")
+  distributorId Int       @map("distributor_id")
+  amount        Decimal   @db.Decimal(12, 2)
+  status        Int       @default(0) // 0待审核 1已通过 2已拒绝
+  reviewedBy    Int?      @map("reviewed_by")
+  reviewNotes   String?   @map("review_notes") @db.VarChar(500)
+  requestedAt   DateTime  @default(now()) @map("requested_at")
+  reviewedAt    DateTime? @map("reviewed_at")
+
+  user        User        @relation(fields: [userId], references: [id])
+  distributor Distributor @relation(fields: [distributorId], references: [id])
+
+  @@map("withdrawal_requests")
+}
+
+// ==================== CRM系统 ====================
+
+model CrmCustomer {
+  id              Int       @id @default(autoincrement())
+  userId          Int?      @map("user_id")
+  name            String?
+  phone           String?
+  wechatId        String?   @map("wechat_id")
+  company         String?
+  position        String?
+  customerLevel   String?   @map("customer_level") // S/A/B/C/D
+  customerType    String?   @map("customer_type") // individual/enterprise
+  customerStage   String?   @map("customer_stage") // lead/prospect/customer/vip/lost
+  totalSpent      Decimal   @default(0) @map("total_spent") @db.Decimal(12, 2)
+  orderCount      Int       @default(0) @map("order_count")
+  lastOrderAt     DateTime? @map("last_order_at")
+  avgOrderAmount  Decimal?  @map("avg_order_amount") @db.Decimal(10, 2)
+  ltvPredicted    Decimal?  @map("ltv_predicted") @db.Decimal(12, 2)
+  baziTags        Json?     @map("bazi_tags")
+  assignedTo      Int?      @map("assigned_to")
+  lastFollowAt    DateTime? @map("last_follow_at")
+  nextFollowAt    DateTime? @map("next_follow_at")
+  followCount     Int       @default(0) @map("follow_count")
+  source          String?
+  sourceDetail    String?   @map("source_detail")
+  notes           String?   @db.Text
+  status          Int       @default(1)
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  followUps CrmFollowUp[]
+
+  @@index([customerLevel, customerStage])
+  @@index([assignedTo, nextFollowAt])
+  @@map("crm_customers")
+}
+
+model CrmFollowUp {
+  id              Int       @id @default(autoincrement())
+  customerId      Int       @map("customer_id")
+  operatorId      Int       @map("operator_id")
+  followType      String    @map("follow_type") // wechat/phone/sms/system
+  content         String    @db.Text
+  aiSuggested     Boolean   @default(false) @map("ai_suggested")
+  aiScript        String?   @map("ai_script") @db.Text
+  result          String?   // interested/not_now/rejected/converted
+  nextAction      String?   @map("next_action")
+  nextFollowAt    DateTime? @map("next_follow_at")
+  convertedOrderId Int?     @map("converted_order_id")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  customer CrmCustomer @relation(fields: [customerId], references: [id])
+
+  @@map("crm_follow_ups")
+}
+
+// ==================== 命理师系统 ====================
+
+model Master {
+  id                 Int       @id @default(autoincrement())
+  userId             Int       @unique @map("user_id")
+  displayName        String    @map("display_name")
+  title              String?
+  bio                String?   @db.Text
+  avatarUrl          String?   @map("avatar_url")
+  specialties        Json?
+  experienceYears    Int?      @map("experience_years")
+  totalConsultations Int       @default(0) @map("total_consultations")
+  avgRating          Float     @default(5.0) @map("avg_rating")
+  totalReviews       Int       @default(0) @map("total_reviews")
+  textPrice          Decimal?  @map("text_price") @db.Decimal(10, 2)
+  voicePrice         Decimal?  @map("voice_price") @db.Decimal(10, 2)
+  videoPrice         Decimal?  @map("video_price") @db.Decimal(10, 2)
+  commissionRate     Decimal   @default(0.70) @map("commission_rate") @db.Decimal(4, 2)
+  totalEarnings      Decimal   @default(0) @map("total_earnings") @db.Decimal(12, 2)
+  sortOrder          Int       @default(0) @map("sort_order")
+  isFeatured         Boolean   @default(false) @map("is_featured")
+  status             Int       @default(0)
+  createdAt          DateTime  @default(now()) @map("created_at")
+
+  consultations Consultation[]
+
+  @@map("masters")
+}
+
+model Consultation {
+  id                Int       @id @default(autoincrement())
+  consultationNo    String    @unique @map("consultation_no")
+  userId            Int       @map("user_id")
+  masterId          Int       @map("master_id")
+  orderId           Int?      @map("order_id")
+  chartId           Int?      @map("chart_id")
+  consultationType  String    @map("consultation_type")
+  topic             String?
+  question          String?   @db.Text
+  messages          Json?
+  aiAssistUsed      Boolean   @default(false) @map("ai_assist_used")
+  status            Int       @default(0)
+  assignedAt        DateTime? @map("assigned_at")
+  startedAt         DateTime? @map("started_at")
+  completedAt       DateTime? @map("completed_at")
+  userRating        Int?      @map("user_rating")
+  userReview        String?   @map("user_review") @db.Text
+  totalAmount       Decimal?  @map("total_amount") @db.Decimal(10, 2)
+  masterAmount      Decimal?  @map("master_amount") @db.Decimal(10, 2)
+  platformAmount    Decimal?  @map("platform_amount") @db.Decimal(10, 2)
+  createdAt         DateTime  @default(now()) @map("created_at")
+
+  master Master @relation(fields: [masterId], references: [id])
+
+  @@map("consultations")
+}
+
+// ==================== AI模型配置 ====================
+
+model AiModelConfig {
+  id              Int       @id @default(autoincrement())
+  provider        String    @unique
+  name            String
+  apiKey          String    @map("api_key") @db.Text
+  baseURL         String    @map("base_url")
+  defaultModel    String    @map("default_model")
+  availableModels Json?     @map("available_models")
+  config          Json?
+  isDefault       Boolean   @default(false) @map("is_default")
+  isActive        Boolean   @default(true) @map("is_active")
+  priority        Int       @default(0)
+  lastTestAt      DateTime? @map("last_test_at")
+  lastTestResult  Json?     @map("last_test_result")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@map("ai_model_configs")
+}
+
+// ==================== 自动成交 ====================
+
+model AutoConversionLog {
+  id              Int       @id @default(autoincrement())
+  userId          Int       @map("user_id")
+  triggerType     String    @map("trigger_type")
+  triggerDetail   Json?     @map("trigger_detail")
+  contentType     String?   @map("content_type")
+  content         String?   @db.Text
+  productId       Int?      @map("product_id")
+  aiGenerated     Boolean   @default(false) @map("ai_generated")
+  promptVersion   String?   @map("prompt_version")
+  delivered       Boolean   @default(false)
+  opened          Boolean   @default(false)
+  clicked         Boolean   @default(false)
+  converted       Boolean   @default(false)
+  convertedOrderId Int?     @map("converted_order_id")
+  scheduledAt     DateTime? @map("scheduled_at")
+  deliveredAt     DateTime? @map("delivered_at")
+  openedAt        DateTime? @map("opened_at")
+  clickedAt       DateTime? @map("clicked_at")
+  convertedAt     DateTime? @map("converted_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  @@index([userId, triggerType])
+  @@map("auto_conversion_logs")
+}
+
+// ==================== 卡密与余额系统 ====================
+
+model CardKey {
+  id          Int       @id @default(autoincrement())
+  code        String    @unique
+  amount      Decimal   @map("amount") @db.Decimal(10, 2)
+  batchNo     String    @map("batch_no")
+  remark      String?
+  status      Int       @default(0) // 0未使用 1已使用 2已作废
+  usedById    Int?      @map("used_by_id")
+  usedAt      DateTime? @map("used_at")
+  expireAt    DateTime? @map("expire_at")
+  creatorId   Int?      @map("creator_id")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  usedBy      User?     @relation("CardKeyUsedBy", fields: [usedById], references: [id])
+  creator     User?     @relation("CardKeyCreator", fields: [creatorId], references: [id])
+
+  @@index([code])
+  @@index([batchNo])
+  @@index([status])
+  @@index([creatorId])
+  @@map("card_keys")
+}
+
+model BalanceTransaction {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @map("user_id")
+  type         String   @map("type") // recharge | payment | refund | admin_adjust | agent_recharge | agent_card_cost
+  amount       Decimal  @map("amount") @db.Decimal(10, 2)
+  balanceAfter Decimal  @map("balance_after") @db.Decimal(12, 2)
+  refId        String?  @map("ref_id")
+  refType      String?  @map("ref_type") // card_key | order | admin
+  remark       String?
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user         User     @relation(fields: [userId], references: [id])
+  tokenUsages  TokenUsage[]
+
+  @@index([userId, createdAt])
+  @@index([refId])
+  @@map("balance_transactions")
+}
+
+// ==================== 聊天系统 ====================
+
+model ChatSession {
+  id            Int       @id @default(autoincrement())
+  uuid          String    @unique @default(uuid())
+  userId        Int       @map("user_id")
+  reportId      Int       @map("report_id")
+  title         String?
+  messageCount  Int       @default(0) @map("message_count")
+  lastMessageAt DateTime? @map("last_message_at")
+  mem0UserId    String?   @map("mem0_user_id")
+  mem0AgentId   String?   @map("mem0_agent_id")
+  status        Int       @default(1)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  user     User            @relation(fields: [userId], references: [id])
+  report   AnalysisReport  @relation(fields: [reportId], references: [id])
+  messages ChatMessage[]
+
+  @@unique([userId, reportId])
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id        Int      @id @default(autoincrement())
+  uuid      String   @unique @default(uuid())
+  sessionId Int      @map("session_id")
+  role          String
+  content       String   @db.Text
+  tokenUsed     Int?     @map("token_used")
+  tokenCost     Decimal? @map("token_cost") @db.Decimal(10, 6)
+  model         String?
+  mem0Added     Boolean  @default(false) @map("mem0_added")
+  feedbackScore Int?     @map("feedback_score") // 1=好 -1=差
+  feedbackText  String?  @map("feedback_text")
+  metadata      Json?
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  session ChatSession @relation(fields: [sessionId], references: [id])
+
+  @@index([sessionId, createdAt])
+  @@map("chat_messages")
+}
+
+// ==================== 朋友圈系统 ====================
+
+model Moment {
+  id           Int      @id @default(autoincrement())
+  uuid         String   @unique @default(uuid())
+  userId       Int      @map("user_id")
+  content      String   @db.Text
+  images       MomentImage[]
+  likesCount   Int      @default(0) @map("likes_count")
+  commentsCount Int     @default(0) @map("comments_count")
+  isPublic     Boolean  @default(true) @map("is_public")
+  status       Int      @default(1)   // 1正常 0删除
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  user     User            @relation(fields: [userId], references: [id])
+  likes    MomentLike[]
+  comments MomentComment[]
+
+  @@index([userId, createdAt])
+  @@index([createdAt])
+  @@map("moments")
+}
+
+model MomentImage {
+  id        Int      @id @default(autoincrement())
+  momentId  Int      @map("moment_id")
+  url       String
+  sortOrder Int      @default(0) @map("sort_order")
+  width     Int?     // 原始宽度
+  height    Int?     // 原始高度
+  createdAt DateTime @default(now()) @map("created_at")
+
+  moment Moment @relation(fields: [momentId], references: [id], onDelete: Cascade)
+
+  @@index([momentId])
+  @@map("moment_images")
+}
+
+model MomentLike {
+  id        Int      @id @default(autoincrement())
+  momentId  Int      @map("moment_id")
+  userId    Int      @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  moment Moment @relation(fields: [momentId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@unique([momentId, userId])
+  @@index([momentId])
+  @@index([userId])
+  @@map("moment_likes")
+}
+
+model MomentComment {
+  id        Int      @id @default(autoincrement())
+  uuid      String   @unique @default(uuid())
+  momentId  Int      @map("moment_id")
+  userId    Int      @map("user_id")
+  content   String   @db.Text
+  replyToId  Int?     @map("reply_to_id")  // 回复某条评论
+  createdAt DateTime @default(now()) @map("created_at")
+
+  moment  Moment         @relation(fields: [momentId], references: [id], onDelete: Cascade)
+  user    User           @relation(fields: [userId], references: [id])
+  replyTo MomentComment? @relation("CommentReplies", fields: [replyToId], references: [id])
+  replies MomentComment[] @relation("CommentReplies")
+
+  @@index([momentId, createdAt])
+  @@index([userId])
+  @@map("moment_comments")
+}
+
+// ==================== 配对请求系统 ====================
+
+model PairingRequest {
+  id                Int       @id @default(autoincrement())
+  uuid              String    @unique @default(uuid())
+  initiatorId       Int       @map("initiator_id")
+  receiverId        Int       @map("receiver_id")
+  pairingType       String    @map("pairing_type") // personality/career/wealth/hehun/comprehensive
+  mode              String    @default("social") @map("mode") // social/self
+  initiatorChartId  Int?      @map("initiator_chart_id")
+  receiverChartId   Int?      @map("receiver_chart_id")
+  status            Int       @default(0) // 0待同意 1已同意 2已拒绝 3配置中 4分析中 5已完成 6已取消
+  reportId          Int?      @map("report_id")
+  orderId           Int?      @map("order_id")
+  isPaid            Boolean   @default(false) @map("is_paid")
+  freeTrial         Boolean   @default(false) @map("free_trial")
+  message           String?   @db.Text
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  initiator       User           @relation("PairingInitiator", fields: [initiatorId], references: [id])
+  receiver        User           @relation("PairingReceiver", fields: [receiverId], references: [id])
+  initiatorChart  BaziChart?     @relation("PairingInitiatorChart", fields: [initiatorChartId], references: [id])
+  receiverChart   BaziChart?     @relation("PairingReceiverChart", fields: [receiverChartId], references: [id])
+  order           Order?         @relation(fields: [orderId], references: [id])
+
+  @@index([initiatorId, status])
+  @@index([receiverId, status])
+  @@index([status, createdAt])
+  @@map("pairing_requests")
+}
+
+// ==================== 通知系统 ====================
+
+model Notification {
+  id          Int       @id @default(autoincrement())
+  uuid        String    @unique @default(uuid())
+  userId      Int       @map("user_id")
+  type        String    // pairing_request/pairing_accepted/pairing_rejected/pairing_report_ready/new_message
+  title       String
+  body        String?   @db.Text
+  refType     String?   @map("ref_type")   // pairing_request/chat_session/report
+  refId       String?   @map("ref_id")     // UUID of the referenced entity
+  isRead      Boolean   @default(false) @map("is_read")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  user           User            @relation(fields: [userId], references: [id])
+
+  @@index([userId, isRead, createdAt])
+  @@index([userId, createdAt])
+  @@map("notifications")
+}
+
+// ==================== 系统配置 ====================
+
+model SystemConfig {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     Json
+  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("system_configs")
+}
+
+// ==================== Token 计费系统 ====================
+
+model TokenPricing {
+  id              Int      @id @default(autoincrement())
+  provider        String   // deepseek | openai | minimax
+  modelName       String   @map("model_name")
+  pricePer1kInput Decimal  @map("price_per_1k_input") @db.Decimal(10, 6)
+  pricePer1kOutput Decimal @map("price_per_1k_output") @db.Decimal(10, 6)
+  isActive        Boolean  @default(true) @map("is_active")
+  sortOrder       Int      @default(0) @map("sort_order")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@unique([provider, modelName])
+  @@map("token_pricings")
+}
+
+model TokenUsage {
+  id               Int       @id @default(autoincrement())
+  userId           Int       @map("user_id")
+  source           String    // chat | report | health | crm
+  sourceRefId      String?   @map("source_ref_id")
+  provider         String
+  model            String
+  inputTokens      Int       @default(0) @map("input_tokens")
+  outputTokens     Int       @default(0) @map("output_tokens")
+  totalTokens      Int       @default(0) @map("total_tokens")
+  estimatedTokens  Int       @default(0) @map("estimated_tokens")
+  pricePer1kInput  Decimal?  @map("price_per_1k_input") @db.Decimal(10, 6)
+  pricePer1kOutput Decimal?  @map("price_per_1k_output") @db.Decimal(10, 6)
+  estimatedCost    Decimal   @default(0) @map("estimated_cost") @db.Decimal(12, 6)
+  actualCost       Decimal   @default(0) @map("actual_cost") @db.Decimal(12, 6)
+  frozenAmount     Decimal   @default(0) @map("frozen_amount") @db.Decimal(10, 2)
+  freeUsed         Boolean   @default(false) @map("free_used")
+  freeSource       String?   @map("free_source") // permanent | daily
+  balanceTxId      Int?      @map("balance_tx_id")
+  status           String    @default("pending") // pending | settled | voided
+  createdAt        DateTime  @default(now()) @map("created_at")
+  settledAt        DateTime? @map("settled_at")
+
+  user              User                @relation(fields: [userId], references: [id])
+  balanceTransaction BalanceTransaction? @relation(fields: [balanceTxId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([source, sourceRefId])
+  @@index([status])
+  @@map("token_usages")
+}
+
+model UserFreeQuota {
+  id              Int       @id @default(autoincrement())
+  userId          Int       @unique @map("user_id")
+  permanentFree   Int       @default(0) @map("permanent_free")
+  dailyFree       Int       @default(5) @map("daily_free")
+  dailyUsed       Int       @default(0) @map("daily_used")
+  lifetimeUsed    Int       @default(0) @map("lifetime_used")
+  lastDailyReset  DateTime? @map("last_daily_reset_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("user_free_quotas")
+}
+
+// ==================== 配对免费试用 ====================
+
+model PairingFreeTrial {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @map("user_id")
+  pairingType  String   @map("pairing_type") // personality/career/wealth/hehun/comprehensive
+  totalFree    Int      @default(0) @map("total_free")
+  usedFree     Int      @default(0) @map("used_free")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, pairingType])
+  @@map("pairing_free_trials")
+}

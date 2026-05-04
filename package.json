@@ -1,0 +1,36 @@
+{
+  "name": "shengri",
+  "version": "1.0.0",
+  "private": true,
+  "description": "专业级八字命理 SaaS 平台",
+  "scripts": {
+    "dev:api": "pnpm --filter @shengri/api dev",
+    "dev:web": "pnpm --filter @shengri/web dev",
+    "dev:admin": "pnpm --filter @shengri/admin dev",
+    "dev:calendar": "cd apps/calendar-engine && python -m uvicorn app.main:app --reload --port 8100",
+    "build:api": "pnpm --filter @shengri/api build",
+    "build:web": "pnpm --filter @shengri/web build",
+    "build:admin": "pnpm --filter @shengri/admin build",
+    "db:migrate": "cd apps/api && npx prisma migrate dev",
+    "db:seed": "cd apps/api && npx prisma db seed",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test"
+  },
+  "pnpm": {
+    "overrides": {
+      "react-router": "6.28.1",
+      "react-router-dom": "6.28.1",
+      "react": "18.2.0",
+      "react-dom": "18.2.0"
+    }
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "devDependencies": {
+    "china-division": "^2.7.0"
+  }
+}

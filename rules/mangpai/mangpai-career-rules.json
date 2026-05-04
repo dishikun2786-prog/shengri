@@ -1,0 +1,129 @@
+[
+  {
+    "rule_id": "mangpai_career_shang_sha",
+    "name": "食伤制杀-创业型",
+    "version": "1.0.0",
+    "module": "mangpai_career",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "contains", "value": "食伤制官杀"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "创业型"},
+      {"type": "set_score", "field": "blind_entrepreneur", "value": 85},
+      {"type": "generate_text", "template": "盲派职业判断：食伤制杀做功，适合创业。以自身能力手段获取平台权力，不适合打工受制于人。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_career_sha_yin",
+    "name": "杀印相生-领导型",
+    "version": "1.0.0",
+    "module": "mangpai_career",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "contains", "value": "杀印相生"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "领导型"},
+      {"type": "set_score", "field": "blind_leader", "value": 92},
+      {"type": "generate_text", "template": "盲派职业判断：杀印相生做功，天生领导者。代表国家或平台行使权力，适合体制内或大型机构管理岗位。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_career_shishang_cai",
+    "name": "食伤生财-自由职业",
+    "version": "1.0.0",
+    "module": "mangpai_career",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "contains", "value": "食伤生财"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "自由职业"},
+      {"type": "set_score", "field": "blind_freelancer", "value": 82},
+      {"type": "generate_text", "template": "盲派职业判断：食伤生财做功，适合自我经营。聪明才智换取财富，不适合朝九晚五，创业或自由职业更能发挥。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_career_yin_heavy",
+    "name": "印星做功-服务型",
+    "version": "1.0.0",
+    "module": "mangpai_career",
+    "priority": 80,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_ten_god_counts.正印", "operator": "gte", "value": 2}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "服务型"},
+      {"type": "set_score", "field": "blind_service", "value": 75},
+      {"type": "generate_text", "template": "盲派职业判断：身弱印旺，适合服务他人。印化官杀代表通过国家或平台行使权力，印生比劫代表服务大众。教育、医疗、公益等帮助他人的行业。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_career_bijie_zhicai",
+    "name": "比劫克财-体力型",
+    "version": "1.0.0",
+    "module": "mangpai_career",
+    "priority": 70,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "contains", "value": "比劫制财"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "体力型"},
+      {"type": "set_score", "field": "blind_labor", "value": 30},
+      {"type": "generate_text", "template": "盲派职业判断：比劫克财做功，体力劳动为主。手脚（比劫）赚钱，辛苦求财。适合制造业、技术工种、农业等实操性工作。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_career_rich_level",
+    "name": "盲派职业三类型-商业",
+    "version": "1.0.0",
+    "module": "mangpai_career",
+    "priority": 75,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_body_use_balance", "operator": "eq", "value": "体用相当"},
+        {"field": "mangpai_work_efficiency", "operator": "gte", "value": 50}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "商业型"},
+      {"type": "set_score", "field": "blind_business", "value": 80},
+      {"type": "generate_text", "template": "盲派职业三类型：身财两停适合商业。贸易、经销、零售批发等流通行业最能发挥天赋。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_career_service_type",
+    "name": "盲派职业三类型-服务业",
+    "version": "1.0.0",
+    "module": "mangpai_career",
+    "priority": 75,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_body_use_balance", "operator": "eq", "value": "体弱用旺"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "服务业型"},
+      {"type": "set_score", "field": "blind_service_type", "value": 70},
+      {"type": "generate_text", "template": "盲派职业三类型：身弱财多适合服务业。自由职业、中介、金融、咨询、教育等轻资产行业。"}
+    ]
+  }
+]

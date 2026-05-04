@@ -1,0 +1,15 @@
+# Cloudflare Tunnel 配置文件
+# 用于将本地多个服务通过 tunnel 暴露到公网
+
+tunnel: 569d4585-6e26-498b-8496-623a1758db85
+credentials-file: C:\Users\dishi\.cloudflared\569d4585-6e26-498b-8496-623a1758db85.json
+
+ingress:
+  # Next.js (NestJS API)
+  - hostname: api.openedskill.com
+    service: http://localhost:3000
+  # Calendar Engine (Python FastAPI)
+  - hostname: sr.openedskill.com
+    service: http://localhost:8100
+  # 默认拒绝
+  - service: http_status:404

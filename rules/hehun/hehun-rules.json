@@ -1,0 +1,55 @@
+[
+  {
+    "rule_id": "hehun_daymaster_he",
+    "name": "日主天合 - 最佳搭配",
+    "version": "1.0.0",
+    "module": "hehun",
+    "priority": 300,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "male.day_master_he_female", "operator": "eq", "value": true}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "天作之合"},
+      {"type": "set_score", "field": "hehun_daymaster", "value": 95},
+      {"type": "generate_text", "template": "双方日主天合，是命理中最佳的婚配组合"}
+    ]
+  },
+  {
+    "rule_id": "hehun_wuxing_complement",
+    "name": "五行互补 - 相互成就",
+    "version": "1.0.0",
+    "module": "hehun",
+    "priority": 250,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "wuxing_complement", "operator": "eq", "value": true}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "五行互补"},
+      {"type": "set_score", "field": "hehun_wuxing", "value": 85}
+    ]
+  },
+  {
+    "rule_id": "hehun_conflict_warning",
+    "name": "冲克较多 - 需要磨合",
+    "version": "1.0.0",
+    "module": "hehun",
+    "priority": 200,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "clash_count", "operator": "gte", "value": 3}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "冲克较多"},
+      {"type": "set_score", "field": "hehun_conflict", "value": 40},
+      {"type": "generate_text", "template": "双方八字冲克较多，感情中容易产生摩擦，需要更多包容和理解"}
+    ]
+  }
+]

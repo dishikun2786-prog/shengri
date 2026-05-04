@@ -1,0 +1,190 @@
+[
+  {
+    "rule_id": "mangpai_work_open_ku",
+    "name": "墓用开库-大富大贵",
+    "version": "1.0.0",
+    "module": "mangpai_work",
+    "priority": 100,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "contains", "value": "墓用"},
+        {"field": "mangpai_work_efficiency", "operator": "gte", "value": 90}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "开库做功"},
+      {"type": "set_score", "field": "blind_wealth_potential", "value": 95},
+      {"type": "generate_text", "template": "财官临库，逢冲开发。盲派最高效做功方式，资产可达亿级以上，有省部级之贵。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_work_shashang_zhi",
+    "name": "食伤制官杀-权力掌控",
+    "version": "1.0.0",
+    "module": "mangpai_work",
+    "priority": 95,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "contains", "value": "制用"},
+        {"field": "mangpai_work_efficiency", "operator": "gte", "value": 70}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "食伤制杀"},
+      {"type": "set_score", "field": "blind_leadership", "value": 85},
+      {"type": "generate_text", "template": "食伤制官杀做功，以才华能力获取权力地位。制什么得什么，制官得官，制财得财。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_work_sha_yin",
+    "name": "杀印相生-化杀为权",
+    "version": "1.0.0",
+    "module": "mangpai_work",
+    "priority": 95,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "contains", "value": "杀印相生"},
+        {"field": "mangpai_work_efficiency", "operator": "gte", "value": 80}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "杀印相生"},
+      {"type": "set_score", "field": "blind_authority", "value": 92},
+      {"type": "generate_text", "template": "杀印相生做功，化杀为权。印化官杀是盲派最高级的化用结构，代表通过国家平台行使权力，亿级格局。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_work_guan_yin",
+    "name": "官印相生-文职掌权",
+    "version": "1.0.0",
+    "module": "mangpai_work",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "contains", "value": "官印相生"},
+        {"field": "mangpai_work_efficiency", "operator": "gte", "value": 70}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "官印相生"},
+      {"type": "set_score", "field": "blind_career_rank", "value": 82},
+      {"type": "generate_text", "template": "官印相生做功，文职掌权。正官得印化，代表正统仕途或大型机构管理职位，千万级格局。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_work_shishang_shengcai",
+    "name": "食伤生财-才华变现",
+    "version": "1.0.0",
+    "module": "mangpai_work",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "contains", "value": "食伤生财"},
+        {"field": "mangpai_work_efficiency", "operator": "gte", "value": 60}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "食伤生财做功"},
+      {"type": "set_score", "field": "blind_creative_wealth", "value": 80},
+      {"type": "generate_text", "template": "食伤生财做功，以才华技能获取财富。不适合打工，自我经营、创业或自由职业更能发挥天赋。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_work_he_cai_guan",
+    "name": "合财合官-依附得利",
+    "version": "1.0.0",
+    "module": "mangpai_work",
+    "priority": 80,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "contains", "value": "合用"},
+        {"field": "mangpai_work_efficiency", "operator": "gte", "value": 50}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "合财官做功"},
+      {"type": "set_score", "field": "blind_partner_fortune", "value": 75},
+      {"type": "generate_text", "template": "合用结构做功，日主合住财官。合官想当官，合财想发财。通过合作、联姻或依附他人获得资源。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_work_bijie_zhicai",
+    "name": "比劫制财-体力求财",
+    "version": "1.0.0",
+    "module": "mangpai_work",
+    "priority": 60,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "contains", "value": "比劫制财"},
+        {"field": "mangpai_work_efficiency", "operator": "lte", "value": 50}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "比劫制财"},
+      {"type": "set_score", "field": "blind_labor_wealth", "value": 35},
+      {"type": "generate_text", "template": "比劫制财做功，体力劳动求财，效率较低。需注意合作分财，适合踏实积累而非投机暴富。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_work_no_work",
+    "name": "无功-平庸无为",
+    "version": "1.0.0",
+    "module": "mangpai_work",
+    "priority": 50,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "eq", "value": "无功"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "无功"},
+      {"type": "generate_text", "template": "命局无功，缺乏明确做功方向。若无势则一生平庸，需在行运中寻找做功机会。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_work_reverse",
+    "name": "反局做功-大富贵",
+    "version": "1.0.0",
+    "module": "mangpai_work",
+    "priority": 95,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_is_reverse", "operator": "eq", "value": true},
+        {"field": "mangpai_work_efficiency", "operator": "gte", "value": 50}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "反局做功"},
+      {"type": "set_score", "field": "blind_reverse_fortune", "value": 90},
+      {"type": "generate_text", "template": "反局做功，用占主位反制宾位。盲派认为大富大贵八字反局多于正局，富贵层级加倍。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_work_cross_boundary",
+    "name": "家内取家外-层级放大",
+    "version": "1.0.0",
+    "module": "mangpai_work",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_host_guest_config", "operator": "eq", "value": "家内取家外"},
+        {"field": "mangpai_work_efficiency", "operator": "gte", "value": 50}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "家内取家外"},
+      {"type": "set_score", "field": "blind_scale", "value": 85},
+      {"type": "generate_text", "template": "以家内之体取家外之用，做功层级被放大。年月为家外代表社会大资源，日时制年月可得大财大官。"}
+    ]
+  }
+]

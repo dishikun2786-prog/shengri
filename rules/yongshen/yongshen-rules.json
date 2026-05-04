@@ -1,0 +1,56 @@
+[
+  {
+    "rule_id": "yongshen_weak_need_sheng",
+    "name": "身弱喜印比",
+    "version": "1.0.0",
+    "module": "yongshen",
+    "priority": 300,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "day_master_strength", "operator": "lt", "value": 45}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "身弱喜印比"},
+      {"type": "set_score", "field": "need_help", "value": 70},
+      {"type": "generate_text", "template": "日主偏弱，喜印星和比劫帮扶。适合寻求贵人帮助，团队合作。方位利东方（木）或北方（水）"}
+    ]
+  },
+  {
+    "rule_id": "yongshen_strong_need_xie",
+    "name": "身强喜食伤财官",
+    "version": "1.0.0",
+    "module": "yongshen",
+    "priority": 300,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "day_master_strength", "operator": "gte", "value": 60}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "身强喜泄耗"},
+      {"type": "set_score", "field": "action_energy", "value": 80},
+      {"type": "generate_text", "template": "日主偏强，喜食伤泄秀和财星耗身。精力旺盛，适合主动出击、创业开拓"}
+    ]
+  },
+  {
+    "rule_id": "yongshen_balanced",
+    "name": "身旺身弱平衡",
+    "version": "1.0.0",
+    "module": "yongshen",
+    "priority": 280,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "day_master_strength", "operator": "between", "value": [45, 60]}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "中和之命"},
+      {"type": "set_score", "field": "balance", "value": 85},
+      {"type": "generate_text", "template": "日主中和，五行较为平衡，命格稳健。一生少大起大落，适合稳中求进"}
+    ]
+  }
+]

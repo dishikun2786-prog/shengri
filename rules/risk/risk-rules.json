@@ -1,0 +1,117 @@
+[
+  {
+    "rule_id": "risk_health_weak",
+    "name": "健康风险 - 日主极弱",
+    "version": "1.0.0",
+    "module": "risk",
+    "priority": 200,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "day_master_strength", "operator": "lt", "value": 25}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "health_risk_high"},
+      {"type": "set_score", "field": "health_risk", "value": 75},
+      {"type": "generate_text", "template": "日主偏弱，需要注意身体健康，建议定期体检，加强锻炼"}
+    ]
+  },
+  {
+    "rule_id": "risk_career_qisha_no_control",
+    "name": "事业风险 - 七杀无制",
+    "version": "1.0.0",
+    "module": "risk",
+    "priority": 180,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "day_master_strength", "operator": "lt", "value": 40}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "career_pressure"},
+      {"type": "set_score", "field": "career_risk", "value": 60},
+      {"type": "generate_text", "template": "工作压力可能较大，注意职场人际关系处理"}
+    ]
+  },
+  {
+    "rule_id": "risk_relationship_chong",
+    "name": "感情风险 - 婚宫逢冲",
+    "version": "1.0.0",
+    "module": "risk",
+    "priority": 170,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "day_master_strength", "operator": "exists", "value": true}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "relationship_attention"},
+      {"type": "set_score", "field": "relationship_risk", "value": 55}
+    ]
+  },
+  {
+    "rule_id": "risk_organ_overstrong",
+    "name": "健康风险 - 五行过旺入病",
+    "version": "1.0.0",
+    "module": "risk",
+    "priority": 190,
+    "conditions": {
+      "operator": "OR",
+      "rules": [
+        {"field": "wuxing_score.木", "operator": "gte", "value": 3.0},
+        {"field": "wuxing_score.火", "operator": "gte", "value": 3.0},
+        {"field": "wuxing_score.土", "operator": "gte", "value": 3.0},
+        {"field": "wuxing_score.金", "operator": "gte", "value": 3.0},
+        {"field": "wuxing_score.水", "operator": "gte", "value": 3.0}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "wuxing_imbalance_health"},
+      {"type": "set_score", "field": "organ_risk", "value": 65},
+      {"type": "generate_text", "template": "五行存在偏旺，对应脏腑负荷较重，需针对性调养。过旺之五行所克脏腑易受抑制，当以疏泄为主。"}
+    ]
+  },
+  {
+    "rule_id": "risk_wuxing_severe_deficiency",
+    "name": "健康风险 - 五行严重缺失",
+    "version": "1.0.0",
+    "module": "risk",
+    "priority": 195,
+    "conditions": {
+      "operator": "OR",
+      "rules": [
+        {"field": "wuxing_counts.木", "operator": "lte", "value": 1},
+        {"field": "wuxing_counts.火", "operator": "lte", "value": 1},
+        {"field": "wuxing_counts.土", "operator": "lte", "value": 1},
+        {"field": "wuxing_counts.金", "operator": "lte", "value": 1},
+        {"field": "wuxing_counts.水", "operator": "lte", "value": 1}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "wuxing_deficiency_health"},
+      {"type": "set_score", "field": "organ_risk", "value": 80},
+      {"type": "generate_text", "template": "五行存在严重缺失，对应脏腑功能先天不足，需重点补益调理。缺失之五行所主脏腑易生病变，应加强养护。"}
+    ]
+  },
+  {
+    "rule_id": "risk_tiaohuo_urgent",
+    "name": "健康风险 - 调候急迫",
+    "version": "1.0.0",
+    "module": "risk",
+    "priority": 185,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "tiaohuo_need", "operator": "exists", "value": true}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "tiaohuo_health_need"},
+      {"type": "set_score", "field": "health_risk", "value": 70},
+      {"type": "generate_text", "template": "命局存在调候需求，寒暖燥湿失衡影响身体健康，需通过环境、饮食、衣物等生活细节进行调节。"}
+    ]
+  }
+]

@@ -1,0 +1,93 @@
+[
+  {
+    "rule_id": "mangpai_health_ri_zhi_shi_zhi",
+    "name": "日时比劫-身体关注",
+    "version": "1.0.0",
+    "module": "mangpai_health",
+    "priority": 80,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "日支坐比劫"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "日时见比劫"},
+      {"type": "set_score", "field": "blind_health_alert", "value": 35},
+      {"type": "generate_text", "template": "盲派健康法则：日支和时支比劫代表身体，不能被冲克穿坏，否则身体得病。需注意对应五行脏腑。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_health_chuan_po",
+    "name": "穿破-健康隐患",
+    "version": "1.0.0",
+    "module": "mangpai_health",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "relations", "operator": "exists_in", "value": "穿"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "命带穿害"},
+      {"type": "set_score", "field": "blind_health_alert", "value": 25},
+      {"type": "generate_text", "template": "盲派健康法则：命带穿害，对应脏腑有隐患。穿是暗伤，不易察觉但持续存在，建议定期体检关注。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_health_wuxing_extreme",
+    "name": "五行过旺-性格健康偏颇",
+    "version": "1.0.0",
+    "module": "mangpai_health",
+    "priority": 80,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_has_power", "operator": "eq", "value": true}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "五行偏旺"},
+      {"type": "set_score", "field": "blind_balance_warning", "value": 40},
+      {"type": "generate_text", "template": "盲派五行身体定位：五行集中在{{mangpai_power_element}}，需关注对应脏腑。木肝胆火心脏土脾胃金肺水肾。过旺则偏颇。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_health_mao_you",
+    "name": "卯酉冲-血液过敏",
+    "version": "1.0.0",
+    "module": "mangpai_health",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "relations", "operator": "contains", "value": "卯酉冲"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "卯酉冲"},
+      {"type": "set_score", "field": "blind_blood_alert", "value": 20},
+      {"type": "generate_text", "template": "盲派健康直断：卯酉冲易血稠过敏。卯酉为金木相冲，也主筋骨伤疤、呼吸系统问题。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_health_laoyu_signal",
+    "name": "牢狱风险信号",
+    "version": "1.0.0",
+    "module": "mangpai_health",
+    "priority": 85,
+    "conditions": {
+      "operator": "OR",
+      "rules": [
+        {"field": "mangpai_ten_god_counts.七杀", "operator": "gte", "value": 3},
+        {"field": "mangpai_ten_god_counts.正官", "operator": "gte", "value": 4}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "官杀过旺"},
+      {"type": "set_score", "field": "blind_legal_risk", "value": 15},
+      {"type": "generate_text", "template": "盲派警示：官杀三重以上需防官非牢狱。盲派把官杀当官非疾病看，过旺无制则易惹祸上身。建议遵纪守法谨慎行事。"}
+    ]
+  }
+]

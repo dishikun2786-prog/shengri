@@ -1,0 +1,96 @@
+---
+description: MUI theme and styling conventions for ShengRi. Apply when modifying theme, creating styled components, or working with MUI sx props.
+globs: ["apps/admin/src/theme.ts", "apps/admin/src/**/*.{tsx,ts}"]
+---
+
+# MUI Theme & Styling Rules
+
+## Theme Architecture
+
+The theme extends react-admin's `defaultTheme` at `apps/admin/src/theme.ts`.
+
+### Color Token Reference
+
+Use these tokens via the `sx` prop or `useTheme()` hook — never hardcode hex values:
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `primary.main` | #c44520 | Buttons, active states, key accents |
+| `primary.light` | #d86a4a | Hover states, lighter accents |
+| `primary.dark` | #8a3016 | Pressed states, gradient endpoints |
+| `secondary.main` | #dca310 | Gold highlights, secondary actions |
+| `secondary.light` | #e6b840 | Hover states for secondary |
+| `secondary.dark` | #9a720b | Pressed states for secondary |
+| `background.default` | #fdf8f4 | Page background (warm cream) |
+| `background.paper` | #ffffff | Card/surface background |
+| `text.primary` | #2d2d2d | Headings, body text |
+| `text.secondary` | #666666 | Supporting text, labels |
+
+### Spacing System
+
+MUI uses 8px base spacing. Use the `sx` shorthand:
+- `p: 1` = 8px, `p: 2` = 16px, `p: 3` = 24px
+- Maintain consistent spacing: 8/16/24/32/48px
+- Cards: `p: 2` or `p: 3` internal padding
+- Page content: `p: 3` (24px) as main padding
+
+### Elevation & Borders
+
+- Cards: use `elevation={1}` or `variant="outlined"` — never both
+- Active sidebar items: `borderLeft: '4px solid'` + `bgcolor: rgba(196,69,32,0.08)`
+- Drawer paper: `borderRight: '1px solid rgba(0,0,0,0.08)'`
+
+### Gradient Usage
+
+The project uses gradients sparingly:
+- AppBar: `linear-gradient(135deg, #c44520 0%, #8a3016 100%)`
+- Primary buttons: `linear-gradient(135deg, #c44520 0%, #d86a4a 100%)`
+- Avoid gradients on other elements unless specifically requested
+
+## Styling Best Practices
+
+### Use `sx` prop (preferred)
+```tsx
+<Box sx={{ p: 2, bgcolor: 'background.paper', borderRadius: 1 }}>
+```
+
+### Use `styled()` for reusable components
+```tsx
+import { styled } from '@mui/material/styles';
+const StyledCard = styled(Card)(({ theme }) => ({
+  padding: theme.spacing(2),
+  borderRadius: theme.shape.borderRadius,
+}));
+```
+
+### Theme-Aware Responsive
+```tsx
+<Box sx={{
+  display: 'flex',
+  flexDirection: { xs: 'column', md: 'row' },
+  gap: { xs: 2, md: 3 },
+}}>
+```
+
+## Component Customization
+
+When customizing MUI components globally, add to the `components` key in `theme.ts`:
+
+```tsx
+components: {
+  MuiComponentName: {
+    styleOverrides: {
+      root: { /* styles */ },
+    },
+    defaultProps: { /* default prop values */ },
+  },
+}
+```
+
+## Status Colors
+
+Use semantic colors for states:
+- Success: `success.main` (#2e7d32) — 完成, 活跃, 正常
+- Error: `error.main` (#d32f2f) — 失败, 错误, 停用
+- Warning: `warning.main` (#ed6c02) — 待处理, 警告
+- Info: `info.main` (#0288d1) — 信息, 提示

@@ -1,0 +1,78 @@
+---
+description: react-admin conventions and patterns for the ShengRi admin panel. Apply when editing react-admin resources, data providers, or admin CRUD views.
+globs: ["apps/admin/src/**/*.{tsx,ts}"]
+---
+
+# react-admin Development Rules
+
+## Architecture
+
+- Framework: react-admin v5 with simple REST data provider
+- Auth: Custom authProvider with JWT
+- Layout: Custom layout with persistent sidebar drawer
+
+## Resource Patterns
+
+### List Views
+- Use `<List>` with `<Datagrid>` for tabular data
+- Include pagination, search (via `<FilterButton>` or `<SearchInput>`)
+- Add bulk actions where appropriate
+- Use `<TextField>`, `<DateField>`, `<NumberField>`, `<FunctionField>` etc.
+- Right-align numeric columns
+
+### Edit/Create Views
+- Use `<SimpleForm>` for single-section forms
+- Use `<TabbedForm>` when form has 3+ logical sections
+- Add validation with `validate` prop or custom validators
+- Include `<Toolbar>` with save/delete actions
+
+### Show Views
+- Use `<SimpleShowLayout>` or `<TabbedShowLayout>`
+- Format dates with locale-aware formatting
+
+## Naming Conventions
+
+- Resource components: `[Resource][Action].tsx` (e.g., `UserList.tsx`, `UserEdit.tsx`)
+- Place in `src/resources/[resource-name]/` directory
+- Export named components, use default export for the main view
+
+## Data Provider
+
+- REST endpoint base: configured in `dataProvider.ts`
+- Follow REST conventions: GET /resource, GET /resource/:id, POST, PUT, DELETE
+- Use `useDataProvider()` hook for custom data fetching
+
+## Common Patterns
+
+```tsx
+// List with filters
+const filters = [
+  <SearchInput source="q" alwaysOn />,
+  <SelectInput source="status" choices={STATUS_CHOICES} />,
+];
+
+// Custom row actions
+<FunctionField render={(record) => (
+  <Button onClick={() => handleAction(record)} />
+)} />
+
+// Conditional fields
+<FunctionField render={(record) =>
+  record.status === 'active'
+    ? <Chip label="活跃" color="success" size="small" />
+    : <Chip label="停用" color="default" size="small" />
+} />
+```
+
+## Localization
+
+- All labels in Chinese (Simplified)
+- Use `options={{ label: '中文名称' }}` on Resource
+- Date formatting: YYYY-MM-DD or YYYY年MM月DD日
+- Currency: ¥ prefix with 2 decimal places
+
+## Performance
+
+- Use `<ReferenceField>` for foreign key lookups (handles caching)
+- Avoid N+1 queries — use `<ReferenceArrayField>` for has-many relations
+- Use `queryOptions={{ refetchInterval }}` sparingly

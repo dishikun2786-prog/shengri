@@ -1,0 +1,68 @@
+---
+description: Frontend design rules for ShengRi admin and web apps. Apply when editing .tsx, .ts, .css files in apps/admin/ or apps/web/.
+globs: ["apps/admin/**/*.{tsx,ts,css}", "apps/web/**/*.{tsx,ts,css}"]
+---
+
+# ShengRi Frontend Design Rules
+
+## Tech Stack
+
+- React 18 + TypeScript
+- react-admin 5 (admin panel framework)
+- MUI 5 (Material UI) — `@mui/material`, `@mui/icons-material`
+- Emotion (`@emotion/react`, `@emotion/styled`) for CSS-in-JS
+- Vite for build tooling
+- react-router-dom 6.28.1
+
+## Design System
+
+### Brand Colors
+
+Primary palette derived from traditional Chinese aesthetics (cinnabar/vermillion tones):
+
+```
+primary.main:   #c44520  (朱砂红 — cinnabar red)
+primary.light:  #d86a4a
+primary.dark:   #8a3016
+secondary.main: #dca310  (金色 — gold)
+secondary.light: #e6b840
+secondary.dark: #9a720b
+background.default: #fdf8f4 (warm off-white)
+background.paper:   #ffffff
+text.primary:   #2d2d2d
+text.secondary: #666666
+```
+
+### Typography
+
+- Primary font stack: KaiTi (楷体) family — always use the project's configured font stack
+- Headings: h5 fontWeight 700, h6 fontWeight 600
+- Never override the established typography system
+
+### Component Patterns
+
+- AppBar: gradient background `linear-gradient(135deg, #c44520 0%, #8a3016 100%)`
+- Sidebar drawer: 240px width, persistent variant
+- Active menu items: 4px left border in primary color with 8% primary background
+
+## Rules
+
+1. Always use MUI components from `@mui/material` — never install alternative UI libraries
+2. Use react-admin components (List, Edit, Create, Show, etc.) for CRUD views
+3. Use the `sx` prop for styling — avoid creating separate CSS files
+4. Reference theme tokens via `theme.palette.*` or the `sx` system (e.g., `color: 'primary.main'`)
+5. Use MUI Icons from `@mui/icons-material` — do not use other icon libraries
+6. All user-facing text must be in Chinese (Simplified)
+7. Maintain the warm cinnabar/gold aesthetic across all pages
+8. Follow react-admin conventions for data providers, auth, and resource definitions
+9. Responsive design: sidebar collapses on mobile, content adapts
+10. Loading states: use MUI Skeleton components matching actual layout shape
+
+## Anti-Patterns
+
+- Do NOT use Tailwind CSS — this project uses MUI/Emotion exclusively
+- Do NOT use shadcn/ui — this project uses MUI exclusively
+- Do NOT hardcode colors — always reference theme palette tokens
+- Do NOT create custom buttons when MUI Button variants exist
+- Do NOT use `style={}` inline — use `sx={}` or `styled()`
+- Do NOT import from `@mui/lab` without checking availability first

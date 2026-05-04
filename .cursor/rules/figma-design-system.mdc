@@ -1,0 +1,98 @@
+---
+description: Rules for implementing Figma designs using the Figma MCP server. Covers component organization, styling conventions, design tokens, asset handling, and the required Figma-to-code workflow for the ShengRi project.
+globs: ["apps/admin/src/**/*.{tsx,ts}", "apps/web/src/**/*.{tsx,ts}"]
+alwaysApply: false
+---
+
+# Figma MCP Integration Rules — ShengRi
+
+## Component Organization
+
+- Admin UI components: `apps/admin/src/resources/[resource-name]/`
+- Shared layout components: `apps/admin/src/layout/`
+- Theme configuration: `apps/admin/src/theme.ts`
+- Data providers: `apps/admin/src/dataProvider.ts`
+- Auth: `apps/admin/src/authProvider.ts`
+
+## Design Tokens
+
+All colors, typography, and spacing are centralized in `apps/admin/src/theme.ts`.
+
+### Color Tokens (never hardcode hex values)
+
+| Role | Token Path | Value | Meaning |
+|------|-----------|-------|---------|
+| Primary | `primary.main` | #c44520 | 朱砂红 — main brand color |
+| Primary Light | `primary.light` | #d86a4a | Hover / lighter accent |
+| Primary Dark | `primary.dark` | #8a3016 | Pressed / gradient endpoint |
+| Secondary | `secondary.main` | #dca310 | 金色 — gold highlights |
+| Background | `background.default` | #fdf8f4 | Warm cream page background |
+| Paper | `background.paper` | #ffffff | Card/surface background |
+| Text | `text.primary` | #2d2d2d | Main text |
+| Text Secondary | `text.secondary` | #666666 | Supporting text |
+| Error | `error.main` | #d32f2f | Error states |
+| Warning | `warning.main` | #ed6c02 | Warning states |
+| Info | `info.main` | #0288d1 | Info states |
+| Success | `success.main` | #2e7d32 | Success states |
+
+### Typography
+
+- Display/Heading font: KaiTi (楷体) family
+- h5: fontWeight 700, h6: fontWeight 600
+- Use MUI Typography component with variant prop
+
+### Spacing
+
+- Base unit: 8px (MUI default)
+- Page padding: 24px (`p: 3`)
+- Card internal: 16px (`p: 2`)
+- Drawer width: 240px
+- AppBar height: 64px
+
+## Required Figma-to-Code Workflow (do not skip)
+
+1. Run `get_design_context` first to fetch the structured representation for the exact node(s)
+2. If the response is too large or truncated, run `get_metadata` to get the high-level node map, then re-fetch only the required node(s) with `get_design_context`
+3. Run `get_screenshot` for a visual reference of the node variant being implemented
+4. Only after you have both `get_design_context` and `get_screenshot`, download any assets needed and start implementation
+5. Translate the output into this project's conventions: React + MUI + Emotion (`sx` prop)
+6. Validate against Figma for 1:1 look and behavior before marking complete
+
+## Implementation Rules
+
+- IMPORTANT: Treat Figma MCP output (often React + Tailwind) as a design reference, NOT as final code
+- IMPORTANT: Replace all Tailwind utility classes with MUI `sx` prop equivalents
+- IMPORTANT: Reuse existing MUI components from `@mui/material` — do not create custom primitives
+- IMPORTANT: Map Figma colors to theme palette tokens, never hardcode hex values
+- Use react-admin components for CRUD views (List, Datagrid, SimpleForm, etc.)
+- Preserve the project's KaiTi font stack for all text elements
+- Use MUI Icons from `@mui/icons-material` for icon replacements
+- Follow react-admin resource naming conventions
+
+## Figma-to-MUI Translation Guide
+
+| Figma Concept | MUI Equivalent |
+|---------------|----------------|
+| Auto Layout (horizontal) | `<Stack direction="row">` or `<Box sx={{ display: 'flex' }}>` |
+| Auto Layout (vertical) | `<Stack>` or `<Box sx={{ display: 'flex', flexDirection: 'column' }}>` |
+| Frame with padding | `<Box sx={{ p: N }}>` or `<Card sx={{ p: N }}>` |
+| Fill container | `sx={{ width: '100%' }}` or `flexGrow: 1` |
+| Fixed size | `sx={{ width: N, height: N }}` |
+| Border radius | `sx={{ borderRadius: N }}` (N in theme units) |
+| Drop shadow | `<Paper elevation={N}>` or `sx={{ boxShadow: N }}` |
+| Text styles | `<Typography variant="hN/body1/body2/caption">` |
+| Icons | `@mui/icons-material` equivalents |
+| Buttons | `<Button variant="contained/outlined/text" color="primary/secondary">` |
+
+## Asset Handling
+
+- IMPORTANT: If the Figma MCP server returns a localhost source for an image or SVG, use that source directly
+- IMPORTANT: DO NOT import/add new icon packages — use `@mui/icons-material`
+- IMPORTANT: DO NOT use or create placeholders if a localhost source is provided
+- Store downloaded assets in `apps/admin/public/assets/`
+
+## Localization
+
+- All user-facing text MUST be in Chinese Simplified (简体中文)
+- Date format: YYYY-MM-DD or YYYY年MM月DD日
+- Currency: ¥ prefix with 2 decimal places

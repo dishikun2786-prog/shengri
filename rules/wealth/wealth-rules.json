@@ -1,0 +1,76 @@
+[
+  {
+    "rule_id": "wealth_explosion_001",
+    "name": "偏财大发年份识别",
+    "version": "1.0.0",
+    "module": "wealth",
+    "priority": 100,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "day_master_strength", "operator": "gte", "value": 55},
+        {"field": "wuxing_score.金", "operator": "gte", "value": 2.0}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "wealth_explosion_potential"},
+      {"type": "set_score", "field": "wealth_explosive", "value": 85},
+      {"type": "generate_text", "template": "命盘显示偏财力量旺盛，日主有力驾驭，具备大财运潜力"}
+    ]
+  },
+  {
+    "rule_id": "wealth_steady_001",
+    "name": "稳健财运型",
+    "version": "1.0.0",
+    "module": "wealth",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "day_master_strength", "operator": "between", "value": [45, 65]},
+        {"field": "strength_level", "operator": "in", "value": ["中和", "偏强"]}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "wealth_steady"},
+      {"type": "set_score", "field": "wealth_stability", "value": 80},
+      {"type": "generate_text", "template": "日主中和偏强，财运稳健，适合长期投资和稳定收入来源"}
+    ]
+  },
+  {
+    "rule_id": "wealth_shishang_shengcai",
+    "name": "食伤生财 - 创意变现型",
+    "version": "1.0.0",
+    "module": "wealth",
+    "priority": 95,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "day_master_strength", "operator": "gte", "value": 50}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "creativity_to_wealth"},
+      {"type": "set_score", "field": "creativity_wealth", "value": 78},
+      {"type": "generate_text", "template": "具备食伤生财的潜力，可以通过才华、技能和创意获取财富"}
+    ]
+  },
+  {
+    "rule_id": "wealth_weak_risk",
+    "name": "身弱财多 - 财来财去型",
+    "version": "1.0.0",
+    "module": "wealth",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "day_master_strength", "operator": "lt", "value": 35}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "wealth_unstable"},
+      {"type": "set_score", "field": "wealth_risk", "value": 65},
+      {"type": "generate_text", "template": "日主偏弱，需注意财来财去的情况，建议稳健理财，避免高风险投资"}
+    ]
+  }
+]

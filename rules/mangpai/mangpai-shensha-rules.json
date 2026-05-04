@@ -1,0 +1,110 @@
+[
+  {
+    "rule_id": "mangpai_shensha_tianyi",
+    "name": "天乙贵人-逢凶化吉",
+    "version": "1.0.0",
+    "module": "mangpai_shensha",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "shensha_list", "operator": "exists_in", "value": "天乙贵人"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "天乙贵人"},
+      {"type": "set_score", "field": "blind_noble_help", "value": 85},
+      {"type": "generate_text", "template": "天乙贵人入命，一生有贵人相助。盲派认为天乙是最大吉星，逢凶化吉遇难呈祥。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_shensha_wenchang",
+    "name": "文昌星-读书科举",
+    "version": "1.0.0",
+    "module": "mangpai_shensha",
+    "priority": 80,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "shensha_list", "operator": "exists_in", "value": "文昌"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "文昌入命"},
+      {"type": "set_score", "field": "blind_academic_star", "value": 78},
+      {"type": "generate_text", "template": "文昌星入命，利于读书考试。盲派以文昌为文凭星，配合印星做功则学历必高。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_shensha_taohua",
+    "name": "桃花-异性缘旺",
+    "version": "1.0.0",
+    "module": "mangpai_shensha",
+    "priority": 75,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "shensha_list", "operator": "exists_in", "value": "桃花"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "桃花入命"},
+      {"type": "set_score", "field": "blind_romance", "value": 70},
+      {"type": "generate_text", "template": "桃花入命，异性缘旺。盲派以桃花为情缘星，桃花在年月主早年恋爱，在日时主婚后仍有异性缘。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_shensha_yima",
+    "name": "驿马-奔波走动",
+    "version": "1.0.0",
+    "module": "mangpai_shensha",
+    "priority": 75,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "shensha_list", "operator": "exists_in", "value": "驿马"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "驿马入命"},
+      {"type": "set_score", "field": "blind_travel", "value": 65},
+      {"type": "generate_text", "template": "驿马入命，一生多走动。盲派认为驿马逢冲必动，寅申巳亥驿马冲则居地职业俱变。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_shensha_yangren",
+    "name": "羊刃-刚强霸气",
+    "version": "1.0.0",
+    "module": "mangpai_shensha",
+    "priority": 80,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "shensha_list", "operator": "exists_in", "value": "羊刃"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "羊刃入命"},
+      {"type": "set_score", "field": "blind_aggressive", "value": 35},
+      {"type": "generate_text", "template": "羊刃入命，刚强霸道。盲派认为金羊刃最厉害为刀为白虎，男犯羊刃克先妻，需制化方吉。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_shensha_huagai",
+    "name": "华盖-孤独玄学",
+    "version": "1.0.0",
+    "module": "mangpai_shensha",
+    "priority": 75,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "shensha_list", "operator": "exists_in", "value": "华盖"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "华盖入命"},
+      {"type": "set_score", "field": "blind_metaphysics", "value": 75},
+      {"type": "generate_text", "template": "华盖入命，孤独而聪慧。盲派以华盖逢空为五术玄学之象，适合研究宗教哲学玄学医卜。"}
+    ]
+  }
+]

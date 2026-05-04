@@ -1,0 +1,9 @@
+fastapi>=0.110.0
+uvicorn>=0.27.0
+sxtwl>=1.1.0
+cnlunar>=0.1.0
+pydantic>=2.5.0
+python-dateutil>=2.8.2
+timezonefinder>=6.2.0
+pytz>=2024.1
+httpx>=0.27.0

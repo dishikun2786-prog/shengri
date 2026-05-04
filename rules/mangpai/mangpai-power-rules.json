@@ -1,0 +1,150 @@
+[
+  {
+    "rule_id": "mangpai_power_work_both",
+    "name": "有势有功-富贵命局",
+    "version": "1.0.0",
+    "module": "mangpai_power",
+    "priority": 100,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_has_power", "operator": "eq", "value": true},
+        {"field": "mangpai_work_efficiency", "operator": "gte", "value": 60}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "有势有功"},
+      {"type": "set_score", "field": "blind_destiny_level", "value": 88},
+      {"type": "generate_text", "template": "有势有功，富贵命局。五行力量集中成势，且有明确的做功方向将能量释放，是盲派富贵八字根本标准。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_power_no_work",
+    "name": "有势无功-怀才不遇",
+    "version": "1.0.0",
+    "module": "mangpai_power",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_has_power", "operator": "eq", "value": true},
+        {"field": "mangpai_work_efficiency", "operator": "eq", "value": 0}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "有势无功"},
+      {"type": "set_score", "field": "blind_missed_potential", "value": 30},
+      {"type": "generate_text", "template": "有势无功，怀才不遇。力量集中但缺乏做功方向，能量空转。需要找到适合自己的发挥通道，否则空有一身本领。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_power_work_no_power",
+    "name": "有功无势-小富小贵",
+    "version": "1.0.0",
+    "module": "mangpai_power",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_has_power", "operator": "eq", "value": false},
+        {"field": "mangpai_work_efficiency", "operator": "gte", "value": 40}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "有功无势"},
+      {"type": "set_score", "field": "blind_moderate_fortune", "value": 55},
+      {"type": "generate_text", "template": "有功无势，小富小贵。有明确的求财求官渠道，但力量分散不成势，难以做大。适合专注一个领域深耕。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_power_level_great",
+    "name": "大人物层次",
+    "version": "1.0.0",
+    "module": "mangpai_power",
+    "priority": 100,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_level", "operator": "eq", "value": "大人物"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "大人物"},
+      {"type": "set_score", "field": "blind_life_level", "value": 98},
+      {"type": "generate_text", "template": "盲派层次定级：大人物。势大有功且制尽，格局极高，有成就大事业的命理基础。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_power_level_rich",
+    "name": "富贵层次",
+    "version": "1.0.0",
+    "module": "mangpai_power",
+    "priority": 90,
+    "conditions": {
+      "operator": "OR",
+      "rules": [
+        {"field": "mangpai_level", "operator": "eq", "value": "富贵"},
+        {"field": "mangpai_level_score", "operator": "gte", "value": 75}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "富贵命"},
+      {"type": "set_score", "field": "blind_life_level", "value": 78},
+      {"type": "generate_text", "template": "盲派层次定级：富贵。势大有功，虽制不尽但仍有富贵基础。适合在自身优势领域做大做强。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_power_level_common",
+    "name": "普通人层次",
+    "version": "1.0.0",
+    "module": "mangpai_power",
+    "priority": 70,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_level_score", "operator": "between", "value": [35, 70]}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "普通人"},
+      {"type": "set_score", "field": "blind_life_level", "value": 45},
+      {"type": "generate_text", "template": "盲派层次定级：普通人。势大功小或势小有功，一生衣食无忧但难有大成。踏实经营可安身立命。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_power_level_poor",
+    "name": "穷苦层次",
+    "version": "1.0.0",
+    "module": "mangpai_power",
+    "priority": 100,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_level_score", "operator": "lte", "value": 30}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "命局层次低"},
+      {"type": "generate_text", "template": "盲派层次定级：穷苦。无势无功，缺乏明确求财求官方向。需借助大运流年之力寻求突破。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_power_dominant",
+    "name": "五行成势-较强一党",
+    "version": "1.0.0",
+    "module": "mangpai_power",
+    "priority": 80,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_has_power", "operator": "eq", "value": true},
+        {"field": "mangpai_power_strength", "operator": "eq", "value": "强"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "五行强势"},
+      {"type": "set_score", "field": "blind_power_strength", "value": 85},
+      {"type": "generate_text", "template": "{{mangpai_power_element}}五行成强势，力量集中压倒其他。此势需明确的做功方向来释放能量。"}
+    ]
+  }
+]

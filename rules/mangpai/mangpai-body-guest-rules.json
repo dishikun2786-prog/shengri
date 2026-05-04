@@ -1,0 +1,110 @@
+[
+  {
+    "rule_id": "mangpai_body_use_balanced",
+    "name": "体用相当-最佳搭配",
+    "version": "1.0.0",
+    "module": "mangpai_body_guest",
+    "priority": 95,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_body_use_balance", "operator": "eq", "value": "体用相当"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "体用相当"},
+      {"type": "set_score", "field": "blind_body_use_score", "value": 90},
+      {"type": "generate_text", "template": "体用相当，最佳搭配。自身能力与外界机遇匹配，能做也能得。非富即贵的命理基础。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_body_weak_use_strong",
+    "name": "体弱用旺-机遇多拿不住",
+    "version": "1.0.0",
+    "module": "mangpai_body_guest",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_body_use_balance", "operator": "eq", "value": "体弱用旺"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "体弱用旺"},
+      {"type": "set_score", "field": "blind_body_use_score", "value": 35},
+      {"type": "generate_text", "template": "体弱用旺，机遇多但拿不住。外界机会很多但自身能力或资源不足，容易出现次次干次次赔的情况。建议先提升自身实力再出击。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_body_strong_use_weak",
+    "name": "体旺用弱-有力无处使",
+    "version": "1.0.0",
+    "module": "mangpai_body_guest",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_body_use_balance", "operator": "eq", "value": "体旺用弱"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "体旺用弱"},
+      {"type": "set_score", "field": "blind_body_use_score", "value": 40},
+      {"type": "generate_text", "template": "体旺用弱，有力无处使。自身能力很强但外部机会稀少，需要等待或主动寻找合适的平台发挥。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_host_guest_normal",
+    "name": "家内取家外-标准富贵配置",
+    "version": "1.0.0",
+    "module": "mangpai_body_guest",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_host_guest_config", "operator": "eq", "value": "家内取家外"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "家内取家外"},
+      {"type": "set_score", "field": "blind_host_guest_score", "value": 85},
+      {"type": "generate_text", "template": "以家内之体取家外之用，是盲派标准富贵配置。自身（日时柱）有能力工具去获取外部社会资源（年月柱）。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_reverse_large",
+    "name": "反局-大富大贵信号",
+    "version": "1.0.0",
+    "module": "mangpai_body_guest",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_is_reverse", "operator": "eq", "value": true}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "反局"},
+      {"type": "set_score", "field": "blind_reverse_signal", "value": 80},
+      {"type": "generate_text", "template": "反局配置，用占主位反制宾位。盲派认为反局八字出大富大贵的概率高于正局。财富或权力不是通过常规途径获取。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_body_guest_mess",
+    "name": "宾主混杂-方向不明",
+    "version": "1.0.0",
+    "module": "mangpai_body_guest",
+    "priority": 60,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_host_guest_config", "operator": "eq", "value": "其他"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "宾主混杂"},
+      {"type": "set_score", "field": "blind_clarity", "value": 30},
+      {"type": "generate_text", "template": "宾主混杂，体用不清，做功方向不明。需借助大运厘清方向，明确自身的工具和目标。"}
+    ]
+  }
+]

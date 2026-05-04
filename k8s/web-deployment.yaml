@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shengri-web
+  namespace: shengri
+  labels:
+    app: shengri-web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: shengri-web
+  template:
+    metadata:
+      labels:
+        app: shengri-web
+    spec:
+      containers:
+        - name: web
+          image: registry.cn-hangzhou.aliyuncs.com/shengri/web:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NEXT_PUBLIC_API_URL
+              value: https://api.shengri.com/api/v1
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+  namespace: shengri
+spec:
+  selector:
+    app: shengri-web
+  ports:
+    - port: 3000
+      targetPort: 3000
+  type: ClusterIP

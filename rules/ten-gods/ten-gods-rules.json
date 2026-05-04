@@ -1,0 +1,116 @@
+[
+  {
+    "rule_id": "ten_gods_wealth_positive",
+    "name": "正财格局 - 稳健理财型",
+    "version": "1.0.0",
+    "module": "ten_gods",
+    "priority": 100,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "ten_gods.正财.count", "operator": "gte", "value": 2},
+        {"field": "day_master_strength", "operator": "gte", "value": 45}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "正财旺"},
+      {"type": "set_score", "field": "wealth_stability", "value": 80},
+      {"type": "generate_text", "template": "正财旺盛，适合稳健投资和固定收入类工作"}
+    ]
+  },
+  {
+    "rule_id": "ten_gods_wealth_partial",
+    "name": "偏财格局 - 投机发财型",
+    "version": "1.0.0",
+    "module": "ten_gods",
+    "priority": 100,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "ten_gods.偏财.count", "operator": "gte", "value": 2},
+        {"field": "day_master_strength", "operator": "gte", "value": 50}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "偏财旺"},
+      {"type": "set_score", "field": "wealth_explosive", "value": 85},
+      {"type": "generate_text", "template": "偏财旺盛，有横财运和投资眼光"}
+    ]
+  },
+  {
+    "rule_id": "ten_gods_officer_positive",
+    "name": "正官透出 - 仕途光明型",
+    "version": "1.0.0",
+    "module": "ten_gods",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "ten_gods.正官.count", "operator": "gte", "value": 1},
+        {"field": "day_master_strength", "operator": "between", "value": [40, 65]}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "正官透出"},
+      {"type": "set_score", "field": "career_official", "value": 82}
+    ]
+  },
+  {
+    "rule_id": "ten_gods_qi_sha",
+    "name": "七杀有制 - 权力掌控型",
+    "version": "1.0.0",
+    "module": "ten_gods",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "ten_gods.七杀.count", "operator": "gte", "value": 1},
+        {"field": "ten_gods.食神.count", "operator": "gte", "value": 1},
+        {"field": "day_master_strength", "operator": "gte", "value": 50}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "七杀有制"},
+      {"type": "set_score", "field": "leadership", "value": 88},
+      {"type": "generate_text", "template": "七杀有食神制化，天生具备领导力和掌控力，适合创业"}
+    ]
+  },
+  {
+    "rule_id": "ten_gods_shishang_shengcai",
+    "name": "食伤生财 - 才华变现型",
+    "version": "1.0.0",
+    "module": "ten_gods",
+    "priority": 95,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "ten_gods.食神.count", "operator": "gte", "value": 1},
+        {"field": "ten_gods.偏财.count", "operator": "gte", "value": 1}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "食伤生财"},
+      {"type": "set_score", "field": "creativity_wealth", "value": 85},
+      {"type": "generate_text", "template": "食伤生财组合，可以通过才华和创意获取财富"}
+    ]
+  },
+  {
+    "rule_id": "ten_gods_yinxing_strong",
+    "name": "印星强旺 - 学术贵人型",
+    "version": "1.0.0",
+    "module": "ten_gods",
+    "priority": 80,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "ten_gods.正印.count", "operator": "gte", "value": 1},
+        {"field": "ten_gods.偏印.count", "operator": "gte", "value": 1}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "印星强旺"},
+      {"type": "set_score", "field": "academic", "value": 80},
+      {"type": "generate_text", "template": "印星双透，学历运佳，适合学术研究或技术领域"}
+    ]
+  }
+]

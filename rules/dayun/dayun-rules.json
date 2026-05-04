@@ -1,0 +1,55 @@
+[
+  {
+    "rule_id": "dayun_wealth_period",
+    "name": "财运大运期",
+    "version": "1.0.0",
+    "module": "dayun",
+    "priority": 150,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "current_dayun.ten_god_gan", "operator": "in", "value": ["正财", "偏财", "食神"]},
+        {"field": "day_master_strength", "operator": "gte", "value": 45}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "财运大运"},
+      {"type": "set_score", "field": "current_wealth_luck", "value": 85},
+      {"type": "generate_text", "template": "当前行财运大运，是求财的黄金期"}
+    ]
+  },
+  {
+    "rule_id": "dayun_career_period",
+    "name": "事业大运期",
+    "version": "1.0.0",
+    "module": "dayun",
+    "priority": 150,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "current_dayun.ten_god_gan", "operator": "in", "value": ["正官", "七杀", "正印"]}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "事业大运"},
+      {"type": "set_score", "field": "current_career_luck", "value": 82}
+    ]
+  },
+  {
+    "rule_id": "dayun_romance_period",
+    "name": "桃花大运期",
+    "version": "1.0.0",
+    "module": "dayun",
+    "priority": 140,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "current_dayun.ten_god_gan", "operator": "in", "value": ["正财", "偏财", "伤官"]}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "桃花大运"},
+      {"type": "set_score", "field": "current_romance_luck", "value": 78}
+    ]
+  }
+]

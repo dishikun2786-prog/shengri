@@ -1,0 +1,22 @@
+{
+  "qdrantUrl": "http://localhost:6333",
+  "embedding": {
+    "provider": "ollama",
+    "ollamaUrl": "http://localhost:11434",
+    "model": "nomic-embed-text",
+    "dimension": 768
+  },
+  "fallbackEmbedding": {
+    "provider": "keyword",
+    "dimension": 1
+  },
+  "userName": "dishi",
+  "collectionName": "claude_memories",
+  "legacyMemoryPaths": [
+    "C:/Users/dishi/.claude/projects/C--WINDOWS-system32/memory"
+  ],
+  "chunking": {
+    "maxTokens": 400,
+    "overlapTokens": 50
+  }
+}

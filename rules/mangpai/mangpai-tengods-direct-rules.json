@@ -1,0 +1,149 @@
+[
+  {
+    "rule_id": "mangpai_tengods_zhengguan_3plus",
+    "name": "正官三重以上-压力重重",
+    "version": "1.0.0",
+    "module": "mangpai_tengods_direct",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_ten_god_counts.正官", "operator": "gte", "value": 3}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "正官过旺"},
+      {"type": "set_score", "field": "blind_stress", "value": 25},
+      {"type": "generate_text", "template": "盲派十神直断：正官三重以上，压力重重需防小人。官多不贵反为鬼，需印星化或食伤制方为吉。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_tengods_qisha_2plus",
+    "name": "七杀双重以上-霸道须制",
+    "version": "1.0.0",
+    "module": "mangpai_tengods_direct",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_ten_god_counts.七杀", "operator": "gte", "value": 2}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "七杀多现"},
+      {"type": "set_score", "field": "blind_aggression", "value": 30},
+      {"type": "generate_text", "template": "盲派十神直断：七杀多见，霸道强势小人多。身强有制化为权，身弱无制多生灾祸。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_tengods_shishang_shengcai",
+    "name": "食伤生财-才华技术致富",
+    "version": "1.0.0",
+    "module": "mangpai_tengods_direct",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_ten_god_counts.食神", "operator": "gte", "value": 1},
+        {"field": "mangpai_ten_god_counts.偏财", "operator": "gte", "value": 1}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "食伤生财"},
+      {"type": "set_score", "field": "blind_talent_wealth", "value": 82},
+      {"type": "generate_text", "template": "食神生偏财，靠才华技术获取财富。不需要看旺衰，只需看财是否通门户为我所得。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_tengods_shang_yin",
+    "name": "伤官配印-高知精英",
+    "version": "1.0.0",
+    "module": "mangpai_tengods_direct",
+    "priority": 88,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_ten_god_counts.伤官", "operator": "gte", "value": 1},
+        {"field": "mangpai_ten_god_counts.正印", "operator": "gte", "value": 1}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "伤官配印"},
+      {"type": "set_score", "field": "blind_intellect", "value": 86},
+      {"type": "generate_text", "template": "伤官配印，高知精英之命。伤官配正印偏向文科学术，伤官配偏印偏向艺术玄学国学。才华有约束能出成果。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_tengods_yin_heavy",
+    "name": "印星过旺-依赖性强",
+    "version": "1.0.0",
+    "module": "mangpai_tengods_direct",
+    "priority": 75,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_ten_god_counts.正印", "operator": "gte", "value": 3}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "印星过旺"},
+      {"type": "set_score", "field": "blind_independence", "value": 30},
+      {"type": "generate_text", "template": "盲派十神直断：正印三四重，缺乏果断依赖强。印为庇护，过多则失去主见。需财星破印激发主动性。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_tengods_shang_heavy",
+    "name": "伤官过旺-投机叛逆",
+    "version": "1.0.0",
+    "module": "mangpai_tengods_direct",
+    "priority": 80,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_ten_god_counts.伤官", "operator": "gte", "value": 3}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "伤官过旺"},
+      {"type": "set_score", "field": "blind_rebel", "value": 28},
+      {"type": "generate_text", "template": "盲派十神直断：伤官三四重，官刑破败愁。不守规矩投机取巧，需印星制约或财星转化方能成器。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_tengods_cai_heavy",
+    "name": "财星多现-身弱贫寒",
+    "version": "1.0.0",
+    "module": "mangpai_tengods_direct",
+    "priority": 80,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_ten_god_counts.正财", "operator": "gte", "value": 5}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "财多身弱"},
+      {"type": "set_score", "field": "blind_wealth_health", "value": 20},
+      {"type": "generate_text", "template": "盲派十神直断：正财五六重，身弱当贫寒。财多身弱，富屋贫人。有满屋金银却拿不走。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_tengods_yin_sha_xian_sheng",
+    "name": "印化杀-化险为夷",
+    "version": "1.0.0",
+    "module": "mangpai_tengods_direct",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_ten_god_counts.七杀", "operator": "gte", "value": 1},
+        {"field": "mangpai_ten_god_counts.正印", "operator": "gte", "value": 1}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "杀印相生"},
+      {"type": "set_score", "field": "blind_crisis_management", "value": 88},
+      {"type": "generate_text", "template": "杀印相生，化险为夷。七杀凶力被印星转化成智慧和权力，危机中反而能抓住机遇。"}
+    ]
+  }
+]

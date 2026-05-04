@@ -1,0 +1,72 @@
+[
+  {
+    "rule_id": "shensha_tianyi_guiren",
+    "name": "天乙贵人入命",
+    "version": "1.0.0",
+    "module": "shensha",
+    "priority": 80,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "shensha_list", "operator": "contains", "value": "天乙贵人"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "天乙贵人"},
+      {"type": "set_score", "field": "noble_help", "value": 80},
+      {"type": "generate_text", "template": "命带天乙贵人，一生多遇贵人相助，逢凶化吉"}
+    ]
+  },
+  {
+    "rule_id": "shensha_taohua",
+    "name": "桃花入命",
+    "version": "1.0.0",
+    "module": "shensha",
+    "priority": 75,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "shensha_list", "operator": "contains", "value": "桃花"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "桃花入命"},
+      {"type": "set_score", "field": "charm", "value": 78}
+    ]
+  },
+  {
+    "rule_id": "shensha_wenchang",
+    "name": "文昌贵人入命",
+    "version": "1.0.0",
+    "module": "shensha",
+    "priority": 75,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "shensha_list", "operator": "contains", "value": "文昌贵人"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "文昌入命"},
+      {"type": "set_score", "field": "academic_luck", "value": 82}
+    ]
+  },
+  {
+    "rule_id": "shensha_yima",
+    "name": "驿马入命",
+    "version": "1.0.0",
+    "module": "shensha",
+    "priority": 70,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "shensha_list", "operator": "contains", "value": "驿马"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "驿马入命"},
+      {"type": "set_score", "field": "travel_luck", "value": 75},
+      {"type": "generate_text", "template": "命带驿马，一生多走动变迁，适合外贸、出海、跨境业务"}
+    ]
+  }
+]

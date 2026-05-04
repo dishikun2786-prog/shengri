@@ -1,0 +1,95 @@
+[
+  {
+    "rule_id": "pattern_zheng_guan_ge",
+    "name": "正官格",
+    "version": "1.0.0",
+    "module": "pattern",
+    "priority": 200,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "month_pillar.hidden_gan_main_ten_god", "operator": "eq", "value": "正官"},
+        {"field": "day_master_strength", "operator": "between", "value": [40, 65]}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "正官格"},
+      {"type": "set_score", "field": "pattern_quality", "value": 80},
+      {"type": "generate_text", "template": "正官格：为人正直，适合从政或大企业管理，一生贵人运旺"}
+    ]
+  },
+  {
+    "rule_id": "pattern_zheng_cai_ge",
+    "name": "正财格",
+    "version": "1.0.0",
+    "module": "pattern",
+    "priority": 200,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "month_pillar.hidden_gan_main_ten_god", "operator": "eq", "value": "正财"},
+        {"field": "day_master_strength", "operator": "gte", "value": 45}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "正财格"},
+      {"type": "set_score", "field": "pattern_quality", "value": 78},
+      {"type": "generate_text", "template": "正财格：理财能力强，通过勤劳和稳健投资积累财富"}
+    ]
+  },
+  {
+    "rule_id": "pattern_shi_shen_ge",
+    "name": "食神格",
+    "version": "1.0.0",
+    "module": "pattern",
+    "priority": 200,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "month_pillar.hidden_gan_main_ten_god", "operator": "eq", "value": "食神"},
+        {"field": "day_master_strength", "operator": "gte", "value": 50}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "食神格"},
+      {"type": "set_score", "field": "pattern_quality", "value": 82},
+      {"type": "generate_text", "template": "食神格：聪明有才华，福禄双全，适合文艺、教育、餐饮行业"}
+    ]
+  },
+  {
+    "rule_id": "pattern_strong_master",
+    "name": "日主极强 - 从强格倾向",
+    "version": "1.0.0",
+    "module": "pattern",
+    "priority": 250,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "day_master_strength", "operator": "gte", "value": 80}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "日主极强"},
+      {"type": "set_tag", "value": "从强格倾向"},
+      {"type": "set_score", "field": "pattern_quality", "value": 75}
+    ]
+  },
+  {
+    "rule_id": "pattern_weak_master",
+    "name": "日主极弱 - 从弱格倾向",
+    "version": "1.0.0",
+    "module": "pattern",
+    "priority": 250,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "day_master_strength", "operator": "lte", "value": 20}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "日主极弱"},
+      {"type": "set_tag", "value": "从弱格倾向"},
+      {"type": "set_score", "field": "pattern_quality", "value": 70}
+    ]
+  }
+]

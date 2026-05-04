@@ -1,0 +1,117 @@
+[
+  {
+    "rule_id": "mangpai_marriage_cai_outside",
+    "name": "财在家外-婚姻不稳",
+    "version": "1.0.0",
+    "module": "mangpai_marriage",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "gender", "operator": "eq", "value": 1},
+        {"field": "mangpai_host_guest_config", "operator": "neq", "value": "家内取家外"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "财在外"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 40},
+      {"type": "generate_text", "template": "盲派婚姻直断：男命财星在家外，婚姻容易不稳定。财在年月为家外，容易被外界因素干扰婚姻。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_cai_inside",
+    "name": "财在家里-婚姻稳定",
+    "version": "1.0.0",
+    "module": "mangpai_marriage",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "gender", "operator": "eq", "value": 1}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "财在家"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 80},
+      {"type": "generate_text", "template": "盲派婚姻判断需兼看财星位置。财在日时（家内）且未被合走克走，则婚姻基础稳固。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_ri_zhi_bijie",
+    "name": "日支比劫-克妻信号",
+    "version": "1.0.0",
+    "module": "mangpai_marriage",
+    "priority": 95,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "gender", "operator": "eq", "value": 1},
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "日支坐比劫"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "日坐比劫"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 25},
+      {"type": "generate_text", "template": "盲派铁口直断：日支坐比劫必主克妻（不论喜忌可直断）。婚姻宫被比劫占据，妻星无位，婚姻波折难免。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_guan_weak",
+    "name": "女命官弱-婚姻迟缓",
+    "version": "1.0.0",
+    "module": "mangpai_marriage",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "gender", "operator": "eq", "value": 2},
+        {"field": "mangpai_ten_god_counts.正官", "operator": "eq", "value": 0},
+        {"field": "mangpai_ten_god_counts.七杀", "operator": "eq", "value": 0}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "女命无官"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 20},
+      {"type": "generate_text", "template": "盲派铁口直断：女命无官伤官羊刃旺盛为孤独之命。官星不显，婚姻缘分淡薄，需行官杀运方有姻缘。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_chuan",
+    "name": "婚姻宫被穿-婚姻大忌",
+    "version": "1.0.0",
+    "module": "mangpai_marriage",
+    "priority": 95,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "relations", "operator": "exists_in", "value": "穿"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "婚姻宫穿"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 15},
+      {"type": "generate_text", "template": "盲派婚姻大忌：婚姻星和婚姻宫相穿，婚姻必不顺。穿是暗箭伤人，比冲克更难调和，易有难以化解的矛盾。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_no_cai",
+    "name": "男命无财-终身难娶",
+    "version": "1.0.0",
+    "module": "mangpai_marriage",
+    "priority": 95,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "gender", "operator": "eq", "value": 1},
+        {"field": "mangpai_ten_god_counts.正财", "operator": "eq", "value": 0},
+        {"field": "mangpai_ten_god_counts.偏财", "operator": "eq", "value": 0},
+        {"field": "mangpai_ten_god_counts.比肩", "operator": "gte", "value": 3}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "男命无财"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 10},
+      {"type": "generate_text", "template": "盲派铁口直断：男命无财比劫旺盛，和尚尼姑或孤独之命终身无嫁娶。财为妻星，不显则姻缘极淡。"}
+    ]
+  }
+]
