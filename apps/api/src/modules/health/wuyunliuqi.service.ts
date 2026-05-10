@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, HttpException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import OpenAI from 'openai';
@@ -440,40 +440,26 @@ export class WuyunliuqiService {
 
     const systemPrompt = `你是一位专业的中医五运六气专家，精通《黄帝内经》运气七篇大论、《伤寒论》、《温病条辨》等中医经典。
 
-## 天干化运对照表（核心基础，必须牢记）
-甲己化土 | 乙庚化金 | 丙辛化水 | 丁壬化木 | 戊癸化火
-阳干（甲丙戊庚壬）为太过 | 阴干（乙丁己辛癸）为不及
+## 数据使用原则（最高优先级）
 
-注意：天干化运 ≠ 天干本身的五行属性！
-- 丙属火，但丙辛化水 → 年运是水运（不是火运！）
-- 丁属火，但丁壬化木 → 年运是木运（不是火运！）
-- 戊属土，但戊癸化火 → 年运是火运（不是土运！）
+**所有年运、司天、在泉、主运、客气等核心数据已由专业引擎预计算完毕，直接使用传入数据进行分析，严禁自行推导！**
 
-## 常见致命错误（禁止犯以下错误）
-❌ 错误: 丙年 → "火运" → 错！丙辛化水，应为"水运"
-❌ 错误: 丁年 → "火运" → 错！丁壬化木，应为"木运"
-❌ 错误: 把"当日主运"当成"年运" → 这是两个不同的概念！
-✅ 正确: 年运看天干化运（丙→水），当日主运看五步推运（根据年内日序推算）
+传入数据中的每个字段都是确定性的计算结果，你必须直接引用：
+- yearYun（年运）→ 直接用，不要推算
+- sitian/zaiquan（司天/在泉）→ 直接用
+- mainYun/keQi（主运/客气）→ 直接用
+- liunianList/liuyueList/liuriList → 每个条目的五行隶属关系已预计算
 
-## 核心概念区分
-1. **年运(yearYun)**: 由流年天干按"天干化运"规则决定，与天干本身五行不同
-2. **年运类型(yearYunType)**: 只填"太过"或"不及"
-3. **司天/在泉**: 由流年地支决定，直接使用传入数据
-4. **当日主运(mainYun)**: 五步推运结果，不等于年运
-5. **当日客气(keQi)**: 随年支变化的六气分布
+## 概念参考（仅用于分析写作，禁止用于推导）
 
-## 强制规则（违反即错误）
-- yearYun 必须使用传入的"预计算结论"中的年运，严禁自己根据天干五行推导
-- yearYunType 必须使用传入的数据，严禁自行判断
-- sitian/zaiquan 必须使用传入的数据
-- mainYun/keQi 必须使用传入的"当日主运"和"当日客气"
-- 分析中涉及年运的五行属性，必须基于传入的预计算结论，而非天干本义
-- 如果传入数据说"丙年→水运"，分析就必须从水运出发，不能说"火运"
+天干化运口诀（仅背景知识）：甲己化土、乙庚化金、丙辛化水、丁壬化木、戊癸化火
+阳干（甲丙戊庚壬）化运为太过 | 阴干（乙丁己辛癸）化运为不及
+注意：化运口诀仅用于理解传入数据的来源，**严禁用于自行推导年运**！
 
 ## 五行生克术语规范
-- 正克: A克B → "A气偏胜，乘克B" 而不是 "A反克B"
-- 反克（相侮）: 被克一方反制克己一方（如木反克金），不可滥用
-- 水运太过之年克火 → 是正克/相乘，不是反克！
+- 正克: A克B → "A气偏胜，乘克B"，不是"反克"
+- 反克（相侮）: 被克一方反制克己一方（如木反克金），仅在有明确数据支持时使用
+- 相乘: 克我之气过盛而克伐 → 正克加重
 
 ## 三层体质分析模型（《黄帝内经》天人合一框架）
 
@@ -1116,27 +1102,57 @@ ${healthTip.主运养生 || ''}
     tokenUsed: number;
   }> {
     const apiKey = this.config.get('DEEPSEEK_API_KEY', '');
+    if (!apiKey) {
+      throw new HttpException('DeepSeek API Key 未配置，请联系管理员', 503);
+    }
+
     const baseURL = this.config.get('DEEPSEEK_BASE_URL', 'https://api.deepseek.com');
     const model = this.config.get('DEEPSEEK_MODEL', 'deepseek-v4-flash');
 
     const client = new OpenAI({ apiKey, baseURL });
 
-    const response = await client.chat.completions.create({
-      model,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt },
-      ],
-      max_tokens: 4000,
-    });
+    let response: OpenAI.Chat.Completions.ChatCompletion;
+    try {
+      response = await client.chat.completions.create({
+        model,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt },
+        ],
+        max_tokens: 4000,
+        temperature: 0.7,
+      });
+    } catch (apiError: any) {
+      const status = apiError?.status || apiError?.response?.status;
+      const message = apiError?.message || 'AI 服务调用失败';
+      this.logger.error(
+        `DeepSeek API 调用失败: status=${status} message=${message} model=${model}`,
+        apiError?.stack?.slice(0, 300),
+      );
+      if (status === 401 || status === 403) {
+        throw new HttpException('AI 服务鉴权失败，请检查 API Key 配置', 502);
+      }
+      if (status === 429) {
+        throw new HttpException('AI 服务请求过于频繁，请稍后重试', 503);
+      }
+      throw new HttpException(`AI 服务暂时不可用: ${message}`, 502);
+    }
 
-    const rawContent = response.choices[0]?.message?.content || '';
+    const rawContent = response.choices?.[0]?.message?.content || '';
     const tokenUsed = response.usage?.total_tokens || 0;
+
+    if (!rawContent) {
+      this.logger.warn('DeepSeek 返回空内容');
+      throw new HttpException('AI 服务返回空内容，请稍后重试', 502);
+    }
 
     let structuredContent: any = null;
     try {
       // 清理可能的 markdown 代码块标记
-      const cleanContent = rawContent.replace(/^```json\s*/i, '').replace(/```$/i, '').trim();
+      const cleanContent = rawContent
+        .replace(/^```json\s*/i, '')
+        .replace(/```\s*$/i, '')
+        .trim();
       structuredContent = JSON.parse(cleanContent);
     } catch (e) {
       this.logger.warn(`解析 DeepSeek 返回内容失败: ${rawContent.slice(0, 200)}`);

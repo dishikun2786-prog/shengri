@@ -6,7 +6,7 @@ echo [mcp-memory] Checking Ollama...
 curl -s http://localhost:11434/api/tags >nul 2>&1
 if %ERRORLEVEL% NEQ 0 (
     echo [mcp-memory] Starting Ollama...
-    start "Ollama" "C:\Users\dishi\AppData\Local\Programs\Ollama\ollama.exe" serve
+    start "Ollama" "D:\Program Files\Ollama\ollama.exe" serve
     timeout /t 3 /nobreak >nul
 )
 

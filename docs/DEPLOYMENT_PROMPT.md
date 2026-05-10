@@ -25,7 +25,7 @@ PostgreSQL (:5432) | Redis (:6379) | Qdrant (:6333) | Ollama (:11434)
 
 ---
 
-## 第一步：环境准备
+## 第一步：环境准备，检查当前环境是否存在已经安装，如果安装请跳过；
 
 ### 1.1 安装系统依赖
 ```bash
@@ -168,10 +168,10 @@ CORS_ORIGIN=http://localhost:3001,http://localhost:3002
 # WECHAT_API_KEY=
 
 # === 可选: 阿里云短信 ===
-# ALIBABA_CLOUD_ACCESS_KEY_ID=
-# ALIBABA_CLOUD_ACCESS_KEY_SECRET=
-# SMS_SIGN_NAME=生辰
-# SMS_TEMPLATE_CODE=
+# ALIBABA_CLOUD_ACCESS_KEY_ID=你的阿里云AccessKey_ID
+# ALIBABA_CLOUD_ACCESS_KEY_SECRET=你的阿里云AccessKey_Secret
+# SMS_SIGN_NAME=你的短信签名
+# SMS_TEMPLATE_CODE=你的短信模板CODE
 
 # === App ===
 PORT=3000

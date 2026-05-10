@@ -75,29 +75,44 @@ class TestKongWang:
 class TestChangSheng:
     """十二长生测试"""
 
-    def test_jia_yin_changsheng(self):
-        """甲木长生在寅"""
-        assert get_chang_sheng("甲", "寅") == "长生"
+    def test_jia_hai_changsheng(self):
+        """甲木长生在亥"""
+        assert get_chang_sheng("甲", "亥") == "长生"
 
-    def test_jia_mao_muyu(self):
-        """甲木沐浴在卯"""
-        assert get_chang_sheng("甲", "卯") == "沐浴"
+    def test_jia_zi_muyu(self):
+        """甲木沐浴在子"""
+        assert get_chang_sheng("甲", "子") == "沐浴"
 
-    def test_jia_wu_diwang(self):
-        """甲木帝旺在午（寅=长生,卯=沐浴,辰=冠带,巳=临官,午=帝旺）"""
-        assert get_chang_sheng("甲", "午") == "帝旺"
+    def test_jia_mao_diwang(self):
+        """甲木帝旺在卯（亥=长生,子=沐浴,丑=冠带,寅=临官,卯=帝旺）"""
+        assert get_chang_sheng("甲", "卯") == "帝旺"
 
-    def test_bing_si_changsheng(self):
-        """丙火长生在巳"""
-        assert get_chang_sheng("丙", "巳") == "长生"
+    def test_bing_yin_changsheng(self):
+        """丙火长生在寅"""
+        assert get_chang_sheng("丙", "寅") == "长生"
 
-    def test_geng_shen_changsheng(self):
-        """庚金长生在申 (idx 8 -> DI_ZHI[8]='申')"""
-        assert get_chang_sheng("庚", "申") == "长生"
+    def test_geng_si_changsheng(self):
+        """庚金长生在巳"""
+        assert get_chang_sheng("庚", "巳") == "长生"
 
     def test_yi_wu_changsheng(self):
         """乙木长生在午（阴干逆排）"""
         assert get_chang_sheng("乙", "午") == "长生"
+
+    def test_yang_gan_reverse_check(self):
+        """阳干长生修正验证: 旧值差3位, 新值对应标准长生"""
+        # 甲: 旧长生在寅(2) → 新长生在亥(11)
+        assert get_chang_sheng("甲", "亥") == "长生"
+        assert get_chang_sheng("甲", "寅") == "临官"  # 甲禄在寅=临官, 不再是长生
+        # 丙: 旧长生在巳(5) → 新长生在寅(2)
+        assert get_chang_sheng("丙", "寅") == "长生"
+        assert get_chang_sheng("丙", "巳") == "临官"  # 丙禄在巳
+        # 庚: 旧长生在申(8) → 新长生在巳(5)
+        assert get_chang_sheng("庚", "巳") == "长生"
+        assert get_chang_sheng("庚", "申") == "临官"  # 庚禄在申
+        # 壬: 旧长生在亥(11) → 新长生在申(8)
+        assert get_chang_sheng("壬", "申") == "长生"
+        assert get_chang_sheng("壬", "亥") == "临官"  # 壬禄在亥
 
 
 class TestTaiSui:

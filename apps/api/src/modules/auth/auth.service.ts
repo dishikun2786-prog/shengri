@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { CaptchaService } from './captcha.service';
+import { SmsService } from '../../common/sms/sms.service';
 import { RegisterDto, LoginRequestDto } from './auth.dto';
 
 const USERNAME_RE = /^[a-zA-Z0-9_]{3,20}$/;
@@ -18,6 +19,7 @@ export class AuthService {
     private prisma: PrismaService,
     private jwt: JwtService,
     private captcha: CaptchaService,
+    private sms: SmsService,
   ) {}
 
   private normalizeUsername(raw: string): string {
@@ -127,6 +129,151 @@ export class AuthService {
 
     const token = this.signToken(user.id, user.uuid);
     return { user: this.sanitizeUser(user), token };
+  }
+
+  private normalizePhone(phone: string): string {
+    return this.sms.normalizePhone(phone);
+  }
+
+  async checkPhoneExists(phone: string) {
+    const normalized = this.normalizePhone(phone);
+    const user = await this.prisma.user.findUnique({ where: { phone: normalized }, select: { id: true } });
+    return { exists: !!user };
+  }
+
+  async sendSmsCode(phone: string) {
+    return this.sms.sendVerificationCode(phone);
+  }
+
+  async smsLogin(phone: string, code: string, username?: string, password?: string, nickname?: string) {
+    const valid = await this.sms.verifyCode(phone, code);
+    if (!valid) {
+      throw new BadRequestException('验证码错误或已过期');
+    }
+
+    const normalizedPhone = this.normalizePhone(phone);
+    let isNewUser = false;
+
+    // Find existing user by phone
+    let user = await this.prisma.user.findUnique({
+      where: { phone: normalizedPhone },
+    });
+
+    if (!user) {
+      isNewUser = true;
+
+      // Validate username if provided
+      let resolvedUsername: string;
+      if (username) {
+        const normalized = this.normalizeUsername(username);
+        if (!USERNAME_RE.test(normalized)) {
+          throw new BadRequestException('账号仅支持 3–20 位字母、数字或下划线');
+        }
+        const existing = await this.prisma.user.findUnique({ where: { username: normalized } });
+        if (existing) {
+          throw new ConflictException('该账号已被使用，请更换');
+        }
+        resolvedUsername = normalized;
+      } else {
+        resolvedUsername = `u${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+      }
+
+      // Hash password if provided
+      let passwordHash: string | undefined;
+      if (password) {
+        if (password.length < 6) {
+          throw new BadRequestException('密码至少需要6位');
+        }
+        passwordHash = await bcrypt.hash(password, 10);
+      }
+
+      // Auto-register new user with phone
+      let retries = 3;
+      while (retries > 0) {
+        try {
+          user = await this.prisma.user.create({
+            data: {
+              phone: normalizedPhone,
+              nickname: nickname || (username || `用户${normalizedPhone.slice(-4)}`),
+              username: resolvedUsername,
+              ...(passwordHash ? { passwordHash } : {}),
+            },
+          });
+          break;
+        } catch (err: any) {
+          if (err?.code === 'P2002' && retries > 1) {
+            retries--;
+            continue;
+          }
+          throw err;
+        }
+      }
+      if (!user) throw new BadRequestException('注册失败，请稍后重试');
+
+      // Create free quota
+      await this.prisma.userFreeQuota.create({
+        data: {
+          userId: user.id,
+          permanentFree: 5,
+          dailyFree: 3,
+          lastDailyReset: new Date(),
+        },
+      }).catch(() => {});
+
+      // Initialize pairing free trials
+      const pairingConfig = await this.prisma.systemConfig.findUnique({
+        where: { key: 'pairing' },
+      });
+      if (pairingConfig) {
+        const config = pairingConfig.value as any;
+        for (const [type, cfg] of Object.entries(config)) {
+          const typedCfg = cfg as any;
+          if (typedCfg.enabled && typedCfg.freeCount > 0) {
+            await this.prisma.pairingFreeTrial.upsert({
+              where: { userId_pairingType: { userId: user.id, pairingType: type } },
+              update: {},
+              create: { userId: user.id, pairingType: type, totalFree: typedCfg.freeCount, usedFree: 0 },
+            }).catch(() => {});
+          }
+        }
+      }
+    }
+
+    if (user.status !== 1) {
+      throw new UnauthorizedException('账号已被禁用');
+    }
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { lastLoginAt: new Date() },
+    });
+
+    const token = this.signToken(user.id, user.uuid);
+    return { user: this.sanitizeUser(user), token, isNewUser };
+  }
+
+  async bindPhone(userId: number, phone: string, code: string) {
+    const valid = await this.sms.verifyCode(phone, code);
+    if (!valid) {
+      throw new BadRequestException('验证码错误或已过期');
+    }
+
+    const normalizedPhone = this.normalizePhone(phone);
+
+    // Check if phone is already bound to another user
+    const existing = await this.prisma.user.findUnique({
+      where: { phone: normalizedPhone },
+    });
+    if (existing && existing.id !== userId) {
+      throw new ConflictException('该手机号已绑定其他账号');
+    }
+
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: { phone: normalizedPhone },
+    });
+
+    return { success: true, phone: user.phone };
   }
 
   async validateUser(userId: number) {

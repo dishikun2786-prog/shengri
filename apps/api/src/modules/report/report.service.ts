@@ -73,15 +73,16 @@ export class ReportService {
       const chartData = this.enrichWithMangpai(this.chartToAnalysisData(chart));
 
       const mangpaiModules = ['mangpai_work', 'mangpai_power', 'mangpai_body_guest', 'mangpai_tengods_direct', 'mangpai_shensha'];
+      const mangpaiDirectModules = ['mangpai_marriage_direct', 'mangpai_health_direct', 'mangpai_career_direct', 'mangpai_wealth_direct', 'mangpai_disaster_direct'];
       const moduleMap: Record<string, string[]> = {
         'free': ['ten_gods', 'pattern', 'yongshen', ...mangpaiModules],
-        'wealth': ['ten_gods', 'pattern', 'yongshen', 'wealth', 'dayun', ...mangpaiModules],
-        'marriage': ['ten_gods', 'pattern', 'yongshen', 'hehun', 'dayun', ...mangpaiModules, 'mangpai_marriage'],
-        'career': ['ten_gods', 'pattern', 'yongshen', 'dayun', 'wealth', ...mangpaiModules, 'mangpai_career'],
-        'annual': ['ten_gods', 'dayun', 'liunian', 'wealth', 'risk', ...mangpaiModules],
+        'wealth': ['ten_gods', 'pattern', 'yongshen', 'wealth', 'dayun', ...mangpaiModules, 'mangpai_wealth_direct'],
+        'marriage': ['ten_gods', 'pattern', 'yongshen', 'hehun', 'dayun', ...mangpaiModules, 'mangpai_marriage', 'mangpai_marriage_direct'],
+        'career': ['ten_gods', 'pattern', 'yongshen', 'dayun', 'wealth', ...mangpaiModules, 'mangpai_career', 'mangpai_career_direct'],
+        'annual': ['ten_gods', 'dayun', 'liunian', 'wealth', 'risk', ...mangpaiModules, 'mangpai_disaster_direct'],
         'partner': ['ten_gods', 'pattern', 'partner', ...mangpaiModules],
-        'enterprise': ['ten_gods', 'pattern', 'wealth', 'dayun', 'risk', ...mangpaiModules],
-        'full': ['ten_gods', 'pattern', 'yongshen', 'wealth', 'marriage', 'career', 'dayun', 'liunian', 'risk', ...mangpaiModules, 'mangpai_marriage', 'mangpai_career', 'mangpai_health'],
+        'enterprise': ['ten_gods', 'pattern', 'wealth', 'dayun', 'risk', ...mangpaiModules, 'mangpai_career_direct'],
+        'full': ['ten_gods', 'pattern', 'yongshen', 'wealth', 'marriage', 'career', 'dayun', 'liunian', 'risk', ...mangpaiModules, 'mangpai_marriage', 'mangpai_career', 'mangpai_health', ...mangpaiDirectModules],
       };
 
       const modules = moduleMap[params.reportType] || moduleMap['free'];
@@ -191,7 +192,24 @@ export class ReportService {
       data: { viewCount: { increment: 1 } },
     });
 
-    if (!report.isPaid) {
+    // 配对报告需同步 PairingRequest 的支付状态（免费试用/已支付均应视为已付费）
+    let effectivePaid = report.isPaid;
+    if (!effectivePaid && report.reportType === 'pairing') {
+      const pairingRequest = await this.prisma.pairingRequest.findFirst({
+        where: { reportId: report.id },
+        select: { isPaid: true, freeTrial: true },
+      });
+      if (pairingRequest?.isPaid || pairingRequest?.freeTrial) {
+        effectivePaid = true;
+        // 回写 AnalysisReport.isPaid 以修复历史数据
+        await this.prisma.analysisReport.update({
+          where: { id: report.id },
+          data: { isPaid: true },
+        }).catch(() => {});
+      }
+    }
+
+    if (!effectivePaid) {
       const upgradeProduct = await this.prisma.product.findFirst({
         where: {
           reportType: report.reportType,
@@ -246,6 +264,60 @@ export class ReportService {
     return lines.slice(0, showLines).join('\n') + '\n\n... 更多精彩内容请解锁完整报告 ...';
   }
 
+  /**
+   * 生成藏干十神预计算数据, 直接注入 AI prompt, 避免 AI 自行推导
+   * 返回格式: { 年柱_寅: "甲(比肩)丙(食神)戊(偏财)", ... }
+   */
+  private buildHiddenStemTenGods(chart: any, tenGodsMap: any): Record<string, string> {
+    const PILLAR_KEYS = ['year', 'month', 'day', 'hour'] as const;
+    const PILLAR_LABELS: Record<string, string> = { year: '年柱', month: '月柱', day: '日柱', hour: '时柱' };
+    const result: Record<string, string> = {};
+
+    for (const key of PILLAR_KEYS) {
+      const zhi = chart[`${key}Zhi`];
+      const hidden = chart[`${key}Hidden`];
+      if (!zhi || !hidden || !Array.isArray(hidden)) continue;
+
+      const parts = hidden.map((gan: string) => {
+        const tg = tenGodsMap?.[gan] || '';
+        return `${gan}(${tg})`;
+      });
+      result[`${PILLAR_LABELS[key]}_${zhi}`] = parts.join(' ');
+    }
+    return result;
+  }
+
+  /** 计算月令本气对日主的十神 (供规则引擎检测格局用) */
+  private calcMonthMainTenGod(dayMaster: string, monthHidden: string[]): string {
+    if (!monthHidden || monthHidden.length === 0) return '';
+    const GAN_WUXING: Record<string, string> = {
+      '甲': '木', '乙': '木', '丙': '火', '丁': '火', '戊': '土',
+      '己': '土', '庚': '金', '辛': '金', '壬': '水', '癸': '水',
+    };
+    const TIAN_GAN = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+    const WX_ORDER = ['木', '火', '土', '金', '水'];
+
+    const getTenGod = (dm: string, og: string): string => {
+      if (dm === og) return '比肩';
+      const dmIdx = TIAN_GAN.indexOf(dm), otIdx = TIAN_GAN.indexOf(og);
+      const same = (dmIdx % 2) === (otIdx % 2);
+      const dmWx = GAN_WUXING[dm], otWx = GAN_WUXING[og];
+      if (dmWx === otWx) return same ? '比肩' : '劫财';
+      const dmWi = WX_ORDER.indexOf(dmWx);
+      const shengWo = WX_ORDER[(dmWi - 1 + 5) % 5];
+      if (otWx === shengWo) return same ? '偏印' : '正印';
+      const woSheng = WX_ORDER[(dmWi + 1) % 5];
+      if (otWx === woSheng) return same ? '食神' : '伤官';
+      const woKe = WX_ORDER[(dmWi + 2) % 5];
+      if (otWx === woKe) return same ? '偏财' : '正财';
+      const keWo = WX_ORDER[(dmWi - 2 + 5) % 5];
+      if (otWx === keWo) return same ? '七杀' : '正官';
+      return '未知';
+    };
+
+    return getTenGod(dayMaster, monthHidden[0]);
+  }
+
   private chartToAnalysisData(chart: any) {
     const GAN_WUXING: Record<string, string> = {
       '甲': '木', '乙': '木', '丙': '火', '丁': '火', '戊': '土',
@@ -264,6 +336,10 @@ export class ReportService {
       wuxing_counts: chart.wuxingCounts,
       wuxing_score: chart.wuxingScore,
       ten_gods: chart.tenGodsMap,
+      // 月令本气十神 — 供规则引擎检测格局 (之前缺失, 导致 pattern-rules 全部失效)
+      month_hidden_main_ten_god: this.calcMonthMainTenGod(chart.dayGan, chart.monthHidden),
+      // 预计算藏干十神 (AI 不需要自行推导, 直接引用此数据)
+      zhi_ten_gods: this.buildHiddenStemTenGods(chart, chart.tenGodsMap),
       shensha_list: chart.shenshaList,
       dayun_list: chart.dayunList,
       dayun_start_age: chart.dayunStartAge,

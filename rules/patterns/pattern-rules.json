@@ -2,94 +2,229 @@
   {
     "rule_id": "pattern_zheng_guan_ge",
     "name": "正官格",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "module": "pattern",
     "priority": 200,
     "conditions": {
       "operator": "AND",
       "rules": [
-        {"field": "month_pillar.hidden_gan_main_ten_god", "operator": "eq", "value": "正官"},
-        {"field": "day_master_strength", "operator": "between", "value": [40, 65]}
+        {"field": "month_hidden_main_ten_god", "operator": "eq", "value": "正官"},
+        {"field": "day_master_strength", "operator": "between", "value": [40, 75]}
       ]
     },
     "actions": [
       {"type": "set_tag", "value": "正官格"},
       {"type": "set_score", "field": "pattern_quality", "value": 80},
-      {"type": "generate_text", "template": "正官格：为人正直，适合从政或大企业管理，一生贵人运旺"}
+      {"type": "generate_text", "template": "正官格：品行端正，有管理才能，适合从政、公务员、大企业高管。官星清透，贵人运旺；官杀混杂则事业多波折。"}
     ]
   },
   {
-    "rule_id": "pattern_zheng_cai_ge",
-    "name": "正财格",
+    "rule_id": "pattern_qi_sha_ge",
+    "name": "七杀格",
     "version": "1.0.0",
     "module": "pattern",
     "priority": 200,
     "conditions": {
       "operator": "AND",
       "rules": [
-        {"field": "month_pillar.hidden_gan_main_ten_god", "operator": "eq", "value": "正财"},
+        {"field": "month_hidden_main_ten_god", "operator": "eq", "value": "七杀"},
+        {"field": "day_master_strength", "operator": "gte", "value": 45}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "七杀格"},
+      {"type": "set_score", "field": "pattern_quality", "value": 75},
+      {"type": "generate_text", "template": "七杀格：果敢刚毅，行事果断，有将帅之才。身强杀旺配印/食神为贵；身弱杀重无制则压力大、小人多。"}
+    ]
+  },
+  {
+    "rule_id": "pattern_zheng_cai_ge",
+    "name": "正财格",
+    "version": "1.1.0",
+    "module": "pattern",
+    "priority": 200,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "month_hidden_main_ten_god", "operator": "eq", "value": "正财"},
         {"field": "day_master_strength", "operator": "gte", "value": 45}
       ]
     },
     "actions": [
       {"type": "set_tag", "value": "正财格"},
       {"type": "set_score", "field": "pattern_quality", "value": 78},
-      {"type": "generate_text", "template": "正财格：理财能力强，通过勤劳和稳健投资积累财富"}
+      {"type": "generate_text", "template": "正财格：理财有方，勤劳致富，通过稳定收入和实业积累财富。食伤生财则财运更旺，比劫夺财则需防破耗。"}
     ]
   },
   {
-    "rule_id": "pattern_shi_shen_ge",
-    "name": "食神格",
+    "rule_id": "pattern_pian_cai_ge",
+    "name": "偏财格",
     "version": "1.0.0",
     "module": "pattern",
     "priority": 200,
     "conditions": {
       "operator": "AND",
       "rules": [
-        {"field": "month_pillar.hidden_gan_main_ten_god", "operator": "eq", "value": "食神"},
+        {"field": "month_hidden_main_ten_god", "operator": "eq", "value": "偏财"},
+        {"field": "day_master_strength", "operator": "gte", "value": 48}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "偏财格"},
+      {"type": "set_score", "field": "pattern_quality", "value": 76},
+      {"type": "generate_text", "template": "偏财格：善抓商机，有投资眼光，适合经商、金融、投机类行业。身强偏财旺则富甲一方，身弱偏财重则财来财去。"}
+    ]
+  },
+  {
+    "rule_id": "pattern_zheng_yin_ge",
+    "name": "正印格",
+    "version": "1.0.0",
+    "module": "pattern",
+    "priority": 200,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "month_hidden_main_ten_god", "operator": "eq", "value": "正印"},
+        {"field": "day_master_strength", "operator": "lte", "value": 70}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "正印格"},
+      {"type": "set_score", "field": "pattern_quality", "value": 82},
+      {"type": "generate_text", "template": "正印格：温文尔雅，好学上进，有贵气。适合教育、文化、公益、慈善行业。印星清透则学识渊博，官印相生则仕途顺遂。"}
+    ]
+  },
+  {
+    "rule_id": "pattern_pian_yin_ge",
+    "name": "偏印格",
+    "version": "1.0.0",
+    "module": "pattern",
+    "priority": 200,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "month_hidden_main_ten_god", "operator": "eq", "value": "偏印"},
+        {"field": "day_master_strength", "operator": "lte", "value": 75}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "偏印格"},
+      {"type": "set_score", "field": "pattern_quality", "value": 74},
+      {"type": "generate_text", "template": "偏印格：思维独特，悟性高，适合技术研发、玄学命理、艺术创作等需要深度思考的领域。偏印夺食需防思维过于孤僻。"}
+    ]
+  },
+  {
+    "rule_id": "pattern_shi_shen_ge",
+    "name": "食神格",
+    "version": "1.1.0",
+    "module": "pattern",
+    "priority": 200,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "month_hidden_main_ten_god", "operator": "eq", "value": "食神"},
         {"field": "day_master_strength", "operator": "gte", "value": 50}
       ]
     },
     "actions": [
       {"type": "set_tag", "value": "食神格"},
       {"type": "set_score", "field": "pattern_quality", "value": 82},
-      {"type": "generate_text", "template": "食神格：聪明有才华，福禄双全，适合文艺、教育、餐饮行业"}
+      {"type": "generate_text", "template": "食神格：聪明有才华，福禄双全。适合文艺、教育、餐饮、演艺行业。食神生财则技艺致富，食神制杀则化险为夷。"}
     ]
   },
   {
-    "rule_id": "pattern_strong_master",
-    "name": "日主极强 - 从强格倾向",
+    "rule_id": "pattern_shang_guan_ge",
+    "name": "伤官格",
     "version": "1.0.0",
+    "module": "pattern",
+    "priority": 200,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "month_hidden_main_ten_god", "operator": "eq", "value": "伤官"},
+        {"field": "day_master_strength", "operator": "gte", "value": 50}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "伤官格"},
+      {"type": "set_score", "field": "pattern_quality", "value": 72},
+      {"type": "generate_text", "template": "伤官格：才华横溢，反应敏捷，有创新精神。适合创意、咨询、法律、演讲等领域。伤官配印则贵气，伤官见官则需防官非口舌。"}
+    ]
+  },
+  {
+    "rule_id": "pattern_jian_lu_ge",
+    "name": "建禄格",
+    "version": "1.0.0",
+    "module": "pattern",
+    "priority": 200,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "month_hidden_main_ten_god", "operator": "eq", "value": "比肩"},
+        {"field": "day_master_strength", "operator": "gte", "value": 50}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "建禄格"},
+      {"type": "set_score", "field": "pattern_quality", "value": 70},
+      {"type": "generate_text", "template": "建禄格：日主得月令禄位，自身力量充沛。需看他柱配置：官杀透出则事业有成，食伤泄秀则才华横溢，孤禄无辅则平凡。"}
+    ]
+  },
+  {
+    "rule_id": "pattern_yang_ren_ge",
+    "name": "羊刃格",
+    "version": "1.0.0",
+    "module": "pattern",
+    "priority": 200,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "month_hidden_main_ten_god", "operator": "eq", "value": "劫财"},
+        {"field": "day_master_strength", "operator": "gte", "value": 55}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "羊刃格"},
+      {"type": "set_score", "field": "pattern_quality", "value": 65},
+      {"type": "generate_text", "template": "羊刃格：性格刚烈果断，执行力强，适合军警、外科医生、竞技体育等需要决断力的职业。羊刃驾杀为贵，无制则冲动好斗。"}
+    ]
+  },
+  {
+    "rule_id": "pattern_cong_strong",
+    "name": "从强格/专旺格",
+    "version": "1.1.0",
     "module": "pattern",
     "priority": 250,
     "conditions": {
       "operator": "AND",
       "rules": [
-        {"field": "day_master_strength", "operator": "gte", "value": 80}
+        {"field": "day_master_strength", "operator": "gte", "value": 80},
+        {"field": "month_hidden_main_ten_god", "operator": "in", "value": ["比肩", "劫财", "正印", "偏印"]}
       ]
     },
     "actions": [
-      {"type": "set_tag", "value": "日主极强"},
       {"type": "set_tag", "value": "从强格倾向"},
-      {"type": "set_score", "field": "pattern_quality", "value": 75}
+      {"type": "set_score", "field": "pattern_quality", "value": 75},
+      {"type": "generate_text", "template": "日主极强且月令为印比，有从强/专旺格倾向。顺势而行，忌克泄耗；逢印比大运更上一层。"}
     ]
   },
   {
-    "rule_id": "pattern_weak_master",
-    "name": "日主极弱 - 从弱格倾向",
-    "version": "1.0.0",
+    "rule_id": "pattern_cong_weak",
+    "name": "从弱格倾向",
+    "version": "1.1.0",
     "module": "pattern",
     "priority": 250,
     "conditions": {
       "operator": "AND",
       "rules": [
-        {"field": "day_master_strength", "operator": "lte", "value": 20}
+        {"field": "day_master_strength", "operator": "lte", "value": 20},
+        {"field": "month_hidden_main_ten_god", "operator": "in", "value": ["正财", "偏财", "正官", "七杀", "食神", "伤官"]}
       ]
     },
     "actions": [
-      {"type": "set_tag", "value": "日主极弱"},
       {"type": "set_tag", "value": "从弱格倾向"},
-      {"type": "set_score", "field": "pattern_quality", "value": 70}
+      {"type": "set_score", "field": "pattern_quality", "value": 70},
+      {"type": "generate_text", "template": "日主极弱且月令为财官食伤，有从弱格倾向。顺势从势，忌生扶帮身；逢克泄耗大运反为吉。"}
     ]
   }
 ]

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { pairingApi, baziApi, userApi } from '@/lib/api';
 import { PairingChartSelector } from '@/components/pairing/PairingChartSelector';
+import ChartCreationForm from '@/components/ChartCreationForm';
 
 const PAIRING_TYPE_META: Record<string, { label: string; desc: string; emoji: string }> = {
   personality: { label: '性格匹配', desc: '分析双方性格是否互补', emoji: '🧠' },
@@ -28,12 +29,7 @@ export default function SelfPairingWizardPage() {
   const [error, setError] = useState('');
   const [requestUuid, setRequestUuid] = useState<string | null>(null);
   const [showNewChartFor, setShowNewChartFor] = useState<'A' | 'B' | null>(null);
-  const [newChart, setNewChart] = useState({
-    name: '', year: new Date().getFullYear(), month: 1, day: 1,
-    hour: 12, minute: 0, gender: 1, isLunar: false,
-  });
-  const [creatingChart, setCreatingChart] = useState(false);
-  const [freeTrialRemaining, setFreeTrialRemaining] = useState(-1); // -1 = loading, 0 = none, >0 = has free
+  const [freeTrialRemaining, setFreeTrialRemaining] = useState(-1);
 
   useEffect(() => {
     pairingApi.getPricing().then((res: any) => setPricing(res.data)).catch(() => {});
@@ -43,26 +39,12 @@ export default function SelfPairingWizardPage() {
     }).catch(() => setCharts([]));
   }, []);
 
-  const handleCreateChart = async (target: 'A' | 'B') => {
-    setCreatingChart(true);
-    try {
-      const res: any = await baziApi.saveChart({
-        name: newChart.name || undefined,
-        year: newChart.year, month: newChart.month, day: newChart.day,
-        hour: newChart.hour, minute: newChart.minute,
-        gender: newChart.gender, isLunar: newChart.isLunar,
-      });
-      const id = res.data?.id || res.data?.chart?.id;
-      if (id) {
-        const refresh: any = await userApi.getCharts();
-        const list = Array.isArray(refresh.data) ? refresh.data : (refresh.data?.charts || []);
-        setCharts(list);
-        if (target === 'A') setChartA(id); else setChartB(id);
-        setShowNewChartFor(null);
-      }
-    } catch (err: any) {
-      alert(err?.response?.data?.message || '创建命盘失败');
-    } finally { setCreatingChart(false); }
+  const handleChartCreated = async (target: 'A' | 'B', chartId: number) => {
+    const refresh: any = await userApi.getCharts();
+    const list = Array.isArray(refresh.data) ? refresh.data : (refresh.data?.charts || []);
+    setCharts(list);
+    if (target === 'A') setChartA(chartId); else setChartB(chartId);
+    setShowNewChartFor(null);
   };
 
   const handleInitiate = async () => {
@@ -149,29 +131,20 @@ export default function SelfPairingWizardPage() {
             </div>
             <PairingChartSelector selectedChartId={chartA} onSelect={(id) => setChartA(id)} />
             {showNewChartFor === 'A' ? (
-              <div style={{ padding: 16, background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, marginTop: 12 }}>
-                <p style={{ fontSize: 14, fontWeight: 500, color: '#374151', marginBottom: 8 }}>新建命盘</p>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 8 }}>
-                  <input type="text" placeholder="姓名(选填)" value={newChart.name} onChange={e => setNewChart({ ...newChart, name: e.target.value })} style={{ padding: '8px 10px', fontSize: 14, border: '1px solid #e5e7eb', borderRadius: 8 }} />
-                  <select value={newChart.gender} onChange={e => setNewChart({ ...newChart, gender: parseInt(e.target.value) })} style={{ padding: '8px 10px', fontSize: 14, border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff' }}>
-                    <option value={1}>男</option>
-                    <option value={0}>女</option>
-                  </select>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 8 }}>
-                  <input type="number" placeholder="年" value={newChart.year} onChange={e => setNewChart({ ...newChart, year: parseInt(e.target.value) || 2000 })} style={{ padding: '8px 10px', fontSize: 14, border: '1px solid #e5e7eb', borderRadius: 8 }} />
-                  <input type="number" placeholder="月" value={newChart.month} onChange={e => setNewChart({ ...newChart, month: Math.min(12, Math.max(1, parseInt(e.target.value) || 1)) })} style={{ padding: '8px 10px', fontSize: 14, border: '1px solid #e5e7eb', borderRadius: 8 }} />
-                  <input type="number" placeholder="日" value={newChart.day} onChange={e => setNewChart({ ...newChart, day: Math.min(31, Math.max(1, parseInt(e.target.value) || 1)) })} style={{ padding: '8px 10px', fontSize: 14, border: '1px solid #e5e7eb', borderRadius: 8 }} />
-                </div>
-                <div style={{ display: 'flex', gap: 8 }}>
-                  <button onClick={() => handleCreateChart('A')} disabled={creatingChart} style={{ flex: 1, padding: '10px 0', background: '#c44520', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: 'pointer', opacity: creatingChart ? 0.5 : 1 }}>
-                    {creatingChart ? '创建中...' : '创建并选择'}
-                  </button>
-                  <button onClick={() => setShowNewChartFor(null)} style={{ padding: '10px 16px', background: '#f3f4f6', color: '#374151', border: 'none', borderRadius: 8, fontSize: 14, cursor: 'pointer' }}>取消</button>
-                </div>
+              <div className="card mt-3">
+                <p className="text-sm font-semibold text-ink-700 mb-3">新建命盘 A</p>
+                <ChartCreationForm
+                  compact
+                  submitLabel="创建并选择"
+                  onSubmit={(payload) => baziApi.saveChart(payload)}
+                  onSuccess={(id) => handleChartCreated('A', id)}
+                />
+                <button onClick={() => setShowNewChartFor(null)} className="w-full mt-3 py-2 text-sm text-ink-400 hover:text-ink-600 transition-colors">
+                  取消
+                </button>
               </div>
             ) : (
-              <button onClick={() => setShowNewChartFor('A')} style={{ width: '100%', marginTop: 12, padding: '10px 0', border: '1px dashed #d1d5db', borderRadius: 12, background: 'none', color: '#6b7280', fontSize: 14, cursor: 'pointer' }}>
+              <button onClick={() => setShowNewChartFor('A')} className="w-full mt-3 py-3 border-2 border-dashed border-ink-200 rounded-xl text-sm text-ink-400 hover:text-ink-600 hover:border-ink-300 transition-colors">
                 + 新建命盘
               </button>
             )}
@@ -190,29 +163,20 @@ export default function SelfPairingWizardPage() {
             </div>
             <PairingChartSelector selectedChartId={chartB} onSelect={(id) => setChartB(id)} />
             {showNewChartFor === 'B' ? (
-              <div style={{ padding: 16, background: '#fff', border: '1px solid #e5e7eb', borderRadius: 12, marginTop: 12 }}>
-                <p style={{ fontSize: 14, fontWeight: 500, color: '#374151', marginBottom: 8 }}>新建命盘</p>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 8 }}>
-                  <input type="text" placeholder="姓名(选填)" value={newChart.name} onChange={e => setNewChart({ ...newChart, name: e.target.value })} style={{ padding: '8px 10px', fontSize: 14, border: '1px solid #e5e7eb', borderRadius: 8 }} />
-                  <select value={newChart.gender} onChange={e => setNewChart({ ...newChart, gender: parseInt(e.target.value) })} style={{ padding: '8px 10px', fontSize: 14, border: '1px solid #e5e7eb', borderRadius: 8, background: '#fff' }}>
-                    <option value={1}>男</option>
-                    <option value={0}>女</option>
-                  </select>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 8 }}>
-                  <input type="number" placeholder="年" value={newChart.year} onChange={e => setNewChart({ ...newChart, year: parseInt(e.target.value) || 2000 })} style={{ padding: '8px 10px', fontSize: 14, border: '1px solid #e5e7eb', borderRadius: 8 }} />
-                  <input type="number" placeholder="月" value={newChart.month} onChange={e => setNewChart({ ...newChart, month: Math.min(12, Math.max(1, parseInt(e.target.value) || 1)) })} style={{ padding: '8px 10px', fontSize: 14, border: '1px solid #e5e7eb', borderRadius: 8 }} />
-                  <input type="number" placeholder="日" value={newChart.day} onChange={e => setNewChart({ ...newChart, day: Math.min(31, Math.max(1, parseInt(e.target.value) || 1)) })} style={{ padding: '8px 10px', fontSize: 14, border: '1px solid #e5e7eb', borderRadius: 8 }} />
-                </div>
-                <div style={{ display: 'flex', gap: 8 }}>
-                  <button onClick={() => handleCreateChart('B')} disabled={creatingChart} style={{ flex: 1, padding: '10px 0', background: '#c44520', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: 'pointer', opacity: creatingChart ? 0.5 : 1 }}>
-                    {creatingChart ? '创建中...' : '创建并选择'}
-                  </button>
-                  <button onClick={() => setShowNewChartFor(null)} style={{ padding: '10px 16px', background: '#f3f4f6', color: '#374151', border: 'none', borderRadius: 8, fontSize: 14, cursor: 'pointer' }}>取消</button>
-                </div>
+              <div className="card mt-3">
+                <p className="text-sm font-semibold text-ink-700 mb-3">新建命盘 B</p>
+                <ChartCreationForm
+                  compact
+                  submitLabel="创建并选择"
+                  onSubmit={(payload) => baziApi.saveChart(payload)}
+                  onSuccess={(id) => handleChartCreated('B', id)}
+                />
+                <button onClick={() => setShowNewChartFor(null)} className="w-full mt-3 py-2 text-sm text-ink-400 hover:text-ink-600 transition-colors">
+                  取消
+                </button>
               </div>
             ) : (
-              <button onClick={() => setShowNewChartFor('B')} style={{ width: '100%', marginTop: 12, padding: '10px 0', border: '1px dashed #d1d5db', borderRadius: 12, background: 'none', color: '#6b7280', fontSize: 14, cursor: 'pointer' }}>
+              <button onClick={() => setShowNewChartFor('B')} className="w-full mt-3 py-3 border-2 border-dashed border-ink-200 rounded-xl text-sm text-ink-400 hover:text-ink-600 hover:border-ink-300 transition-colors">
                 + 新建命盘
               </button>
             )}

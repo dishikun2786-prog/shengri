@@ -1,0 +1,137 @@
+[
+  {
+    "rule_id": "mangpai_health_direct_001", "name": "五行缺金-肺大肠系统", "version": "1.0.0", "module": "mangpai_health_direct", "priority": 90,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "五行缺金"}]},
+    "actions": [
+      {"type": "set_tag", "value": "缺金体质"},
+      {"type": "set_score", "field": "blind_health_risk", "value": 65},
+      {"type": "generate_text", "template": "盲派铁口直断：五行缺金（肺与大肠系统偏弱），肺主呼吸、皮肤、毛发，大肠主排泄。此命天生呼吸系统功能薄弱，易患哮喘、鼻炎、皮肤过敏、便秘痔疮。养护重点：多食白色食物（银耳、百合、山药、白萝卜），练习深呼吸和游泳，避免吸烟和粉尘环境。每逢秋季（金旺之时，反为缺金体质的不适应期）需特别防范呼吸道感染。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_health_direct_002", "name": "五行缺木-肝胆系统", "version": "1.0.0", "module": "mangpai_health_direct", "priority": 90,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "五行缺木"}]},
+    "actions": [
+      {"type": "set_tag", "value": "缺木体质"},
+      {"type": "set_score", "field": "blind_health_risk", "value": 65},
+      {"type": "generate_text", "template": "盲派铁口直断：五行缺木（肝胆系统偏弱），肝主疏泄、藏血、主筋，胆主决断。此命天生肝胆解毒功能薄弱，易患脂肪肝、胆囊炎、筋腱损伤、视力下降、抑郁倾向。养护重点：多食绿色蔬菜（菠菜、西兰花、芹菜），保持情绪舒畅避免肝郁，练习瑜伽和拉伸运动舒筋活络。每逢春季（木旺之时）需特别注意肝胆养护和情绪调节。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_health_direct_003", "name": "五行缺水-肾膀胱系统", "version": "1.0.0", "module": "mangpai_health_direct", "priority": 90,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "五行缺水"}]},
+    "actions": [
+      {"type": "set_tag", "value": "缺水体质"},
+      {"type": "set_score", "field": "blind_health_risk", "value": 65},
+      {"type": "generate_text", "template": "盲派铁口直断：五行缺水（肾与膀胱系统偏弱），肾主生殖、骨髓、耳朵、头发，膀胱主排尿。此命天生肾气不足，易患腰膝酸软、耳鸣脱发、泌尿系统感染、不孕不育。养护重点：多食黑色食物（黑豆、黑芝麻、黑木耳、海参），节制房事保精固肾，冬季尤其注意保暖腰部。长期熬夜最伤肾阴，务必在23点前入睡。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_health_direct_004", "name": "五行缺火-心小肠系统", "version": "1.0.0", "module": "mangpai_health_direct", "priority": 90,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "五行缺火"}]},
+    "actions": [
+      {"type": "set_tag", "value": "缺火体质"},
+      {"type": "set_score", "field": "blind_health_risk", "value": 65},
+      {"type": "generate_text", "template": "盲派铁口直断：五行缺火（心与小肠系统偏弱），心主血脉、神志，小肠主吸收。此命天生心脑血管功能薄弱，易患心悸心慌、血压不稳、失眠多梦、手脚冰凉、消化不良。养护重点：多食红色食物（红枣、红豆、枸杞、西红柿），适度有氧运动增强心肺功能，午时（11-13点）小憩养心。夏季虽热但不可贪凉，心火不足者反需温补。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_health_direct_005", "name": "五行缺土-脾胃系统", "version": "1.0.0", "module": "mangpai_health_direct", "priority": 90,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "五行缺土"}]},
+    "actions": [
+      {"type": "set_tag", "value": "缺土体质"},
+      {"type": "set_score", "field": "blind_health_risk", "value": 65},
+      {"type": "generate_text", "template": "盲派铁口直断：五行缺土（脾胃系统偏弱），脾主运化、肌肉、统血，胃主受纳。此命天生消化吸收功能薄弱，易患胃痛胃胀、消化不良、营养不良、肌肉萎缩、贫血。养护重点：多食黄色食物（小米、南瓜、山药、茯苓），饮食规律细嚼慢咽，少食生冷油腻。长夏季节（季夏）脾胃最旺亦最脆弱，过饱过饥均伤脾胃。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_health_direct_006", "name": "甲庚冲-头骨外伤风险", "version": "1.0.0", "module": "mangpai_health_direct", "priority": 88,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "甲庚冲"}]},
+    "actions": [
+      {"type": "set_tag", "value": "甲庚冲"},
+      {"type": "set_score", "field": "blind_health_risk", "value": 75},
+      {"type": "generate_text", "template": "盲派铁口直断：甲庚冲，金木交战。甲为头为胆为筋骨，庚为大肠为骨骼，两者沖击则头部外伤、肝胆疾病、筋骨疼痛之风险极高。逢申酉年（金旺之年）甲木受克更甚，需特别防范交通事故、坠落、撞击等头部伤害。建议佩戴木质饰品以补木气，从事木艺园艺等木属性活动调和金木之战。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_health_direct_007", "name": "乙辛冲-神经衰弱风险", "version": "1.0.0", "module": "mangpai_health_direct", "priority": 88,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "乙辛冲"}]},
+    "actions": [
+      {"type": "set_tag", "value": "乙辛冲"},
+      {"type": "set_score", "field": "blind_health_risk", "value": 75},
+      {"type": "generate_text", "template": "盲派铁口直断：乙辛冲，金木交战。乙为肝为神经为筋，辛为肺为骨骼为皮肤，两者沖击则神经衰弱、肝胆不畅、皮肤过敏之风险极高。女命尤需注意月经不调、乳腺增生等妇科问题。逢申酉年加重。建议练习太极或八段锦调和气血，饮食多辛香（葱姜蒜）以疏通气机，避免长期精神紧张。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_health_direct_008", "name": "丙壬冲-心脑血管风险", "version": "1.0.0", "module": "mangpai_health_direct", "priority": 88,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "丙壬冲"}]},
+    "actions": [
+      {"type": "set_tag", "value": "丙壬冲"},
+      {"type": "set_score", "field": "blind_health_risk", "value": 80},
+      {"type": "generate_text", "template": "盲派铁口直断：丙壬冲，水火交战最为激烈。丙为心为眼为小肠，壬为肾为膀胱为血液，两者沖击则心脑血管、眼部、血压方面存在重大健康隐患。此命高血压或低血压、心律不齐、视网膜病变、失眠多梦的风险远高于常人。逢子午年（水火对冲之年）为高风险期。务必定期体检心脑血管，控制情绪波动，不可大喜大怒。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_health_direct_009", "name": "丁癸冲-心脏血液风险", "version": "1.0.0", "module": "mangpai_health_direct", "priority": 88,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "丁癸冲"}]},
+    "actions": [
+      {"type": "set_tag", "value": "丁癸冲"},
+      {"type": "set_score", "field": "blind_health_risk", "value": 80},
+      {"type": "generate_text", "template": "盲派铁口直断：丁癸冲，水火交战。丁为心脏为血液为神志，癸为肾脏为内分泌为骨髓，两者沖击则心脏疾病、血液循环障碍、情绪极度波动的风险远高于常人。此命需特别防范心脏病突发和抑郁症。逢子午年高风险。建议培养冥冥习惯安定心神，饮食清淡少盐少油，定期检查心电图和血脂。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_health_direct_010", "name": "子午冲-心肾不交", "version": "1.0.0", "module": "mangpai_health_direct", "priority": 85,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "子午冲"}]},
+    "actions": [
+      {"type": "set_tag", "value": "子午冲"},
+      {"type": "set_score", "field": "blind_health_risk", "value": 70},
+      {"type": "generate_text", "template": "盲派铁口直断：子午冲，心肾不交，水火不济。子为水为肾，午为火为心，两者对冲则心火不能下温肾水，肾水不能上济心火，导致上热下寒之症。典型症状：上半身燥热（口干舌燥、失眠心悸），下半身虚寒（腰膝酸冷、夜尿频多）。此命宜练习站桩和打坐以交通心肾，饮食宜温补下焦（肉桂、附子适量），忌大寒大热之物。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_health_direct_011", "name": "卯酉冲-肝胆筋骨风险", "version": "1.0.0", "module": "mangpai_health_direct", "priority": 85,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "卯酉冲"}]},
+    "actions": [
+      {"type": "set_tag", "value": "卯酉冲"},
+      {"type": "set_score", "field": "blind_health_risk", "value": 72},
+      {"type": "generate_text", "template": "盲派铁口直断：卯酉冲，金木交战。卯为肝为筋为目，酉为肺为骨骼为皮肤，两者对冲则肝胆疾病、筋骨损伤、呼吸系统过敏的风险极高。典型症状：血液黏稠、皮肤过敏、筋骨酸痛、视力下降。此命需避免酒后运动和过度使用电子屏幕，多食清肝明目食物（菊花茶、枸杞、胡萝卜）。逢卯酉年（兔年鸡年）为高风险期。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_health_direct_012", "name": "三刑入命-官非伤病", "version": "1.0.0", "module": "mangpai_health_direct", "priority": 85,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "三刑入命"}]},
+    "actions": [
+      {"type": "set_tag", "value": "三刑入命"},
+      {"type": "set_score", "field": "blind_health_risk", "value": 80},
+      {"type": "generate_text", "template": "盲派铁口直断：三刑入命，刑伤难免。寅巳申刑为恃势之刑，主官非牢狱、交通事故、手术刀伤；丑戌未刑为无恩之刑，主疾病缠绵、慢性疼痛、被人背叛伤害；子卯刑为无礼之刑，主桃花纠纷引发的人身伤害。此命一生需远离危险环境和暴力冲突，逢刑之年（如寅年巳年申年）需额外防范意外伤害。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_health_direct_013", "name": "七杀无制-凶灾重病风险", "version": "1.0.0", "module": "mangpai_health_direct", "priority": 88,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "七杀无制"}]},
+    "actions": [
+      {"type": "set_tag", "value": "七杀攻身"},
+      {"type": "set_score", "field": "blind_health_risk", "value": 85},
+      {"type": "generate_text", "template": "盲派铁口直断：七杀无制无化，凶神直攻日主，健康存在重大隐患。七杀代表意外、暴力、手术、重症，无印化（缺贵人医生庇护）无食制（缺自身抵抗力），则意外伤害和重大疾病的风险远高于常人。此命需购买充足的健康保险和意外保险，定期全面体检，避免高危运动和危险工作环境。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_health_direct_014", "name": "羊刃入命-血光之灾", "version": "1.0.0", "module": "mangpai_health_direct", "priority": 85,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "羊刃入命"}]},
+    "actions": [
+      {"type": "set_tag", "value": "羊刃血光"},
+      {"type": "set_score", "field": "blind_health_risk", "value": 78},
+      {"type": "generate_text", "template": "盲派铁口直断：羊刃入命，性刚情烈，易有血光之灾。羊刃为刀剑之象，代表手术、外伤、意外流血。羊刃逢冲之年（如卯年对冲酉金羊刃）必有意想不到的血光伤害。此命需特别防范：开车时分心、酒后行动、与人冲突动手、高危运动。建议献血化解血光之煞，或从事金器相关职业（如外科医生、厨师）将羊刃之凶转化为职业技能。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_health_direct_015", "name": "枭神夺食-健康福气双损", "version": "1.0.0", "module": "mangpai_health_direct", "priority": 88,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "枭神夺食"}]},
+    "actions": [
+      {"type": "set_tag", "value": "枭夺食"},
+      {"type": "set_score", "field": "blind_health_risk", "value": 82},
+      {"type": "generate_text", "template": "盲派铁口直断：枭神夺食，食神为福星，被偏印（枭神）夺走则福气受损、健康受损。食神代表消化系统、口福、享受生活的能力，被夺则食欲不振、消化不良、精神抑郁。此命常有无故忧虑、寝食难安之象，严重影响身心健康。建议培养规律运动习惯以泄偏印之滞气，多参加社交活动避免独处胡思乱想。"}
+    ]
+  }
+]

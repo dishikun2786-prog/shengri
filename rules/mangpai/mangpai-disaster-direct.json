@@ -1,0 +1,134 @@
+[
+  {
+    "rule_id": "mangpai_disaster_direct_001",
+    "name": "伤官见官无制-官非牢狱",
+    "version": "1.0.0", "module": "mangpai_disaster_direct", "priority": 98,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "伤官见官（无制）"}]},
+    "actions": [
+      {"type": "set_tag", "value": "官非风险"},
+      {"type": "set_score", "field": "blind_disaster_risk", "value": 90},
+      {"type": "generate_text", "template": "盲派铁口直断：伤官见官且无印制化，为祸百端之凶格。伤官克正官为以下犯上，必遭法律惩处或权力反噬。此命存在明确的官非牢狱信号——或与人诉讼、或被行政处罚、或入狱服刑。高风险年份在伤官或正官透干之年。化解之道：遵纪守法，远离灰色产业，不可抱侥幸心理触碰法律红线。建议预先咨询律师，做好法律风险防范。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_disaster_direct_002",
+    "name": "七杀无制-凶灾横祸",
+    "version": "1.0.0", "module": "mangpai_disaster_direct", "priority": 98,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "七杀无制"}]},
+    "actions": [
+      {"type": "set_tag", "value": "七杀攻身"},
+      {"type": "set_score", "field": "blind_disaster_risk", "value": 92},
+      {"type": "generate_text", "template": "盲派铁口直断：七杀无制无化，凶神攻身，凶灾横祸之象。七杀为暴力、小人暗算、意外事故、重大疾病的综合凶神。无印化则无贵人解救，无食制则无自身化解能力——此为八字中最凶的组合之一。此命在逢七杀旺盛之大运流年（如申酉金运对木日主）为高风险期。务必远离江湖是非、高风险投资、危险环境。购买足额保险为家人留后路。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_disaster_direct_003",
+    "name": "三刑入命-牢狱伤病",
+    "version": "1.0.0", "module": "mangpai_disaster_direct", "priority": 95,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "三刑入命"}]},
+    "actions": [
+      {"type": "set_tag", "value": "三刑入命"},
+      {"type": "set_score", "field": "blind_disaster_risk", "value": 85},
+      {"type": "generate_text", "template": "盲派铁口直断：命带三刑，一生必有刑伤之灾。寅巳申三刑为无恩之刑，主官非牢狱、交通事故、手术；丑戌未三刑为恃势之刑，主慢性病痛、被亲近之人背叛伤害；子卯刑为无礼之刑，主桃花纠纷引发的人身伤害。三刑入命者，逢刑之年（如本命三刑地支在流年重现）为不可逃避之灾期。化解之道：积德行善、远离争讼、预先体检排查隐患。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_disaster_direct_004",
+    "name": "天克地冲-重大变动灾难",
+    "version": "1.0.0", "module": "mangpai_disaster_direct", "priority": 95,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "天克地冲"}]},
+    "actions": [
+      {"type": "set_tag", "value": "天克地冲"},
+      {"type": "set_score", "field": "blind_disaster_risk", "value": 82},
+      {"type": "generate_text", "template": "盲派铁口直断：命带天克地冲，天地之气交战，一生必有重大变故。天克为天时不利（政策环境突变），地冲为地利不稳（根基动摇）。两者并见则祸不单行。若天克地冲发生在日柱（婚姻宫），则中年婚姻事业双重变故；在年柱则早年家运破败；在月柱则中年事业崩塌；在时柱则晚景凄凉。逢大运再冲之年为灾难集中爆发期。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_disaster_direct_005",
+    "name": "羊刃入命-血光之灾",
+    "version": "1.0.0", "module": "mangpai_disaster_direct", "priority": 90,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "羊刃入命"}]},
+    "actions": [
+      {"type": "set_tag", "value": "血光之灾"},
+      {"type": "set_score", "field": "blind_disaster_risk", "value": 78},
+      {"type": "generate_text", "template": "盲派铁口直断：羊刃入命，血光之灾的信号极为明确。羊刃为刀剑利器之象，代表手术开刀、意外伤害、暴力冲突。逢羊刃逢冲之年（对冲地支年份）必有血光。化解最佳方式：定期献血化解血煞，或从事与刀刃相关的职业（外科医生、厨师、理发师、刀具匠人）将凶星转化为职业优势。切忌酒后驾驶和与人争斗。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_disaster_direct_006",
+    "name": "正官五重-牢刑难免",
+    "version": "1.0.0", "module": "mangpai_disaster_direct", "priority": 92,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "正官五重"}]},
+    "actions": [
+      {"type": "set_tag", "value": "官非牢刑"},
+      {"type": "set_score", "field": "blind_disaster_risk", "value": 88},
+      {"type": "generate_text", "template": "盲派铁口直断：正官五重，官多为杀，牢刑难免。正官本为吉星，但五重则过犹不及，官星变杀星压制日主，必主官非牢狱之灾。此命切不可涉足任何法律灰色地带，不可偷税漏税，不可贿赂公职人员，不可与人发生刑事案件纠纷。最安全的生活方式是完全遵纪守法，做正当行业，不求暴富但求平安。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_disaster_direct_007",
+    "name": "七杀五重-孤雁短寿",
+    "version": "1.0.0", "module": "mangpai_disaster_direct", "priority": 95,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "七杀五重"}]},
+    "actions": [
+      {"type": "set_tag", "value": "七杀五重"},
+      {"type": "set_score", "field": "blind_disaster_risk", "value": 95},
+      {"type": "generate_text", "template": "盲派铁口直断：七杀五重，孤雁短寿之兆。七杀为凶中之凶，五重则凶气弥漫全盘，日主被彻底压制，毫无生机可言。此命健康风险极高，意外伤害、重大疾病的风险远超常人十倍以上。逢七杀旺地之大运流年为生死关口。化解之道：皈依佛门或信仰宗教以精神力量护持，长期素食减少杀气，行善积德以化解前世业力。此为罕见凶格，务必万分谨慎对待生命。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_disaster_direct_008",
+    "name": "枭神夺食-福尽灾生",
+    "version": "1.0.0", "module": "mangpai_disaster_direct", "priority": 90,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "枭神夺食"}]},
+    "actions": [
+      {"type": "set_tag", "value": "枭夺灾难"},
+      {"type": "set_score", "field": "blind_disaster_risk", "value": 80},
+      {"type": "generate_text", "template": "盲派铁口直断：枭神夺食，福星被夺，福气耗尽则灾祸接踵而至。食神代表福气、食禄、子女、享受，被偏印夺走则生活乐趣丧失，精神抑郁，继而引发身体疾病和人际灾难。此命宜培养积极乐观的生活态度，多与人交往避免独处阴郁。特别提醒：枭神夺食在女命中极为凶险，有克子女之象，怀孕生产需格外小心。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_disaster_direct_009",
+    "name": "天克地冲日柱-中年大劫",
+    "version": "1.0.0", "module": "mangpai_disaster_direct", "priority": 92,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "天克地冲日柱：婚姻宫被冲克"}]},
+    "actions": [
+      {"type": "set_tag", "value": "日柱天克地冲"},
+      {"type": "set_score", "field": "blind_disaster_risk", "value": 88},
+      {"type": "generate_text", "template": "盲派铁口直断：天克地冲日柱为八字第一凶兆之一。日柱为命主自身和婚姻，天克则天时不利，地冲则根基动摇。此命在中年（35-50岁）必有一场重大人生危机——或婚姻破裂、或事业崩塌、或重病缠身、或至亲离世。逢大运或流年再次冲击日柱之年为灾难爆发点。提前做好心理和财务准备，不可将人生建立在沙土之上。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_disaster_direct_010",
+    "name": "年月驿马冲-早年动荡",
+    "version": "1.0.0", "module": "mangpai_disaster_direct", "priority": 78,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "年月驿马冲"}]},
+    "actions": [
+      {"type": "set_tag", "value": "驿马早冲"},
+      {"type": "set_score", "field": "blind_disaster_risk", "value": 55},
+      {"type": "generate_text", "template": "盲派铁口直断：年月驿马冲，年柱为祖业父母根基，月柱为少年提纲，驿马逢冲则根基被拔，早年动荡不安。此命少年时期多变动——或父母离异、或被寄养、或频繁搬家转学。这些早年动荡给成年后的性格和安全感带来深远影响。虽不是直接的生命危险，但早年根基不稳导致的人格脆弱，会在中年危机时集中爆发。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_disaster_direct_011",
+    "name": "财星空亡-破产风险",
+    "version": "1.0.0", "module": "mangpai_disaster_direct", "priority": 85,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "财星空亡"}]},
+    "actions": [
+      {"type": "set_tag", "value": "破产风险"},
+      {"type": "set_score", "field": "blind_disaster_risk", "value": 75},
+      {"type": "generate_text", "template": "盲派铁口直断：财星落空亡，破产风险极高。空亡者，虚无之象。财星落空则财富如空中楼阁，看似有实则无。此命极易遭遇：投资被骗、借出难回、担保被追偿、企业破产清算等财务灾难。理财铁律：不买理财（尤其是承诺高回报的），不借大额给别人，不做担保人，优先持有实物资产（房产、黄金）而非金融资产。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_disaster_direct_012",
+    "name": "七杀三重-牢狱风险",
+    "version": "1.0.0", "module": "mangpai_disaster_direct", "priority": 85,
+    "conditions": {"operator": "AND", "rules": [{"field": "mangpai_direct_rules", "operator": "contains", "value": "七杀三重"}]},
+    "actions": [
+      {"type": "set_tag", "value": "牢狱风险"},
+      {"type": "set_score", "field": "blind_disaster_risk", "value": 80},
+      {"type": "generate_text", "template": "盲派铁口直断：七杀三重，牢狱风险明确。七杀为法律制裁、牢狱之象，三重则法网恢恢难以逃脱。此命务必遵纪守法，不可有任何侥幸心理。特别需注意：不可参与民间借贷、不可替人担保、不可涉黑涉恶、不可偷税漏税。逢七杀旺地之大运流年（尤其申酉年）为高风险期，应提前咨询法律顾问排查风险点。"}
+    ]
+  }
+]

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { userApi, uploadApi } from '@/lib/api';
+import { userApi, uploadApi, authApi } from '@/lib/api';
 import { dispatchAuthChange } from '@/components/AuthNav';
 
 export default function ProfileSettingsPage() {
@@ -24,6 +24,15 @@ export default function ProfileSettingsPage() {
   const [pwdMsg, setPwdMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [changingPwd, setChangingPwd] = useState(false);
 
+  // Phone binding state
+  const [userPhone, setUserPhone] = useState('');
+  const [bindPhoneInput, setBindPhoneInput] = useState('');
+  const [bindCode, setBindCode] = useState('');
+  const [bindSendCooldown, setBindSendCooldown] = useState(0);
+  const [bindMsg, setBindMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [binding, setBinding] = useState(false);
+  const bindTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
   const avatarInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -40,12 +49,18 @@ export default function ProfileSettingsPage() {
         setBio(data.bio || '');
         setAvatarUrl(data.avatarUrl || '');
         setAvatarPreview(data.avatarUrl || '');
+        setUserPhone(data.phone || '');
       })
       .catch(() => {
         setMsg({ type: 'error', text: '加载失败' });
       })
       .finally(() => setLoading(false));
   }, [router]);
+
+  // Cleanup bind timer on unmount
+  useEffect(() => {
+    return () => { if (bindTimerRef.current) clearInterval(bindTimerRef.current); };
+  }, []);
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -89,6 +104,65 @@ export default function ProfileSettingsPage() {
       setPwdMsg({ type: 'error', text: err?.response?.data?.message || '修改失败' });
     } finally {
       setChangingPwd(false);
+    }
+  };
+
+  const startBindCooldown = () => {
+    setBindSendCooldown(60);
+    bindTimerRef.current = setInterval(() => {
+      setBindSendCooldown((prev) => {
+        if (prev <= 1) {
+          if (bindTimerRef.current) clearInterval(bindTimerRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  const handleBindSendCode = async () => {
+    const phone = bindPhoneInput.trim();
+    if (!phone) {
+      setBindMsg({ type: 'error', text: '请输入手机号' });
+      return;
+    }
+    setBindMsg(null);
+    try {
+      await authApi.sendSmsCode(phone);
+      startBindCooldown();
+    } catch (err: any) {
+      setBindMsg({ type: 'error', text: err.response?.data?.message || '发送失败' });
+    }
+  };
+
+  const handleBindPhone = async () => {
+    const phone = bindPhoneInput.trim();
+    const code = bindCode.trim();
+    if (!phone || !code) {
+      setBindMsg({ type: 'error', text: '请输入手机号和验证码' });
+      return;
+    }
+    setBinding(true);
+    setBindMsg(null);
+    try {
+      const res = await authApi.bindPhone(phone, code);
+      setUserPhone(res.data.phone || phone);
+      setBindPhoneInput('');
+      setBindCode('');
+      setBindMsg({ type: 'success', text: '手机号绑定成功' });
+      // Update localStorage
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        try {
+          const userData = JSON.parse(userStr);
+          userData.phone = res.data.phone || phone;
+          localStorage.setItem('user', JSON.stringify(userData));
+        } catch {}
+      }
+    } catch (err: any) {
+      setBindMsg({ type: 'error', text: err.response?.data?.message || '绑定失败' });
+    } finally {
+      setBinding(false);
     }
   };
 
@@ -228,6 +302,80 @@ export default function ProfileSettingsPage() {
           />
           <div className="text-right text-xs text-gray-400 mt-1">{bio.length}/200</div>
         </div>
+      </div>
+
+      {/* Phone Binding */}
+      <div className="max-w-lg mx-auto bg-white mt-4 rounded-xl px-4 py-4">
+        <h2 className="text-base font-medium text-gray-800 mb-4">绑定手机号</h2>
+        {userPhone ? (
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-500">已绑定</p>
+              <p className="text-base font-medium text-gray-800 mt-0.5">{userPhone}</p>
+            </div>
+            <button
+              onClick={() => { setUserPhone(''); setBindMsg(null); }}
+              className="text-sm text-primary-500 hover:text-primary-600"
+            >
+              更换
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm text-gray-500 mb-2 block">手机号</label>
+              <input
+                type="tel"
+                value={bindPhoneInput}
+                onChange={(e) => setBindPhoneInput(e.target.value)}
+                placeholder="输入手机号"
+                maxLength={15}
+                className="w-full px-3 py-2 text-sm text-gray-800 border border-gray-200 rounded-lg focus:outline-none focus:border-primary-300 bg-white"
+              />
+            </div>
+            <div>
+              <label className="text-sm text-gray-500 mb-2 block">验证码</label>
+              <div className="flex gap-3">
+                <input
+                  type="text"
+                  value={bindCode}
+                  onChange={(e) => setBindCode(e.target.value)}
+                  placeholder="6位验证码"
+                  maxLength={6}
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  className="flex-1 px-3 py-2 text-sm text-gray-800 border border-gray-200 rounded-lg focus:outline-none focus:border-primary-300 bg-white"
+                />
+                <button
+                  type="button"
+                  onClick={handleBindSendCode}
+                  disabled={bindSendCooldown > 0}
+                  className={`shrink-0 px-4 py-2 text-sm rounded-lg transition-colors ${
+                    bindSendCooldown > 0
+                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                      : 'bg-primary-500 text-white hover:bg-primary-600'
+                  }`}
+                >
+                  {bindSendCooldown > 0 ? `${bindSendCooldown}s` : '获取验证码'}
+                </button>
+              </div>
+            </div>
+            <button
+              onClick={handleBindPhone}
+              disabled={binding}
+              className="w-full py-2 text-sm text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50"
+            >
+              {binding ? '绑定中...' : '确认绑定'}
+            </button>
+          </div>
+        )}
+        {bindMsg && (
+          <div className={`mt-3 rounded-lg px-4 py-2 text-sm text-center ${
+            bindMsg.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-600'
+          }`}>
+            {bindMsg.text}
+          </div>
+        )}
       </div>
 
       {/* Password Change */}

@@ -1160,53 +1160,73 @@ def _calc_pattern(
     wuxing_score: dict[str, float],
     strength: float,
 ) -> tuple[str, str, float]:
-    """格局判断（正格八格）"""
+    """格局判断（正格八格 + 建禄/羊刃 + 从格）"""
 
-    # 月令藏干的十神
     month_hidden = month_p.hidden_gan
     if not month_hidden:
         return "", "", 0.0
 
-    # 取月令本气
+    # 月令本气的十神
     month_ben_qi = month_hidden[0]
     ben_qi_ten_god = get_ten_god(day_master, month_ben_qi)
 
-    # 比肩/劫财不成格，需看中余气或其他透出
+    # 天干集合（年/月/时干，日主不算）
+    all_gan = [year_p.gan, month_p.gan, hour_p.gan]
+
+    # 检查某藏干是否透出天干（精确天干匹配，非五行匹配）
+    def is_transparent(hidden_gan: str) -> bool:
+        return hidden_gan in all_gan
+
+    # 比肩/劫财不成正格，需看中余气透出，否则建禄/羊刃
     if ben_qi_ten_god in ("比肩", "劫财"):
         for hg in month_hidden[1:]:
             tg = get_ten_god(day_master, hg)
             if tg not in ("比肩", "劫财"):
-                # 检查是否透出天干
-                all_gan = [year_p.gan, month_p.gan, hour_p.gan]
-                for ag in all_gan:
-                    if GAN_WUXING.get(ag) == GAN_WUXING.get(hg):
-                        ben_qi_ten_god = tg
-                        break
-                if ben_qi_ten_god not in ("比肩", "劫财"):
+                if is_transparent(hg):
+                    ben_qi_ten_god = tg
                     break
         if ben_qi_ten_god in ("比肩", "劫财"):
             return "", "建禄格" if ben_qi_ten_god == "比肩" else "羊刃格", 50.0
 
+    # 正格映射
     pattern_name = ZHENG_GE_MAP.get(ben_qi_ten_god, "")
     if not pattern_name:
         return "", "", 0.0
 
-    # 评分：基于格局的纯粹度
+    # === 格局评分 ===
     pattern_score = 60.0
 
-    # 月令本气透出天干加分
-    all_gan_set = {year_p.gan, month_p.gan, hour_p.gan}
-    for g in all_gan_set:
-        if get_ten_god(day_master, g) == ben_qi_ten_god:
-            pattern_score += 15.0
-            break
+    # 本气透出天干 +15
+    if is_transparent(month_ben_qi):
+        pattern_score += 15.0
 
-    # 日主强弱与格局匹配度
+    # 日主强弱与格局匹配
     is_wealth_officer = ben_qi_ten_god in ("正财", "偏财", "正官", "七杀")
-    if is_wealth_officer and strength < 50:
-        pattern_score -= 10.0  # 身弱不担财官
-    elif not is_wealth_officer and strength > 60:
-        pattern_score -= 5.0
+    is_output = ben_qi_ten_god in ("食神", "伤官")
+
+    if is_wealth_officer and strength < 45:
+        pattern_score -= 15.0  # 财官格身弱不担
+    elif is_wealth_officer and strength >= 55:
+        pattern_score += 10.0  # 财官格身强能担
+    elif is_output and strength < 50:
+        pattern_score -= 10.0  # 食伤格身弱无力泄秀
+    elif is_output and strength >= 55:
+        pattern_score += 5.0   # 食伤格身强泄秀有力
+    # 印格不论身强弱均可成，但过强过弱都有偏颇
+
+    # 从格倾向检测
+    if strength >= 85:
+        # 极强: 可能从强/专旺, 正格纯度降
+        if not is_wealth_officer:
+            pattern_score = max(pattern_score, 70.0)
+        else:
+            pattern_score -= 5.0  # 极强又财官格, 格局混杂
+    elif strength <= 20:
+        # 极弱: 可能从弱
+        if is_wealth_officer:
+            pattern_score += 5.0   # 极弱财官格 → 从格倾向
+        else:
+            pattern_score -= 5.0   # 极弱印食伤格 → 无力不真
 
     pattern_score = max(0, min(100, pattern_score))
 
@@ -1224,32 +1244,82 @@ def _calc_yong_shen(
     pattern_type: str,
     wuxing_score: dict[str, float],
 ) -> tuple[str, str, str, str]:
-    """用神推算（抑强扶弱）"""
+    """用神推算（格局+强弱综合判断）"""
     dm_wx = GAN_WUXING[day_master]
-    wx_order = ["木", "火", "土", "金", "水"]
 
     sheng_wo = WUXING_SHENG_WO.get(dm_wx, "")  # 印
     wo_sheng = WUXING_SHENG.get(dm_wx, "")      # 食伤
     wo_ke = WUXING_KE.get(dm_wx, "")             # 财
     ke_wo = WUXING_KE_WO.get(dm_wx, "")          # 官杀
 
+    # 格局类型分类
+    is_officer = pattern_type in ("正官", "七杀")
+    is_wealth = pattern_type in ("正财", "偏财")
+    is_output = pattern_type in ("食神", "伤官")
+    is_seal = pattern_type in ("正印", "偏印")
+
     if strength >= 55:
-        # 身强：泄耗（食伤、财、官杀）
-        yong = wo_sheng  # 食伤泄秀
-        xi = wo_ke       # 财星耗身
-        ji = sheng_wo    # 印星忌
-        chou = dm_wx     # 比劫仇
+        # === 身强 ===
+        if is_officer:
+            # 身强官杀格 → 用财生官/食神制杀 (忌印化官、忌食伤克官)
+            yong = wo_ke if pattern_type == "正官" else wo_sheng
+            xi = wo_sheng if pattern_type == "正官" else wo_ke
+            ji = sheng_wo
+            chou = dm_wx
+        elif is_wealth:
+            # 身强财格 → 用食伤生财 (忌比劫夺财)
+            yong = wo_sheng
+            xi = sheng_wo
+            ji = dm_wx
+            chou = ke_wo
+        else:
+            # 身强印/食伤/建禄/羊刃 → 泄耗
+            yong = wo_sheng
+            xi = wo_ke
+            ji = sheng_wo
+            chou = dm_wx
     elif strength <= 45:
-        # 身弱：生扶（印、比劫）
-        yong = sheng_wo  # 印星生扶
-        xi = dm_wx       # 比劫帮身
-        ji = wo_ke       # 财星忌
-        chou = ke_wo     # 官杀仇
+        # === 身弱 ===
+        if is_officer:
+            # 身弱官杀格 → 用印化杀生身 (忌食伤克官、忌财生杀)
+            yong = sheng_wo
+            xi = dm_wx
+            ji = wo_ke
+            chou = ke_wo
+        elif is_wealth:
+            # 身弱财格 → 用比劫帮身担财 (忌官杀、忌食伤泄身)
+            yong = dm_wx
+            xi = sheng_wo
+            ji = ke_wo
+            chou = wo_sheng
+        elif is_output:
+            # 身弱食伤格 → 用印制食伤生身 (忌财泄食伤、忌官杀)
+            yong = sheng_wo
+            xi = dm_wx
+            ji = wo_sheng
+            chou = wo_ke
+        else:
+            # 身弱印格 → 用比劫帮身
+            yong = sheng_wo
+            xi = dm_wx
+            ji = wo_ke
+            chou = ke_wo
     else:
-        # 中和：取平衡
+        # === 中和 ===
+        if is_officer:
+            yong = sheng_wo
+            xi = wo_ke
+        elif is_wealth:
+            yong = dm_wx
+            xi = sheng_wo
+        elif is_output:
+            yong = sheng_wo
+            xi = dm_wx
+        else:
+            yong = sheng_wo
+            xi = dm_wx
+
         sorted_wx = sorted(wuxing_score.items(), key=lambda x: x[1])
-        yong = sorted_wx[0][0] if sorted_wx else ""
-        xi = sorted_wx[1][0] if len(sorted_wx) > 1 else ""
         ji = sorted_wx[-1][0] if sorted_wx else ""
         chou = sorted_wx[-2][0] if len(sorted_wx) > 1 else ""
 

@@ -48,29 +48,30 @@ export class TokenService {
 
   // ── Estimation ──
 
-  /** Estimate tokens from text. Chinese chars ~1.3/token, English ~4/token */
+  /**
+   * Estimate token count from text.
+   * CJK characters ~1.5-2 tokens each (DeepSeek/OpenAI tokenizers).
+   * English ~4 chars per token. Spaces/newlines are negligible.
+   */
   estimateTokens(text: string): number {
     if (!text) return 0;
-    let chineseChars = 0;
+    let cjkChars = 0;
     let otherChars = 0;
     for (const ch of text) {
-      if (/[一-鿿㐀-䶿]/.test(ch)) {
-        chineseChars++;
+      if (/[\p{Script=Han}\p{Script=Katakana}\p{Script=Hiragana}]/u.test(ch)) {
+        cjkChars++;
       } else if (ch !== ' ' && ch !== '\n') {
         otherChars++;
       }
     }
-    return Math.ceil(chineseChars / 1.2 + otherChars / 4);
+    // CJK: ~1.8 tokens per char (avg between 1.5-2.0 across providers)
+    // Latin: ~0.25 tokens per char (4 chars per token)
+    return Math.ceil(cjkChars * 1.8 + otherChars * 0.25);
   }
 
   /** Estimate output tokens from response text (already generated). */
   estimateOutputTokens(responseText: string): number {
-    if (!responseText) return 0;
-    let chars = 0;
-    for (const ch of responseText) {
-      if (ch !== ' ' && ch !== '\n') chars++;
-    }
-    return Math.ceil(chars / 1.3);
+    return this.estimateTokens(responseText);
   }
 
   // ── Pricing ──

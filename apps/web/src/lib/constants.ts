@@ -11,6 +11,10 @@ export const REPORT_TYPE_LABELS: Record<string, string> = {
   enterprise: '企业发展周期分析',
   full: '全方位深度分析',
   pairing: '配对分析',
+  xiaoliuren: '小六壬占卜',
+  digital_energy: '数字能量',
+  bazhai: '八宅风水',
+  health: '五运六气健康分析',
 };
 
 /** 分享页面转化文案 */

@@ -1,0 +1,272 @@
+[
+  {
+    "rule_id": "mangpai_career_direct_001",
+    "name": "官杀混杂-事业多变",
+    "version": "1.0.0",
+    "module": "mangpai_career_direct",
+    "priority": 95,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "官杀混杂"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "官杀混杂"},
+      {"type": "set_score", "field": "blind_career_trajectory", "value": 35},
+      {"type": "generate_text", "template": "盲派铁口直断：正官七杀同现为官杀混杂，事业多变之象。正官为正途之职，七杀为偏门之权，两者并存则命主一生职业多变，频繁跳槽，难以在一个岗位深耕。宜选择多元化的职业路径（如同时拥有主业和副业），或选择变动性大的行业（贸易、咨询、媒体），化不利为有利。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_career_direct_002",
+    "name": "伤官见官（无制）-丢官罢职",
+    "version": "1.0.0",
+    "module": "mangpai_career_direct",
+    "priority": 95,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "伤官见官（无制）"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "伤官见官"},
+      {"type": "set_score", "field": "blind_career_trajectory", "value": 20},
+      {"type": "generate_text", "template": "盲派铁口直断：伤官见官且无印星制化，为祸百端之格。伤官克正官，官星为事业为上司为法律，被伤官所克则必主丢官罢职、口舌是非、官非诉讼。此命不宜在体制内或大机构工作，宜自由职业、创业或从事不受体制约束的行业。女命伤官见官尤凶，事业家庭双重受损。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_career_direct_003",
+    "name": "财破印-弃学从商",
+    "version": "1.0.0",
+    "module": "mangpai_career_direct",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "财破印"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "财破印"},
+      {"type": "set_score", "field": "blind_career_trajectory", "value": 60},
+      {"type": "generate_text", "template": "盲派铁口直断：财星破印，印星为学历为文书为信誉，被财星所克则学业受阻、文凭难获、信誉易损。此命不宜走学术科研路线，宜及早进入商界或实务领域。虽有弃学从商之象，但若财印配置得当，亦可通过实战经验积累成为行业专家。关键在财印力量对比——财过旺则唯利是图失人心，印有根则商亦有道。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_career_direct_004",
+    "name": "枭神夺食-健康事业双损",
+    "version": "1.0.0",
+    "module": "mangpai_career_direct",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "枭神夺食"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "枭神夺食"},
+      {"type": "set_score", "field": "blind_career_trajectory", "value": 25},
+      {"type": "generate_text", "template": "盲派铁口直断：偏印夺食神，枭神夺食为八字中最凶组合之一。食神为才华、福气、享受、子女之象，被偏印（枭神）夺走则才华无处施展、福气被夺、健康受损。此命事业上常遭遇突发变故，眼看成功在望却被截胡夺走。需远离投机行业，宜做幕后技术型工作，减少与人正面竞争。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_career_direct_005",
+    "name": "食伤旺而无财-怀才不遇",
+    "version": "1.0.0",
+    "module": "mangpai_career_direct",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "食伤旺而无财"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "食伤旺无财"},
+      {"type": "set_score", "field": "blind_career_trajectory", "value": 40},
+      {"type": "generate_text", "template": "盲派铁口直断：食伤旺而无财星通关，才华横溢却无处变现。食伤为才华思想，生财星则才华变现为财富，无财则才华空转无法落地。此命清高孤傲，不愿为五斗米折腰，宜走纯技术或纯艺术路线，以作品说话而非以商业衡量。切忌创业经商，财星不现则求财无门，白费心血。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_career_direct_006",
+    "name": "比劫夺财-不宜合伙",
+    "version": "1.0.0",
+    "module": "mangpai_career_direct",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "比劫夺财"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "比劫夺财"},
+      {"type": "set_score", "field": "blind_career_trajectory", "value": 30},
+      {"type": "generate_text", "template": "盲派铁口直断：比劫重重克财，财来财去留不住，且最忌与人合伙经营。比劫为同辈、合作伙伴，财为利润，比劫夺财则合作伙伴必分走大部分利润，甚至反目成仇。此命只宜独资经营或做个体户，切忌与人合资、合伙、入股。即使在职场也不宜进入合伙人制度的公司，宜做独立贡献者。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_career_direct_007",
+    "name": "杀印相生-仕途显赫",
+    "version": "1.0.0",
+    "module": "mangpai_career_direct",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "eq", "value": "化用（杀印相生）"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "杀印相生"},
+      {"type": "set_score", "field": "blind_career_trajectory", "value": 92},
+      {"type": "generate_text", "template": "盲派铁口直断：杀印相生做功，七杀之凶被印星转化，化杀为权，仕途显赫之格。此为体制内最高级别的功名格局，代表通过国家平台、大型机构行使权力，有省部级以上的政治潜力或大型企业CEO之才。此命宜进入体制、国企、大型跨国公司，走官方路线，以权力为导向积累实力。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_career_direct_008",
+    "name": "食伤制杀-创业型领袖",
+    "version": "1.0.0",
+    "module": "mangpai_career_direct",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "eq", "value": "制用（食伤制官杀）"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "食伤制杀"},
+      {"type": "set_score", "field": "blind_career_trajectory", "value": 85},
+      {"type": "generate_text", "template": "盲派铁口直断：食伤制官杀做功，以才华能力获取权力地位，创业型领袖之格。食伤为才华创意，制官杀则用智慧驾驭权力，制什么得什么——制官得官，制财得财。此命宜创业开公司，以自己的专业能力为核心竞争力，不宜久居人下打工。创业方向应为技术驱动型或创意型公司。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_career_direct_009",
+    "name": "食伤生财-经商之命",
+    "version": "1.0.0",
+    "module": "mangpai_career_direct",
+    "priority": 80,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "eq", "value": "生用泄用（食伤生财）"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "食伤生财"},
+      {"type": "set_score", "field": "blind_career_trajectory", "value": 82},
+      {"type": "generate_text", "template": "盲派铁口直断：食伤生财做功，才华变现的典型商业人才。食伤为创意产品服务，生财星则才华转化为财富，是天然的经商之命。此命不适合打工，宜自我经营或创业，将自己的技能、知识、创意直接变现。适合行业：培训教育、内容创作、设计艺术、技术服务、餐饮美食等能将个人才华转化为产品/服务的领域。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_career_direct_010",
+    "name": "官印相生-公务员气质",
+    "version": "1.0.0",
+    "module": "mangpai_career_direct",
+    "priority": 80,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "eq", "value": "化用（官印相生）"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "官印相生"},
+      {"type": "set_score", "field": "blind_career_trajectory", "value": 80},
+      {"type": "generate_text", "template": "盲派铁口直断：官印相生做功，官星得印星护持，正统仕途或大型机构管理之格。正官为正统职位，配印星则为官有印，有名有权，代表公务员、国企管理、事业单位领导类型的职业路径。此命宜考公考编进体制，或进入大型正规企业走管理路线，不宜创业。千万级格局，稳扎稳打可至中高层管理。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_career_direct_011",
+    "name": "比劫制财-体力劳动求财",
+    "version": "1.0.0",
+    "module": "mangpai_career_direct",
+    "priority": 75,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "eq", "value": "制用（比劫制财）"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "比劫制财"},
+      {"type": "set_score", "field": "blind_career_trajectory", "value": 35},
+      {"type": "generate_text", "template": "盲派铁口直断：比劫制财做功，以体力劳动求财，效率较低的求财方式。比劫代表体力、竞争，直接克财则用体力换取钱财。此命适合制造、物流、建筑、农业、安保等体力和执行型工作，不宜做高脑力高创意的白领工作。财富积累靠勤，不宜投机赌博。虽辛苦但有稳定收入，量力而行亦可小康。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_career_direct_012",
+    "name": "印禄相随-福泽深厚",
+    "version": "1.0.0",
+    "module": "mangpai_career_direct",
+    "priority": 80,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "eq", "value": "印禄相随"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "印禄相随"},
+      {"type": "set_score", "field": "blind_career_trajectory", "value": 78},
+      {"type": "generate_text", "template": "盲派铁口直断：印禄相随做功，印星生身，禄神在位，福泽深厚之格。印星代表贵人长辈学历庇护，禄神代表俸禄地位根基，两者结合则为有贵人相助、有稳定收入之命。此命宜在大机构或政府单位工作，享受体制内的稳定和福利，不宜冒险创业。纵使不主动争取，福气亦会自然而来，是人称羡的'铁饭碗'命格。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_career_direct_013",
+    "name": "开官杀库-权倾一方",
+    "version": "1.0.0",
+    "module": "mangpai_career_direct",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "in", "value": ["开官杀库"]}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "开官杀库"},
+      {"type": "set_score", "field": "blind_career_trajectory", "value": 95},
+      {"type": "generate_text", "template": "盲派铁口直断：开官杀库做功，最高等级的功名格局。官杀库被冲开，如同权力宝库之门大开，权柄倾泻而出，一发如雷。此格资产可达亿级以上，有省部级之贵或行业龙头企业家之才。开库之年（大运逢辰戌丑未冲之年）为人生最大转折点，把握住则一步登天。此命必为大人物，千万人中出一人。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_career_direct_014",
+    "name": "七杀无制-凶灾事业受阻",
+    "version": "1.0.0",
+    "module": "mangpai_career_direct",
+    "priority": 88,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "七杀无制"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "七杀无制"},
+      {"type": "set_score", "field": "blind_career_trajectory", "value": 15},
+      {"type": "generate_text", "template": "盲派铁口直断：七杀无制无化，凶神攻身，事业多遭横祸。七杀为小人、竞争、意外、官非之象，无印化则无贵人庇护，无食制则无才华应对，事业必然坎坷多难。此命不宜创业或在竞争激烈的行业工作，宜做低风险的稳定工作，如技术岗、后勤岗，远离权力斗争和商战环境。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_career_direct_015",
+    "name": "年月财官到家-天生富贵",
+    "version": "1.0.0",
+    "module": "mangpai_career_direct",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "eq", "value": "年月财官到家"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "财官到家"},
+      {"type": "set_score", "field": "blind_career_trajectory", "value": 82},
+      {"type": "generate_text", "template": "盲派铁口直断：年月财官到家做功，年月为宾位有财官之资源，日时为主位有印比之工具，家内之体取家外之用——典型的先天资源好、后天善经营的富贵格局。此命或出身优越（年月为父母家庭），或善于整合外部资源为己所用。职业方向应为资源整合型工作，如投资、贸易、供应链管理。"}
+    ]
+  }
+]

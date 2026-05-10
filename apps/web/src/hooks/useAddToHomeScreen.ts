@@ -32,6 +32,58 @@ function isMobile(): boolean {
 const DISMISSED_KEY = 'a2hs_dismissed';
 const DISMISS_DURATION = 7 * 24 * 60 * 60 * 1000;
 
+/**
+ * Register service worker as early as possible (before component mount).
+ * Chrome requires the SW to be active for the install prompt to fire.
+ */
+let swRegistrationPromise: Promise<ServiceWorkerRegistration | null> | null = null;
+function ensureServiceWorker(): Promise<ServiceWorkerRegistration | null> {
+  if (swRegistrationPromise) return swRegistrationPromise;
+  if (!('serviceWorker' in navigator)) {
+    swRegistrationPromise = Promise.resolve(null);
+    return swRegistrationPromise;
+  }
+  swRegistrationPromise = (async () => {
+    try {
+      // Force-update: unregister any old SW with corrupted cache first
+      const oldReg = await navigator.serviceWorker.getRegistration('/sw.js');
+      if (oldReg && oldReg.active) {
+        const activeVersion = oldReg.active.scriptURL;
+        // Check if we need to update — the old SW might have a corrupted cache
+        await oldReg.update();
+      }
+
+      const reg = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
+      console.log('[PWA] Service Worker registered, scope:', reg.scope);
+
+      // Immediately check for updates and apply them
+      reg.addEventListener('updatefound', () => {
+        const newWorker = reg.installing;
+        if (newWorker) {
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              // New SW available — reload to activate
+              console.log('[PWA] New Service Worker available, reloading...');
+              window.location.reload();
+            }
+          });
+        }
+      });
+
+      return reg;
+    } catch (err: any) {
+      console.warn('[PWA] Service Worker registration failed:', err.message);
+      return null;
+    }
+  })();
+  return swRegistrationPromise;
+}
+
+// Register SW at module import time (runs before any component mounts)
+if (typeof window !== 'undefined' && isMobile() && !isStandalone()) {
+  ensureServiceWorker();
+}
+
 export function useAddToHomeScreen() {
   const [browserType, setBrowserType] = useState<BrowserType | null>(null);
   const [show, setShow] = useState(false);
@@ -43,41 +95,45 @@ export function useAddToHomeScreen() {
     setBrowserType(type);
 
     if (isStandalone()) return;
+    if (!isMobile()) return;
 
     const dismissed = localStorage.getItem(DISMISSED_KEY);
     if (dismissed && Date.now() - parseInt(dismissed, 10) < DISMISS_DURATION) return;
 
-    if (!isMobile()) return;
+    // Ensure SW is registered (may have been done at import time)
+    ensureServiceWorker();
 
-    // Register minimal service worker (required for Chrome install prompt)
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(() => {});
-    }
-
+    // Listen for install prompt — must be added synchronously in the effect
     const promptHandler = (e: Event) => {
       e.preventDefault();
       deferredPrompt.current = e as BeforeInstallPromptEvent;
+      // Show prompt immediately when browser fires beforeinstallprompt
+      setShow(true);
+      if (timerRef.current) clearTimeout(timerRef.current);
     };
     window.addEventListener('beforeinstallprompt', promptHandler);
 
-    // Show after 10 seconds on page
-    timerRef.current = setTimeout(() => setShow(true), 10000);
+    // Fallback: show after 10 seconds if no beforeinstallprompt fired (e.g. on browsers that don't support it)
+    timerRef.current = setTimeout(() => {
+      if (!deferredPrompt.current) {
+        setShow(true);
+      }
+    }, 10000);
 
-    // Also show when user scrolls past 30% of page
+    // Also show when user scrolls past 30%
     let scrollFired = false;
     const scrollHandler = () => {
       if (scrollFired) return;
       const docH = document.documentElement.scrollHeight - window.innerHeight;
       if (docH > 0 && window.scrollY / docH > 0.3) {
         scrollFired = true;
-        setShow(true);
+        if (!deferredPrompt.current) setShow(true);
         window.removeEventListener('scroll', scrollHandler);
         if (timerRef.current) clearTimeout(timerRef.current);
       }
     };
     window.addEventListener('scroll', scrollHandler, { passive: true });
 
-    // Listen for appinstalled event to hide prompt
     const installedHandler = () => setShow(false);
     window.addEventListener('appinstalled', installedHandler);
 
@@ -96,6 +152,7 @@ export function useAddToHomeScreen() {
       deferredPrompt.current = null;
       if (result.outcome === 'accepted') {
         setShow(false);
+        return;
       }
     }
     // For iOS/WeChat: the guide UI just dismisses

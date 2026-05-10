@@ -36,6 +36,7 @@ const CATEGORY_FEATURES: Record<string, string[]> = {
   premium: ['所有功能', '5000字+全方位分析', '财运/婚姻/事业/健康', '流年大运详解', '神煞详细解读'],
   enterprise: ['所有高级功能', '企业级定制报告', '专属顾问服务', '团队分析', 'API 接入'],
   vip: ['所有功能全包', '无限次报告', '专属顾问推荐', '优先响应', '年度运势'],
+  xiaoliuren: ['传统掌诀推算', '六神五行解读', '吉凶方位指引', 'AI深度解读报告', '每日免费1次'],
 };
 
 const CATEGORY_CTA: Record<string, string> = {
@@ -150,9 +151,15 @@ export default function ProductsPage() {
   };
 
   const handlePaymentSuccess = () => {
-    if (pendingOrder) {
-      setShowChartSelection(true);
+    if (!pendingOrder) return;
+    // 小六壬不需要选择八字命盘，直接跳转到小六壬页面
+    if (pendingOrder.reportType === 'xiaoliuren') {
+      const order = pendingOrder;
+      setPendingOrder(null);
+      router.push(`/xiaoliuren?paid=1&orderNo=${encodeURIComponent(order.orderNo)}`);
+      return;
     }
+    setShowChartSelection(true);
   };
 
   const handlePaymentCancel = () => {
@@ -162,7 +169,11 @@ export default function ProductsPage() {
   const handleChartSelect = (chartId: number) => {
     setShowChartSelection(false);
     setPendingOrder(null);
-    router.push(`/report/generating/${chartId}?type=${pendingOrder?.reportType || 'free'}&paid=1`);
+    if (pendingOrder?.reportType === 'xiaoliuren') {
+      router.push(`/xiaoliuren?paid=1&orderNo=${encodeURIComponent(pendingOrder.orderNo || '')}`);
+    } else {
+      router.push(`/report/generating/${chartId}?type=${pendingOrder?.reportType || 'free'}&paid=1`);
+    }
   };
 
   const handleChartSelectCancel = () => {
@@ -193,7 +204,9 @@ export default function ProductsPage() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((p) => {
             const style = CATEGORY_STYLE[p.category] || { color: 'border-ink-200', highlight: false };
-            const features = CATEGORY_FEATURES[p.category] || CATEGORY_FEATURES.standard;
+            const features = p.reportType === 'xiaoliuren'
+              ? CATEGORY_FEATURES.xiaoliuren
+              : (CATEGORY_FEATURES[p.category] || CATEGORY_FEATURES.standard);
             const cta = CATEGORY_CTA[p.category] || '立即购买';
             const isFree = p.currentPrice === 0;
             const existingReport = p.reportType ? reportMap[p.reportType] : undefined;

@@ -1,0 +1,275 @@
+[
+  {
+    "rule_id": "mangpai_wealth_direct_001",
+    "name": "开财库-横发之财",
+    "version": "1.0.0",
+    "module": "mangpai_wealth_direct",
+    "priority": 98,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "in", "value": ["开财库"]}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "开财库-暴富"},
+      {"type": "set_score", "field": "blind_wealth_level", "value": 98},
+      {"type": "generate_text", "template": "盲派铁口直断：辰戌冲或丑未冲开财库，财库被沖开如决堤之水，财富倾泻而入，必主横发之财。资产可达亿级以上。发迹时间在财库被冲之大运流年，通常在30-45岁之间爆发。此命为百万人中出一人的暴富格局，一旦财运启动一发如雷。关键提示：暴富后需守财，宜配置固定资产和长期投资，防止财来财去。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_wealth_direct_002",
+    "name": "财星入墓不冲-财运闭塞",
+    "version": "1.0.0",
+    "module": "mangpai_wealth_direct",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "财星入墓不沖"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "财星入墓"},
+      {"type": "set_score", "field": "blind_wealth_level", "value": 20},
+      {"type": "generate_text", "template": "盲派铁口直断：财星在墓库之中而无冲开之机，如同宝藏被锁在仓库中却没有钥匙。此命财运闭塞，小富靠勤，大富无缘。一生辛苦积累却难有爆发机会。唯有在大运流年逢冲墓库之时（辰戌冲或丑未冲），方有短暂财运窗口，宜在那时加码投资。其余时间宜守不宜攻，保本为上。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_wealth_direct_003",
+    "name": "财星空亡-财运虚无",
+    "version": "1.0.0",
+    "module": "mangpai_wealth_direct",
+    "priority": 88,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "财星空亡"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "财星空亡"},
+      {"type": "set_score", "field": "blind_wealth_level", "value": 15},
+      {"type": "generate_text", "template": "盲派铁口直断：财星落空亡，求财如捕风捉影，财运虚无缥缈之象。此命一生金钱运极弱，辛苦付出却难有相应回报。尤其容易遭遇财务诈骗、投资亏损、借出难回的困境。宜做稳定收入工作（工资型而非投资型），切忌投机炒股、民间借贷等高风险行为。财务需交由可信之人打理，自己不宜亲手操作资金。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_wealth_direct_004",
+    "name": "财星食伤俱无-一生清贫",
+    "version": "1.0.0",
+    "module": "mangpai_wealth_direct",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "财星食伤俱无"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "财食俱无"},
+      {"type": "set_score", "field": "blind_wealth_level", "value": 10},
+      {"type": "generate_text", "template": "盲派铁口直断：财星和食伤全无，求财无路之格。食伤为生财之源，财星为财富本身，两者全无则既无赚钱的能力（无食伤），也无赚钱的机会（无财星）。此命不宜以追求财富为人生目标，宜以印星（知识、精神、信仰）为人生寄托，安贫乐道，或靠长辈庇荫维持生活。强行求财必血本无归。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_wealth_direct_005",
+    "name": "比劫夺财-财来财去",
+    "version": "1.0.0",
+    "module": "mangpai_wealth_direct",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "比劫夺财"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "比劫夺财"},
+      {"type": "set_score", "field": "blind_wealth_level", "value": 30},
+      {"type": "generate_text", "template": "盲派铁口直断：比劫重重夺财，财来财去留不住。比劫为分财之手，挣到的钱必被分割——或合伙分利、或朋友借钱不还、或兄弟争产、或员工流失带走客户。此命的理财第一原则：不合伙、不担保、不借钱。财富宜以实物形式持有（房产、黄金、收藏品），不宜现金或股权持有。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_wealth_direct_006",
+    "name": "财气通门户-晚年富足",
+    "version": "1.0.0",
+    "module": "mangpai_wealth_direct",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "财气通门户"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "财通门户"},
+      {"type": "set_score", "field": "blind_wealth_level", "value": 75},
+      {"type": "generate_text", "template": "盲派铁口直断：财气通门户，时柱为归宿为家宅为晚年，财星归位于时柱则越老越富。此命早年辛苦积累，中年财富起步，晚年财运达到顶峰。投资风格宜稳健长期型，如定投指数基金、长线持有优质资产。退休后财富不但不会缩水反而会继续增长，是典型的晚景优渥之命。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_wealth_direct_007",
+    "name": "反局+财旺-亿级富贵",
+    "version": "1.0.0",
+    "module": "mangpai_wealth_direct",
+    "priority": 88,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "反局+财旺"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "反局财旺"},
+      {"type": "set_score", "field": "blind_wealth_level", "value": 95},
+      {"type": "generate_text", "template": "盲派铁口直断：反局做功加财旺，用占主位反制宾位，大富大贵之格。反局为非常规做功，代表不走寻常路的财富获取方式，往往是颠覆性创新或非对称竞争。资产可达亿级甚至十亿级。此命不宜走传统求财路线，应用非常规思维——别人放弃的市场你进入，别人看不懂的机遇你把握。反局发迹往往在众人看衰时。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_wealth_direct_008",
+    "name": "正官五重-牢刑破财",
+    "version": "1.0.0",
+    "module": "mangpai_wealth_direct",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "正官五重"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "官非破财"},
+      {"type": "set_score", "field": "blind_wealth_level", "value": 20},
+      {"type": "generate_text", "template": "盲派铁口直断：正官五重为官星过旺，官多为杀，必主牢刑官非。正官本为吉神，但过犹不及，五重正官则变为压制日主的凶神，官非缠身。官司诉讼必然导致巨额经济损失，律师费、赔偿金、罚款层层剥皮。此命务必遵纪守法，远离灰色地带，签署任何文件前需法律审查。逢官杀旺盛之年尤需谨慎。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_wealth_direct_009",
+    "name": "财星两头挂-出手大方",
+    "version": "1.0.0",
+    "module": "mangpai_wealth_direct",
+    "priority": 70,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "财星两头挂"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "财星两头挂"},
+      {"type": "set_score", "field": "blind_wealth_level", "value": 45},
+      {"type": "generate_text", "template": "盲派铁口直断：财星两头挂（年时均为财星），出手大方，财来财去。年为早年时运，时为晚景归宿，两头皆见财则一生与钱打交道，赚钱能力强但花钱能力更强。此命需强制储蓄和理财规划，否则赚多少花多少，晚年无积蓄。建议设置自动划账储蓄机制，把'花钱的手'绑住。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_wealth_direct_010",
+    "name": "食伤生财-技能变现",
+    "version": "1.0.0",
+    "module": "mangpai_wealth_direct",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "eq", "value": "生用泄用（食伤生财）"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "食伤生财"},
+      {"type": "set_score", "field": "blind_wealth_level", "value": 80},
+      {"type": "generate_text", "template": "盲派铁口直断：食伤生财做功，才华变现的最佳模式。食伤为技能、创意、服务，生财星则将个人能力直接转化为财富。此命不靠资本赚钱，而靠自己的专业能力赚钱。适合技能型创业或高端自由职业。收入天花板取决于技能稀缺性——技能越稀缺，收费越高。建议持续提升专业壁垒，打造个人品牌，财富随之水涨船高。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_wealth_direct_011",
+    "name": "开食伤库-才华爆发变富",
+    "version": "1.0.0",
+    "module": "mangpai_wealth_direct",
+    "priority": 88,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "in", "value": ["开食伤库"]}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "开食伤库"},
+      {"type": "set_score", "field": "blind_wealth_level", "value": 88},
+      {"type": "generate_text", "template": "盲派铁口直断：开食伤库做功，才华之库被冲开，创意和灵感的爆发带来巨额财富。食伤库代表创意的蓄积，被冲开则如同灵感喷泉，创作力和创新力达到巅峰。此命适合内容创业、IP打造、技术发明、艺术创作等领域。爆发的关键节点在食伤库被冲之大运流年，把握住即可靠才华一夜暴富。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_wealth_direct_012",
+    "name": "羊刃合杀-武职求财",
+    "version": "1.0.0",
+    "module": "mangpai_wealth_direct",
+    "priority": 75,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "eq", "value": "羊刃合杀"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "羊刃合杀"},
+      {"type": "set_score", "field": "blind_wealth_level", "value": 60},
+      {"type": "generate_text", "template": "盲派铁口直断：羊刃合杀做功，以武力或权威制服对手而获利。羊刃为刀剑武器，合杀则制服凶神，是以武力、执法、安保、军事能力获取财富的格局。此命适合军队、警察、安保公司、风险管理、催收等行业。以"制恶"为财路，越是能制服对手，财富地位越高。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_wealth_direct_013",
+    "name": "财破印-商品交易致富",
+    "version": "1.0.0",
+    "module": "mangpai_wealth_direct",
+    "priority": 78,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "财破印"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "财破印求财"},
+      {"type": "set_score", "field": "blind_wealth_level", "value": 55},
+      {"type": "generate_text", "template": "盲派铁口直断：财星破印，以舍弃学历/稳定/体面为代价换取财富。印星代表学历、稳定、面子、固定资产，被财星克破则命主倾向于为了赚钱放弃稳定工作或学历追求。此命适合销售、贸易、中介等需要"放下身段"赚钱的行业。不必在意学历和面子，务实的赚钱态度反而能打开财富之门。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_wealth_direct_014",
+    "name": "比劫合财-合伙求财",
+    "version": "1.0.0",
+    "module": "mangpai_wealth_direct",
+    "priority": 72,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_work_type", "operator": "eq", "value": "比劫合财"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "比劫合财"},
+      {"type": "set_score", "field": "blind_wealth_level", "value": 50},
+      {"type": "generate_text", "template": "盲派铁口直断：比劫合财做功，以合伙合作方式求财。比劫为合作伙伴，合财则合伙谋取财富。此命可以与人合伙经营，但须选对伙伴——伙伴的八字五行能补足你的短板方为良配。合伙合同中必须明确利益分配和退出机制，且你出资源/资本，伙伴出执行/劳动，角色清晰才能长久。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_wealth_direct_015",
+    "name": "财无食伤-无源之财易断",
+    "version": "1.0.0",
+    "module": "mangpai_wealth_direct",
+    "priority": 80,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_ten_god_counts.正财", "operator": "gte", "value": 1},
+        {"field": "mangpai_ten_god_counts.偏财", "operator": "gte", "value": 1},
+        {"field": "mangpai_ten_god_counts.食神", "operator": "eq", "value": 0},
+        {"field": "mangpai_ten_god_counts.伤官", "operator": "eq", "value": 0}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "财无源头"},
+      {"type": "set_score", "field": "blind_wealth_level", "value": 35},
+      {"type": "generate_text", "template": "盲派铁口直断：有财星而无食伤，财无源头，如无源之水终将枯竭。食伤为生财之源，无食伤则财星孤立无援，初期虽有财运但难以为继。此命需靠他人之力（印星代表的长辈/平台）来维持财富，不宜独立创业。投资应选择被动收入模式，如收租、分红、利息，依靠资产而非劳动赚钱。"}
+    ]
+  }
+]

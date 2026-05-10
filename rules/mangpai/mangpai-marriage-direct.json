@@ -1,0 +1,371 @@
+[
+  {
+    "rule_id": "mangpai_marriage_direct_001",
+    "name": "男命日支比劫-克妻再娶",
+    "version": "1.0.0",
+    "module": "mangpai_marriage_direct",
+    "priority": 95,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "gender", "operator": "eq", "value": 1},
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "日支坐比劫（男命）"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "男命日坐比劫"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 20},
+      {"type": "generate_text", "template": "盲派铁口直断：男命日支坐比劫，婚姻宫被比劫占据，妻星（财星）无处安身，必主婚姻波折。比劫为同性竞争者，日坐比劫则配偶身边竞争者不断，轻则夫妻争吵不断，重则克妻再娶。此命格晚婚可缓，早婚必离。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_direct_002",
+    "name": "女命日支比劫-感情竞争",
+    "version": "1.0.0",
+    "module": "mangpai_marriage_direct",
+    "priority": 95,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "gender", "operator": "eq", "value": 2},
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "日支坐比劫（女命）"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "女命日坐比劫"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 20},
+      {"type": "generate_text", "template": "盲派铁口直断：女命日支坐比劫，婚姻宫被比劫占据，夫星（官星）无处安身，必主感情竞争激烈。比劫为同性竞争者，日坐比劫则丈夫身边桃花不断，婚姻宫被争夺，轻则夫妻聚少离多，重则离异再嫁。此命以晚婚为吉，早婚多败。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_direct_003",
+    "name": "男命财星被合-配偶被夺",
+    "version": "1.0.0",
+    "module": "mangpai_marriage_direct",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "gender", "operator": "eq", "value": 1},
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "男命财星被合"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "男命财被合"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 25},
+      {"type": "generate_text", "template": "盲派铁口直断：男命财星被其他干支合走，正财/偏财为妻星，妻星被合则配偶易被他人争夺。如财星被比劫合走，则妻子易被朋友或兄弟夺走；如财星被官杀合走，则妻子易被有权势者夺走。此命婚姻存在第三者介入的确定信号。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_direct_004",
+    "name": "女命官星被合-丈夫被夺",
+    "version": "1.0.0",
+    "module": "mangpai_marriage_direct",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "gender", "operator": "eq", "value": 2},
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "女命官星被合"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "女命官被合"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 25},
+      {"type": "generate_text", "template": "盲派铁口直断：女命官星被其他干支合走，官杀为夫星，夫星被合则丈夫易被他人争夺。如官星被比劫合走，则丈夫易被闺蜜或女性朋友夺走；如官星被食伤合走，则自己性格强势逼走丈夫。此命婚姻存在明显第三者信号。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_direct_005",
+    "name": "天克地冲日柱-婚姻危机",
+    "version": "1.0.0",
+    "module": "mangpai_marriage_direct",
+    "priority": 90,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "天克地冲日柱：婚姻宫被冲克"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "日柱天克地冲"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 15},
+      {"type": "generate_text", "template": "盲派铁口直断：天克地冲日柱，日柱为婚姻宫，天干克地支冲则婚姻宫动荡不安，必主中年婚姻危机。天克主外在压力（父母反对/社会舆论），地冲主内在矛盾（性格不合/感情破裂），两者并见则婚姻极易破裂，严重者生离死别。逢大运或流年再冲日柱之年必是婚变之年。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_direct_006",
+    "name": "男命财星空亡-婚姻有名无实",
+    "version": "1.0.0",
+    "module": "mangpai_marriage_direct",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "gender", "operator": "eq", "value": 1},
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "男命财星空亡"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "男命财星空亡"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 18},
+      {"type": "generate_text", "template": "盲派铁口直断：男命财星（妻星）落空亡，婚姻有名无实。财星空亡则妻星虚无缥缈，或配偶体弱多病常年服药，或夫妻聚少离多长期分居，或婚后感情冷淡形同陌路。此命需在财星填实之年（如大运填实空亡之地支）方可成婚，否则难以维持正常婚姻关系。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_direct_007",
+    "name": "女命官星空亡-婚姻有名无实",
+    "version": "1.0.0",
+    "module": "mangpai_marriage_direct",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "gender", "operator": "eq", "value": 2},
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "女命官星空亡"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "女命官星空亡"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 18},
+      {"type": "generate_text", "template": "盲派铁口直断：女命官星（夫星）落空亡，婚姻有名无实。官星空亡则夫星虚无缥缈，或丈夫体弱多病常年卧床，或夫妻长期分居两地，或名义夫妻缺乏实质感情。此命需在官星填实之大运流年方可结婚，否则婚姻如空中楼阁，难有实质幸福。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_direct_008",
+    "name": "四柱纯阳-孤阳不生",
+    "version": "1.0.0",
+    "module": "mangpai_marriage_direct",
+    "priority": 80,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "四柱纯阳"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "四柱纯阳"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 25},
+      {"type": "generate_text", "template": "盲派铁口直断：四柱纯阳，孤阳不生。八字全阳干则性格刚强过甚，缺乏阴柔之气调和，男命过于刚暴克妻，女命过于刚强克夫。纯阳之命婚姻多波折，需配纯阴之命方可互补，否则孤独终老之象。纯阳命格宜修身养性以柔克刚，方有化解可能。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_direct_009",
+    "name": "四柱纯阴-孤阴不长",
+    "version": "1.0.0",
+    "module": "mangpai_marriage_direct",
+    "priority": 80,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "四柱纯阴"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "四柱纯阴"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 25},
+      {"type": "generate_text", "template": "盲派铁口直断：四柱纯阴，孤阴不长。八字全阴干则性格阴柔过甚，缺乏阳刚之气，男命过于阴柔无担当，女命过于敏感多疑。纯阴之命婚姻难成，需配纯阳之命方可互补，否则孤独终老之象。纯阴命格宜培养阳刚之气，增强决断力，方有化解可能。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_direct_010",
+    "name": "男命无财星-婚姻缘薄",
+    "version": "1.0.0",
+    "module": "mangpai_marriage_direct",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "gender", "operator": "eq", "value": 1},
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "男命无财星"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "男命无财"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 10},
+      {"type": "generate_text", "template": "盲派铁口直断：男命四柱无财星，妻星不现，婚姻缘极薄。无财则无妻，此命先天缺少婚姻基因，一生难遇正缘，或终身不娶，或所遇皆非正缘。唯有在大运流年财星透出之时方可成婚，但运过则婚姻亦随之消散。此命宜在财星大运期间主动把握，错过则难以再遇。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_direct_011",
+    "name": "女命无官杀-婚姻缘薄",
+    "version": "1.0.0",
+    "module": "mangpai_marriage_direct",
+    "priority": 85,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "gender", "operator": "eq", "value": 2},
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "女命无官杀"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "女命无官"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 10},
+      {"type": "generate_text", "template": "盲派铁口直断：女命四柱无官杀，夫星不现，婚姻缘极薄。无官则无夫，此命先天缺少婚姻基因，一生难遇正缘，或终身不嫁，或所遇皆非正缘。唯有在大运流年官杀透出之时方可成婚，但运过则婚姻亦随之消散。此命宜在官杀大运期间主动把握，错过则难以再遇。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_direct_012",
+    "name": "日支坐比劫-克妻再娶（通用型）",
+    "version": "1.0.0",
+    "module": "mangpai_marriage_direct",
+    "priority": 88,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "日支坐比劫"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "日坐比劫"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 22},
+      {"type": "generate_text", "template": "盲派铁口直断：日支为婚姻宫，坐比肩劫财则婚姻宫被比劫占据。比劫为同辈、竞争者、第三者之象。婚姻宫被比劫占据，则配偶位置被竞争者取代，婚姻必然出现第三者插足或感情竞争。此命晚婚可缓，早婚必败。择偶应选择年龄差距大或异地异文化背景者，可减轻比劫争夫/争妻之象。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_direct_013",
+    "name": "年月驿马冲-早婚不稳",
+    "version": "1.0.0",
+    "module": "mangpai_marriage_direct",
+    "priority": 75,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "年月驿马冲"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "驿马逢冲"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 40},
+      {"type": "generate_text", "template": "盲派铁口直断：年月驿马冲，早年奔波不定，婚姻基础不稳。年柱为根基，月柱为提纲，驿马逢冲则根基动摇，早年生活环境多变，难以安定成家。此命早年恋爱多但难成正果，宜在30岁后行稳定大运时成婚，早婚必因事业奔波或家庭反对而破裂。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_direct_014",
+    "name": "财星两头挂-婚姻多变",
+    "version": "1.0.0",
+    "module": "mangpai_marriage_direct",
+    "priority": 75,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "gender", "operator": "eq", "value": 1},
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "财星两头挂"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "财星两头挂-男命"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 35},
+      {"type": "generate_text", "template": "盲派铁口直断：男命财星两头挂（年时均为财星），一生女人缘不断，但正缘难定。年上财星为早年恋情，时上财星为晚年桃花，两头皆有则一生感情经历丰富，但婚姻多变。此命不宜早婚，需在中年事业有成后择贤内助而娶，否则婚姻难稳。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_direct_015",
+    "name": "伤官两头挂-婚姻尖锐",
+    "version": "1.0.0",
+    "module": "mangpai_marriage_direct",
+    "priority": 75,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "伤官两头挂"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "伤官两头挂"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 30},
+      {"type": "generate_text", "template": "盲派铁口直断：伤官两头挂（年时均为伤官），言语尖锐刻薄，亲情淡薄，婚姻关系中沟通方式极易伤人。伤官克官杀（夫星），女命尤为不利，动则指责丈夫，夫妻关系如履薄冰。此命需修口德、学包容，否则婚姻必因言语暴力而破裂。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_direct_016",
+    "name": "七杀两头挂-晚景孤独",
+    "version": "1.0.0",
+    "module": "mangpai_marriage_direct",
+    "priority": 75,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "七杀两头挂"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "七杀两头挂"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 28},
+      {"type": "generate_text", "template": "盲派铁口直断：七杀两头挂（年时均为七杀），一生劳碌奔波，情感压抑，晚年孤独之象。七杀为凶神，两头皆见则早年受父母严厉管教情感压抑，晚年子孙远离孤独终老。此命婚姻中缺乏温情，需主动经营亲密关系，否则晚年凄凉。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_direct_017",
+    "name": "配偶星空亡-婚姻虚浮",
+    "version": "1.0.0",
+    "module": "mangpai_marriage_direct",
+    "priority": 82,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "星空亡"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "配偶星空亡"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 20},
+      {"type": "generate_text", "template": "盲派铁口直断：配偶星落空亡，婚姻如同空中楼阁。空亡者，有名无实之象。配偶星落空亡则配偶存在感极弱，或长期不在身边，或身患慢性疾病需长期照料，或夫妻感情淡漠形同室友。此命需在空亡被填实的大运流年努力维系婚姻，否则婚姻形同虚设。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_direct_018",
+    "name": "反局+财旺-大富贵但婚姻复杂",
+    "version": "1.0.0",
+    "module": "mangpai_marriage_direct",
+    "priority": 80,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "反局+财旺"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "反局财旺"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 30},
+      {"type": "generate_text", "template": "盲派铁口直断：反局做功+财旺，乃大富贵之命，但财富与婚姻不可兼得。反局者，用占主位反制宾位，财富可达亿级，但财旺反局则妻财一体，富贵之时亦是婚姻危机之时。此命一生多段婚姻或妻妾并存的格局，需有极大包容心方可维持婚姻。典型的大人物婚姻模式——事业越成功，感情越复杂。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_direct_019",
+    "name": "伤官配印-高知但婚姻挑剔",
+    "version": "1.0.0",
+    "module": "mangpai_marriage_direct",
+    "priority": 75,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "伤官配印"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "伤官配印"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 50},
+      {"type": "generate_text", "template": "盲派铁口直断：伤官配印，才华横溢之士，但婚姻观念极为挑剔。伤官为才华宣泄，配印则有理性的克制，但伤官本性难改，对配偶要求极高，寻常人物难入法眼。此命宜寻志同道合之人，精神契合重于物质条件，否则终身寻觅难定。女命伤官配印尤需注意，不可因才华孤高而耽误终身。"}
+    ]
+  },
+  {
+    "rule_id": "mangpai_marriage_direct_020",
+    "name": "财气通门户-晚年婚姻稳定",
+    "version": "1.0.0",
+    "module": "mangpai_marriage_direct",
+    "priority": 75,
+    "conditions": {
+      "operator": "AND",
+      "rules": [
+        {"field": "mangpai_direct_rules", "operator": "contains", "value": "财气通门户"}
+      ]
+    },
+    "actions": [
+      {"type": "set_tag", "value": "财通门户"},
+      {"type": "set_score", "field": "blind_marriage_stability", "value": 65},
+      {"type": "generate_text", "template": "盲派铁口直断：财气通门户，时柱为归宿为家宅，财星归位则晚年财运丰足，婚姻也随之稳定。此命早年可能为事业拼搏感情波折，但中年后财务自由则婚姻自然安稳，越老越富，越老越和谐。宜找能共苦后同甘的伴侣，晚年享受财富与家庭的双重美满。"}
+    ]
+  }
+]

@@ -59,7 +59,13 @@ type ResourceName =
   | 'card_keys'
   | 'balance_transactions'
   | 'token_pricings'
-  | 'token_usages';
+  | 'token_usages'
+  | 'xiaoliuren_records'
+  | 'digital_energy_records'
+  | 'bazhai_records'
+  | 'bazhai_reports'
+  | 'health_records'
+  | 'health_reports';
 
 const RESOURCE_MODEL_MAP: Record<ResourceName, string> = {
   users: 'user',
@@ -80,6 +86,12 @@ const RESOURCE_MODEL_MAP: Record<ResourceName, string> = {
   balance_transactions: 'balanceTransaction',
   token_pricings: 'tokenPricing',
   token_usages: 'tokenUsage',
+  xiaoliuren_records: 'xiaoliurenRecord',
+  digital_energy_records: 'digitalEnergyRecord',
+  bazhai_records: 'bazhaiRecord',
+  bazhai_reports: 'analysisReport',
+  health_records: 'healthRecord',
+  health_reports: 'analysisReport',
 };
 
 const RESOURCE_SEARCH_FIELDS: Record<string, string[]> = {
@@ -101,6 +113,10 @@ const RESOURCE_SEARCH_FIELDS: Record<string, string[]> = {
   balanceTransaction: ['refId'],
   tokenPricing: ['provider', 'modelName'],
   tokenUsage: ['provider', 'model', 'source'],
+  xiaoliurenRecord: ['resultName', 'question'],
+  digitalEnergyRecord: ['phone'],
+  bazhaiRecord: ['trigram'],
+  healthRecord: ['yearGan', 'yearZhi', 'sitian', 'zaiquan'],
 };
 
 const RESOURCE_SORTABLE_FIELDS: Record<string, string[]> = {
@@ -122,6 +138,10 @@ const RESOURCE_SORTABLE_FIELDS: Record<string, string[]> = {
   balanceTransaction: ['id', 'userId', 'type', 'amount', 'balanceAfter', 'createdAt'],
   tokenPricing: ['id', 'provider', 'modelName', 'pricePer1kInput', 'pricePer1kOutput', 'sortOrder', 'isActive', 'createdAt'],
   tokenUsage: ['id', 'userId', 'source', 'provider', 'model', 'totalTokens', 'actualCost', 'frozenAmount', 'freeUsed', 'status', 'createdAt', 'settledAt'],
+  xiaoliurenRecord: ['id', 'userId', 'inputType', 'resultPosition', 'resultName', 'createdAt'],
+  digitalEnergyRecord: ['id', 'userId', 'phone', 'createdAt'],
+  bazhaiRecord: ['id', 'userId', 'birthYear', 'gender', 'kuaNumber', 'trigram', 'group', 'createdAt'],
+  healthRecord: ['id', 'userId', 'targetDate', 'yearGan', 'yearZhi', 'yearYun', 'sitian', 'zaiquan', 'createdAt'],
 };
 
 const GET_ONE_INCLUDES: Record<string, any> = {
@@ -129,6 +149,34 @@ const GET_ONE_INCLUDES: Record<string, any> = {
     user: { select: { id: true, nickname: true, phone: true } },
     reports: {
       select: { id: true, uuid: true, reportType: true, isPaid: true, viewCount: true, createdAt: true },
+      orderBy: { createdAt: 'desc' as const },
+    },
+  },
+  xiaoliurenRecord: {
+    user: { select: { id: true, nickname: true, phone: true } },
+    reports: {
+      select: { id: true, uuid: true, reportType: true, isPaid: true, aiTokenUsed: true, viewCount: true, createdAt: true },
+      orderBy: { createdAt: 'desc' as const },
+    },
+  },
+  digitalEnergyRecord: {
+    user: { select: { id: true, nickname: true, phone: true } },
+    reports: {
+      select: { id: true, uuid: true, reportType: true, isPaid: true, aiTokenUsed: true, viewCount: true, createdAt: true },
+      orderBy: { createdAt: 'desc' as const },
+    },
+  },
+  bazhaiRecord: {
+    user: { select: { id: true, nickname: true, phone: true } },
+    reports: {
+      select: { id: true, uuid: true, reportType: true, isPaid: true, aiTokenUsed: true, viewCount: true, createdAt: true },
+      orderBy: { createdAt: 'desc' as const },
+    },
+  },
+  healthRecord: {
+    user: { select: { id: true, nickname: true, phone: true } },
+    reports: {
+      select: { id: true, uuid: true, reportType: true, isPaid: true, aiTokenUsed: true, viewCount: true, createdAt: true },
       orderBy: { createdAt: 'desc' as const },
     },
   },

@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 import { CaptchaService } from './captcha.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
+import { SmsModule } from '../../common/sms/sms.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { JwtStrategy } from './jwt.strategy';
         signOptions: { expiresIn: config.get('JWT_EXPIRES_IN', '7d') },
       }),
     }),
+    SmsModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, CaptchaService, JwtStrategy],

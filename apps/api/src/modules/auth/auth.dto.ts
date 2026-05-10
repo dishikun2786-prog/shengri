@@ -54,3 +54,53 @@ export class LoginRequestDto {
   @MinLength(6)
   password: string;
 }
+
+// ========== SMS Auth DTOs ==========
+
+export class SendSmsCodeDto {
+  @ApiProperty({ example: '13800138000' })
+  @IsString()
+  phone: string;
+}
+
+export class SmsLoginDto {
+  @ApiProperty({ example: '13800138000' })
+  @IsString()
+  phone: string;
+
+  @ApiProperty({ example: '123456' })
+  @IsString()
+  @MinLength(4)
+  code: string;
+
+  @ApiPropertyOptional({ example: 'zhangsan', description: '注册时设置账号（仅新用户）' })
+  @IsOptional()
+  @IsString()
+  @MinLength(3)
+  @MaxLength(20)
+  @Matches(USERNAME_RE, { message: '账号仅支持 3–20 位字母、数字或下划线' })
+  username?: string;
+
+  @ApiPropertyOptional({ example: '123456', description: '注册时设置密码（仅新用户）' })
+  @IsOptional()
+  @IsString()
+  @MinLength(6)
+  password?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @MaxLength(32)
+  nickname?: string;
+}
+
+export class BindPhoneDto {
+  @ApiProperty({ example: '13800138000' })
+  @IsString()
+  phone: string;
+
+  @ApiProperty({ example: '123456' })
+  @IsString()
+  @MinLength(4)
+  code: string;
+}

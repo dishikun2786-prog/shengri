@@ -67,6 +67,8 @@ export class RuleEngineService {
       summary: {},
     };
 
+    const matchedRuleIds: string[] = [];
+
     for (const rule of rules) {
       try {
         const ruleResult = this.executeRule(rule, chartData);
@@ -77,19 +79,60 @@ export class RuleEngineService {
           result.tags.push(...ruleResult.tags);
           Object.assign(result.scores, ruleResult.scores);
 
-          await this.prisma.rule.update({
-            where: { ruleId: rule.rule_id },
-            data: { hitCount: { increment: 1 } },
-          }).catch(() => {});
+          // Batch Redis INCR instead of per-rule DB write
+          matchedRuleIds.push(rule.rule_id);
         }
       } catch (e) {
         this.logger.warn(`Rule ${rule.rule_id} execution failed: ${e.message}`);
       }
     }
 
+    // Flush hit counts to Redis in a single pipeline, then batch-persist to DB
+    if (matchedRuleIds.length > 0) {
+      this.flushHitCounts(matchedRuleIds).catch(err =>
+        this.logger.warn(`Rule hit count flush failed: ${err.message}`));
+    }
+
     result.tags = [...new Set(result.tags)];
     result.summary = this.buildSummary(result);
     return result;
+  }
+
+  /** Batch increment hit counts: Redis pipeline → periodic DB flush */
+  private async flushHitCounts(ruleIds: string[]): Promise<void> {
+    // Increment all in Redis with a TTL-based accumulator
+    const pipeline = this.redis.getClient().pipeline();
+    for (const id of ruleIds) {
+      pipeline.incr(`rule:hit:${id}`);
+      pipeline.expire(`rule:hit:${id}`, 600); // 10min TTL on counter, flushed before expiry
+    }
+    await pipeline.exec();
+
+    // Throttle DB flush: at most once per 60 seconds
+    const flushKey = 'rule:hit:flush_lock';
+    const lockAcquired = await this.redis.getClient().set(flushKey, '1', 'EX', 60, 'NX');
+    if (lockAcquired) {
+      // Delayed flush to let more accumulates come in
+      setTimeout(async () => {
+        try {
+          const keys = await this.redis.getClient().keys('rule:hit:*');
+          for (const key of keys) {
+            if (key === flushKey) continue;
+            const ruleId = key.replace('rule:hit:', '');
+            const count = parseInt(await this.redis.getClient().get(key) || '0', 10);
+            if (count > 0) {
+              await this.prisma.rule.update({
+                where: { ruleId },
+                data: { hitCount: { increment: count } },
+              }).catch(() => {});
+              await this.redis.getClient().del(key);
+            }
+          }
+        } catch (e) {
+          this.logger.warn(`Batch rule hit flush failed: ${(e as Error).message}`);
+        }
+      }, 5000); // 5s delay to batch multiple analyze() calls
+    }
   }
 
   private async loadRules(modules: string[]): Promise<RuleConfig[]> {
@@ -117,7 +160,7 @@ export class RuleEngineService {
       ab_group: r.abGroup,
     }));
 
-    await this.redis.setJson(cacheKey, rules, 300);
+    await this.redis.setJson(cacheKey, rules, 3600);
     return rules;
   }
 

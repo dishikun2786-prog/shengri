@@ -14,12 +14,14 @@ interface PairingChartSelectorProps {
   selectedChartId?: number | null;
   onSelect: (chartId: number) => void;
   disabled?: boolean;
+  onCreateNew?: () => void;
 }
 
 export function PairingChartSelector({
   selectedChartId,
   onSelect,
   disabled = false,
+  onCreateNew,
 }: PairingChartSelectorProps) {
   const [charts, setCharts] = useState<ChartItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,13 +56,27 @@ export function PairingChartSelector({
   if (charts.length === 0) {
     return (
       <div className="text-center py-4">
-        <p className="text-sm text-gray-400">暂无命盘</p>
-        <button
-          className="mt-2 text-sm text-primary-500 hover:text-primary-600"
-          onClick={() => window.location.href = '/chart'}
-        >
-          去新建命盘
-        </button>
+        <p className="text-sm text-gray-400 mb-3">暂无命盘</p>
+        {onCreateNew ? (
+          <button
+            type="button"
+            onClick={onCreateNew}
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-primary-500 text-white
+              rounded-xl text-sm font-medium hover:bg-primary-600 transition-colors shadow-sm"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            新建命盘
+          </button>
+        ) : (
+          <button
+            className="mt-2 text-sm text-primary-500 hover:text-primary-600"
+            onClick={() => window.location.href = '/chart'}
+          >
+            去新建命盘
+          </button>
+        )}
       </div>
     );
   }

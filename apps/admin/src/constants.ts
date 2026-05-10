@@ -41,6 +41,12 @@ export const REPORT_TYPES = [
   { id: 'hehun', name: '合婚' },
   { id: 'partner', name: '合伙人' },
   { id: 'enterprise', name: '企业' },
+  { id: 'full', name: '全方位' },
+  { id: 'pairing', name: '配对' },
+  { id: 'xiaoliuren', name: '小六壬' },
+  { id: 'digital_energy', name: '数字能量' },
+  { id: 'bazhai', name: '八宅风水' },
+  { id: 'health', name: '五运六气健康' },
 ];
 
 export const RULE_MODULES = [
@@ -54,6 +60,9 @@ export const RULE_MODULES = [
   { id: 'partner', name: '合伙人' },
   { id: 'shensha', name: '神煞' },
   { id: 'liunian', name: '流年' },
+  { id: 'xiaoliuren', name: '小六壬' },
+  { id: 'digital_energy', name: '数字能量' },
+  { id: 'bazhai', name: '八宅风水' },
 ];
 
 export const PRODUCT_CATEGORIES = [

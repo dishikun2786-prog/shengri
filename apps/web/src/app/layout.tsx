@@ -3,8 +3,6 @@ import './globals.css';
 import AuthNav from '@/components/AuthNav';
 import MobileBottomNav from '@/components/MobileBottomNav';
 import AddToHomeScreen from '@/components/AddToHomeScreen';
-import { setDynamicApiUrl } from '@/lib/api';
-
 const API_INTERNAL = process.env.API_INTERNAL_URL || 'http://localhost:3000';
 
 interface SiteConfig {
@@ -85,24 +83,39 @@ export default async function RootLayout({
 }) {
   const [site, urlConfig] = await Promise.all([getSiteConfig(), getUrlConfig()]);
 
-  // 设置动态 API 地址，让客户端请求使用后台配置的地址
-  if (urlConfig.apiUrl) {
-    setDynamicApiUrl(urlConfig.apiUrl);
-  }
+  // 客户端请求统一走 Next.js 代理 (/api/v1 → backend)，避免跨域 CORS 问题
+  // Cloudflare Tunnel 场景下，跨域直连 api.openedskill.com 会被 SW 拦截且 CORS 头易丢失
 
   return (
     <html lang="zh-CN">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
         <meta name="theme-color" content="#dc5a2e" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="生日命理" />
+        <meta name="application-name" content="生日命理" />
         <meta name="format-detection" content="telephone=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="msapplication-TileColor" content="#dc5a2e" />
+        <meta name="msapplication-starturl" content="/?utm_source=pwa" />
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192.png" />
+        <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512.png" />
+        <link rel="canonical" href="https://sr.openedskill.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        {/* Service Worker — register early for PWA install */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(function(){});
+              }
+            `,
+          }}
+        />
         <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet" />
       </head>
       <body className="min-h-screen antialiased">
@@ -112,8 +125,12 @@ export default async function RootLayout({
               <span className="text-2xl">☯</span>
               <span className="text-xl font-bold text-primary-700 font-kai">{site.brandName}</span>
             </a>
-            <div className="hidden md:flex items-center gap-6 text-sm text-ink-600">
+            <div className="hidden md:flex items-center gap-5 text-sm text-ink-600">
               <a href="/" className="hover:text-primary-600 transition-colors">首页</a>
+              <a href="/xiaoliuren" className="hover:text-amber-600 transition-colors">小六壬</a>
+              <a href="/digital-energy" className="hover:text-blue-600 transition-colors">数字能量</a>
+              <a href="/bazhai" className="hover:text-emerald-600 transition-colors">八宅风水</a>
+              <a href="/health" className="hover:text-green-600 transition-colors">健康养生</a>
               <a href="/products" className="hover:text-primary-600 transition-colors">产品</a>
               <a href="/moments" className="hover:text-primary-600 transition-colors">朋友圈</a>
               <a href="/about" className="hover:text-primary-600 transition-colors">关于</a>

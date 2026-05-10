@@ -273,6 +273,55 @@ export const orderApi = {
     api.post(`/order/pay-balance/${orderNo}`),
 };
 
+export const xiaoliurenApi = {
+  calculate: (data: {
+    inputType: 'time' | 'random';
+    month?: number; day?: number; hour?: number;
+    random1?: number; random2?: number; random3?: number;
+    question?: string;
+  }) => api.post('/xiaoliuren/calculate', data),
+  generateReport: (data: {
+    inputType: 'time' | 'random';
+    month?: number; day?: number; hour?: number;
+    random1?: number; random2?: number; random3?: number;
+    question?: string;
+    isPaid?: boolean;
+    orderId?: number;
+    productId?: number;
+  }) => api.post('/xiaoliuren/report/generate', data, { timeout: AI_TIMEOUT }),
+  getReport: (uuid: string) => api.get(`/xiaoliuren/report/${uuid}`),
+  getHistory: (skip?: number, take?: number) =>
+    api.get('/xiaoliuren/history', { params: { skip, take } }),
+  delete: (id: number) => api.delete(`/xiaoliuren/${id}`),
+};
+
+export const digitalEnergyApi = {
+  calculate: (data: { phone: string; question?: string }) => api.post('/digital-energy/calculate', data),
+  generateReport: (data: { phone: string; question?: string; isPaid?: boolean; orderId?: number; productId?: number; orderNo?: string }) =>
+    api.post('/digital-energy/report/generate', data, { timeout: AI_TIMEOUT }),
+  getReport: (uuid: string) => api.get(`/digital-energy/report/${uuid}`),
+  getHistory: (skip?: number, take?: number) => api.get('/digital-energy/history', { params: { skip, take } }),
+  delete: (id: number) => api.delete(`/digital-energy/${id}`),
+};
+
+export const bazhaiApi = {
+  calculate: (data: { birthYear: number; gender: number; question?: string }) => api.post('/bazhai/calculate', data),
+  generateReport: (data: { birthYear: number; gender: number; question?: string; isPaid?: boolean; orderId?: number; productId?: number; orderNo?: string }) => api.post('/bazhai/report/generate', data, { timeout: AI_TIMEOUT }),
+  getReport: (uuid: string) => api.get(`/bazhai/report/${uuid}`),
+  getHistory: (skip?: number, take?: number) => api.get('/bazhai/history', { params: { skip, take } }),
+  delete: (id: number) => api.delete(`/bazhai/${id}`),
+};
+
+export const healthAnalysisApi = {
+  calculate: (data: { targetDate?: string; birthDate?: string; birthCalendarType?: string; gender?: number; question?: string; symptoms?: { symptom: string; duration?: string; severity?: string }[]; height?: number; weight?: number }) =>
+    api.post('/health-report/calculate', data),
+  generateReport: (data: { targetDate?: string; birthDate?: string; birthCalendarType?: string; gender?: number; question?: string; symptoms?: { symptom: string; duration?: string; severity?: string }[]; isPaid?: boolean; orderId?: number; productId?: number; orderNo?: string; height?: number; weight?: number }) =>
+    api.post('/health-report/report/generate', data, { timeout: AI_TIMEOUT }),
+  getReport: (uuid: string) => api.get(`/health-report/report/${uuid}`),
+  getHistory: (skip?: number, take?: number) => api.get('/health-report/history', { params: { skip, take } }),
+  delete: (id: number) => api.delete(`/health-report/${id}`),
+};
+
 export const cardKeyApi = {
   redeem: (code: string) => api.post('/card-key/redeem', { code }),
   getBalance: () => api.get<{ balance: number }>('/card-key/balance'),
@@ -658,6 +707,15 @@ export const authApi = {
   }) => api.post('/auth/register', data),
   login: (data: { account: string; password: string }) =>
     api.post('/auth/login', data),
+  // SMS auth
+  checkPhone: (phone: string) =>
+    api.post<{ exists: boolean }>('/auth/sms/check', { phone }),
+  sendSmsCode: (phone: string) =>
+    api.post('/auth/sms/send', { phone }),
+  smsLogin: (phone: string, code: string, username?: string, password?: string, nickname?: string) =>
+    api.post('/auth/sms/login', { phone, code, username, password, nickname }),
+  bindPhone: (phone: string, code: string) =>
+    api.post('/auth/bind-phone', { phone, code }),
 };
 
 export const userApi = {

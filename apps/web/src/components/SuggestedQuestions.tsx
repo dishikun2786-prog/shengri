@@ -8,10 +8,11 @@ const DEFAULT_QUESTIONS: Record<string, string[]> = {
   annual: ['今年需要注意什么？', '哪个月运势最好？', '有什么需要避免的？', '今年串宫压运的吉凶星如何分布？', '白虎和朱雀临位该怎么化解？'],
   hehun: ['我们的匹配度如何？', '相处需要注意什么？', '对方的性格特点？', '盲派看我们做功方式是否互补？', '双方的宾主配置是否冲突？'],
   full: ['我的人生全貌如何？', '哪个方向最适合我？', '需要注意哪些方面？', '从盲派角度看我的命局层次和做功效率？', '我的命局有势有功吗？'],
+  xiaoliuren: ['这个掌诀对近期运势有什么影响？', '根据六神提示应该注意什么？', '有利的方位和时机是什么？', '如何化解掌诀中的凶兆？', '这个结果对财运/感情有什么预示？'],
 };
 
 const FIRST_VISIT_ICONS: Record<string, string> = {
-  free: '☰', wealth: '☲', marriage: '☱', career: '☳', annual: '☴', hehun: '☷', full: '✦',
+  free: '☰', wealth: '☲', marriage: '☱', career: '☳', annual: '☴', hehun: '☷', full: '✦', xiaoliuren: '☲',
 };
 
 interface SuggestedQuestionsProps {

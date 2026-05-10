@@ -102,3 +102,108 @@ A warm, inviting scene split into two halves. Left half: modern Chinese living r
 3. **通义万相/即梦**：版本 A 最通用；如投放小红书/朋友圈选版本 B 国潮风
 4. **文心一格**：版本 B 国潮插画风效果最佳
 5. **生成后处理**：AI 生成的基础图 + Figma/PS 加文字（标题 + tagline + URL），避免 AI 乱码文字
+
+---
+
+## 六、五大功能专项海报提示词（3:4 竖版 · 底部留白放二维码）
+
+> 统一品牌调性：东方传统 + AI科技融合  
+> 品牌三主色：红橙 #dc5a2e / 金 #d4a84b / 墨 #2d251e  
+> 尺寸：3:4 竖版（1080×1440），底部 20% 深色渐变留白放二维码  
+> 项目名称：生日命理
+
+---
+
+### 1. 八字命盘 · 精准排盘
+
+**Midjourney 英文提示词：**
+
+```
+A vertical 3:4 poster for a premium Chinese Bazi fortune-telling platform "生日命理". Center: an exquisitely rendered ancient Chinese Bazi chart (four pillars with Heavenly Stems and Earthly Branches) floating above a warm rosewood desk, each character glowing with soft golden light. The chart is surrounded by three translucent orbital rings representing 大运 (10-year cycles), 流年 (yearly), 流月 (monthly) in warm copper-gold. Background: traditional rice-paper texture with faint ink-wash mountain silhouettes and subtle AI neural network lines in warm amber. Left side: a traditional Chinese brush and inkstone. Warm morning light streams in from upper right, casting soft shadows. The overall mood is scholarly, wise, and trustworthy. Color palette: warm red-orange (#dc5a2e) accents, deep ink tones (#2d251e), imperial gold (#d4a84b). Bottom 20%: clean dark gradient reserved for QR code. Style: editorial quality, photorealistic, 8K, cinematic soft lighting --ar 3:4 --v 6.1
+```
+
+**文案叠加：**
+> 标题：你的命盘，AI 来解读  
+> 副标题：输入出生时间 · 秒出精准四柱 · 5000字全维度分析  
+> 场景引导：财运何时爆发？正缘何时到来？事业高峰在哪年？  
+> 底部标注：扫码体验 AI 命理师 → 生日命理
+
+---
+
+### 2. 小六壬 · 马前课占卜
+
+**Midjourney 英文提示词：**
+
+```
+A vertical 3:4 poster inspired by traditional Chinese palm reading. Close-up of an elegant hand in a gentle pointing gesture, with six miniature glowing golden temples (representing the six divination results: 大安/留连/速喜/赤口/小吉/空亡) floating above the fingertips like delicate lanterns. Each temple emits a soft light in different warm tones from amber to coral. Background: ancient parchment texture with faint lunar calendar markings and subtle circuit-like patterns in warm gold that fade into the paper. A single ink brush stroke sweeps across the top. Warm, intimate lighting as if illuminated by candlelight. Color palette: warm amber, soft coral, aged parchment, touches of gold. Bottom 20%: dark gradient for QR code. Style: traditional Chinese miniature painting meets modern editorial, 8K, soft focus edges --ar 3:4 --v 6.1
+```
+
+**文案叠加：**
+> 标题：举棋不定？掐指一算  
+> 副标题：月日时三数推算 · 六大掌诀即时解读  
+> 场景引导：今日出行是否顺利？此事可成否？失物何方寻？  
+> 底部标注：扫码立即占卜 → 生日命理
+
+---
+
+### 3. 数字能量 · 手机号码解读
+
+**Midjourney 英文提示词：**
+
+```
+A vertical 3:4 poster showing a premium smartphone floating vertically above a dark wooden surface. From the phone's back, eight luminous Chinese star symbols (天医/生气/延年/伏位/绝命/五鬼/六煞/祸害) emerge like a constellation, each rendered in a different element color (warm earth yellow, jade green, metallic gold, soft red, deep blue) with delicate gold connecting lines forming a Bagua pattern. The phone screen glows warmly, reflecting on the polished wood below. Background: deep ink-wash gradient with subtle traditional Chinese geometric patterns and very faint AI data streams in copper tones. Top right: a single plum blossom branch in soft pink, adding a touch of life. Color palette dominated by warm gold and deep ink, with the eight star colors as accents. Bottom 20%: dark gradient for QR code. Style: premium product photography meets Chinese metaphysics, 8K, soft rim lighting --ar 3:4 --v 6.1
+```
+
+**文案叠加：**
+> 标题：11位数字 · 藏着你的运势  
+> 副标题：八星磁场解码 · 洞察财运事业婚姻健康  
+> 场景引导：手机号后4位是什么能量？吉星多还是凶星多？0和5怎么影响你？  
+> 底部标注：扫码测号码能量 → 生日命理
+
+---
+
+### 4. 八宅风水 · 命卦方位
+
+**Midjourney 英文提示词：**
+
+```
+A vertical 3:4 poster featuring a top-down view of a traditional Chinese courtyard home (四合院) rendered as a beautiful architectural blueprint on aged rice paper. Eight golden trigram symbols (八卦: ☰☷☲☵☱☶☳☴) float at their corresponding compass positions around the house, with four of them glowing in warm green (auspicious) and four in soft red (requiring attention). A translucent antique compass (罗盘) hovers above the center, casting a subtle golden grid across the layout. Background: dark wood texture transitioning to warm ink tones, with faint mountain-water landscape (山水) in the distance. Delicate gold lines trace energy flow paths through rooms. Color palette: warm rosewood, imperial gold, jade green accents, soft red warnings. Bottom 20%: dark gradient for QR code. Style: architectural visualization meets traditional Chinese art, 8K, warm ambient lighting --ar 3:4 --v 6.1
+```
+
+**文案叠加：**
+> 标题：你家大门 · 开对方向了吗？  
+> 副标题：出生年份定命卦 · 大游年歌诀判八方吉凶  
+> 场景引导：卧室该放哪间房？厨房不能在哪里？办公室怎么布局？  
+> 底部标注：扫码测八宅风水 → 生日命理
+
+---
+
+### 5. 五运六气 · 中医健康养生
+
+**Midjourney 英文提示词：**
+
+```
+A vertical 3:4 poster inspired by ancient Chinese medical manuscripts (《黄帝内经》). Center: a translucent human figure in a peaceful standing pose, with five glowing points along the spine in the Five Element colors (green wood, red fire, yellow earth, white metal, blue water) connected by golden meridian lines. Surrounding the figure: a circular celestial calendar wheel showing the six Qi stages (六气), traditional medicinal herbs (goji berries, astragalus, chrysanthemum, ginseng) floating gently, and a jade-green acupuncture figure in the corner. Background: aged rice-paper texture with faint hand-copied medical text and subtle vital-sign wave patterns in warm gold. Morning light filtered through bamboo leaves creates dappled shadows. Color palette: warm healing tones -- soft terracotta, calming jade green, earthy amber, warm cream. Bottom 20%: dark gradient for QR code. Style: TCM manuscript meets modern wellness editorial, 8K, soft natural lighting --ar 3:4 --v 6.1
+```
+
+**文案叠加：**
+> 标题：你的体质 · 出生那年就决定了  
+> 副标题：五运六气判脏腑虚实 · 中医体质辨识 · 药膳食疗方案  
+> 场景引导：为什么总疲劳乏力？为什么反复上火？什么食物真正适合你？  
+> 底部标注：扫码测中医体质 → 生日命理
+
+---
+
+### 6. 综合品牌海报 · 全功能展示
+
+**Midjourney 英文提示词：**
+
+```
+A vertical 3:4 brand poster for "生日命理" (ShengRi), a premium Chinese metaphysics and TCM health platform. Center: a luminous golden Taiji symbol formed by traditional ink brushstrokes on one side and subtle digital data streams on the other. Five small circular portals orbit around it, each containing a delicate miniature scene: a Bazi chart, a divination hand, a glowing phone, a courtyard blueprint, and a wellness figure. Background: deep warm ink-black transitioning to aged parchment at the edges, with faint constellation lines forming Chinese characters 命·运·生·养. Golden particles drift upward like incense smoke. Traditional Chinese cloud motifs (祥云) frame the upper corners. The composition follows the golden ratio. Color palette: the brand trinity -- warm red-orange (#dc5a2e), imperial gold (#d4a84b), deep ink (#2d251e). Bottom 20%: clean dark gradient with decorative gold border line for QR code. Style: sacred geometry meets traditional Chinese aesthetics, editorial quality, 8K, volumetric lighting --ar 3:4 --v 6.1
+```
+
+**文案叠加：**
+> 标题：生日命理 · AI国学派  
+> 副标题：八字排盘 | 小六壬 | 数字能量 | 八宅风水 | 健康养生  
+> 场景引导：古人穷尽一生所学 · 今朝AI秒级呈现  
+> 底部标注：扫码开启国学智慧之旅 → sr.openedskill.com

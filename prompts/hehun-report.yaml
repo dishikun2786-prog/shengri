@@ -4,7 +4,7 @@ name: 合婚分析报告
 version: "1.1.0"
 model_provider: deepseek
 model_name: deepseek-v4-flash
-temperature: 0.7
+temperature: 0.2
 max_tokens: 5000
 
 system_prompt: |

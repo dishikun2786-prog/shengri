@@ -17,6 +17,9 @@
     "prisma:seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
+    "@alicloud/dysmsapi20170525": "^4.5.1",
+    "@alicloud/openapi-client": "^0.4.15",
+    "@alicloud/tea-util": "^1.4.11",
     "@lunisolar/plugin-char8ex": "^0.2.5",
     "@lunisolar/plugin-takesound": "^0.1.2",
     "@nestjs/axios": "^3.0.2",

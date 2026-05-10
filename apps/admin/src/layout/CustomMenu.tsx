@@ -34,6 +34,7 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import DataUsageIcon from '@mui/icons-material/DataUsage';
 import TuneIcon from '@mui/icons-material/Tune';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import SmsIcon from '@mui/icons-material/Sms';
 
 interface MenuItem {
   path: string;
@@ -64,6 +65,12 @@ const adminMenuGroups: MenuGroup[] = [
       { path: '/products', label: '产品管理', icon: <InventoryIcon /> },
       { path: '/reports', label: '报告管理', icon: <AssessmentIcon /> },
       { path: '/charts', label: '命盘管理', icon: <AutoGraphIcon /> },
+      { path: '/xiaoliuren_records', label: '小六壬占卜', icon: <SmsIcon /> },
+      { path: '/digital_energy_records', label: '数字能量', icon: <DataUsageIcon /> },
+      { path: '/bazhai_records', label: '八宅风水', icon: <AccountTreeIcon /> },
+      { path: '/bazhai_reports', label: '八宅报告', icon: <AssessmentIcon /> },
+      { path: '/health_records', label: '五运六气分析', icon: <AssessmentIcon /> },
+      { path: '/health_reports', label: '健康报告', icon: <AssessmentIcon /> },
       { path: '/prompts', label: 'Prompt管理', icon: <ChatIcon /> },
       { path: '/rules', label: '规则引擎', icon: <AccountTreeIcon /> },
     ],
@@ -100,6 +107,7 @@ const adminMenuGroups: MenuGroup[] = [
       { path: '/token_usages', label: 'Token消耗', icon: <DataUsageIcon /> },
       { path: '/token-config', label: 'Token配置', icon: <TuneIcon /> },
       { path: '/pairing-config', label: '配对设置', icon: <FavoriteIcon /> },
+      { path: '/sms-config', label: '短信配置', icon: <SmsIcon /> },
     ],
   },
 ];

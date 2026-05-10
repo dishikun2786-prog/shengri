@@ -52,6 +52,10 @@ model User {
   referrals      User[]    @relation("UserReferral")
   tags           UserTag[]
   charts         BaziChart[]
+  xlrRecords     XiaoliurenRecord[]
+  deRecords      DigitalEnergyRecord[]
+  bzRecords      BazhaiRecord[]
+  haRecords      HealthRecord[]
   orders         Order[]
   reports        AnalysisReport[]
   reportShares   ReportShare[]
@@ -349,7 +353,11 @@ model AnalysisReport {
   id              Int      @id @default(autoincrement())
   uuid            String   @unique @default(uuid())
   userId          Int      @map("user_id")
-  chartId         Int      @map("chart_id")
+  chartId         Int?     @map("chart_id")
+  xlrRecordId     Int?     @map("xlr_record_id")
+  deRecordId      Int?     @map("de_record_id")
+  bzRecordId      Int?     @map("bz_record_id")
+  haRecordId      Int?     @map("ha_record_id")
   reportType      String   @map("report_type")
   productId       Int?     @map("product_id")
   orderId         Int?     @map("order_id")
@@ -378,17 +386,109 @@ model AnalysisReport {
   status          Int      @default(1)
   createdAt       DateTime @default(now()) @map("created_at")
 
-  user   User          @relation(fields: [userId], references: [id])
-  chart  BaziChart     @relation(fields: [chartId], references: [id])
-  shares ReportShare[]
+  user      User               @relation(fields: [userId], references: [id])
+  chart     BaziChart?          @relation(fields: [chartId], references: [id])
+  xlrRecord XiaoliurenRecord?   @relation(fields: [xlrRecordId], references: [id])
+  deRecord  DigitalEnergyRecord? @relation(fields: [deRecordId], references: [id])
+  bzRecord  BazhaiRecord?       @relation(fields: [bzRecordId], references: [id])
+  haRecord  HealthRecord?       @relation(fields: [haRecordId], references: [id])
+  shares    ReportShare[]
   chatSessions ChatSession[]
 
   @@index([userId, reportType])
   @@index([chartId])
+  @@index([xlrRecordId])
   @@map("analysis_reports")
 }
 
-// ==================== 报告分享 ====================
+// ==================== 小六壬占卜记录 ====================
+
+model XiaoliurenRecord {
+  id             Int      @id @default(autoincrement())
+  uuid           String   @unique @default(uuid())
+  userId         Int      @map("user_id")
+  inputType      String   @map("input_type") // time | random
+  inputDetail    Json?    @map("input_detail")
+  resultPosition Int      @map("result_position") // 1-6
+  resultName     String   @map("result_name") // 大安/留连/速喜/赤口/小吉/空亡
+  question       String?  @db.Text
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  user    User             @relation(fields: [userId], references: [id])
+  reports AnalysisReport[]
+
+  @@index([userId, createdAt])
+  @@map("xiaoliuren_records")
+}
+
+model DigitalEnergyRecord {
+  id               Int      @id @default(autoincrement())
+  uuid             String   @unique @default(uuid())
+  userId           Int      @map("user_id")
+  phone            String   @map("phone")
+  stars            Json?    @map("stars")
+  lastFourAnalysis Json?    @map("last_four_analysis")
+  stats            Json?    @map("stats")
+  question         String?  @db.Text
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  user    User               @relation(fields: [userId], references: [id])
+  reports AnalysisReport[]
+
+  @@index([userId, createdAt])
+  @@map("digital_energy_records")
+}
+
+model BazhaiRecord {
+  id        Int      @id @default(autoincrement())
+  uuid      String   @unique @default(uuid())
+  userId    Int      @map("user_id")
+  birthYear Int      @map("birth_year")
+  gender    Int      @map("gender")
+  kuaNumber Int      @map("kua_number")
+  trigram   String   @map("trigram")
+  group     String   @map("group")
+  directions Json?   @map("directions")
+  question  String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id])
+  reports   AnalysisReport[]
+  @@index([userId, createdAt])
+  @@map("bazhai_records")
+}
+
+model HealthRecord {
+  id            Int      @id @default(autoincrement())
+  uuid          String   @unique @default(uuid())
+  userId        Int      @map("user_id")
+  targetDate    String   @map("target_date")
+  yearGan       String   @map("year_gan")
+  yearZhi       String   @map("year_zhi")
+  yearYun       String   @map("year_yun")
+  sitian        String
+  zaiquan       String
+  mainYun       String?  @map("main_yun")
+  keQi          String?  @map("ke_qi")
+  hostQi        Json?    @map("host_qi")
+  guestQi       Json?    @map("guest_qi")
+  constitution  Json?
+  organResults  Json?    @map("organ_results")
+  dailyTip      String?  @db.Text @map("daily_tip")
+  symptoms      Json?
+  question      String?  @db.Text
+  height        Float?   @map("height")
+  weight        Float?   @map("weight")
+  bmi           Float?   @map("bmi")
+  bmiCategory   String?  @map("bmi_category")
+  weightAnalysis Json?   @map("weight_analysis")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  user    User             @relation(fields: [userId], references: [id])
+  reports AnalysisReport[]
+
+  @@index([userId, createdAt])
+  @@map("health_records")
+}
 
 model ReportShare {
   id          Int       @id @default(autoincrement())

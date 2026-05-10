@@ -491,8 +491,10 @@ export class PairingService {
         await this.billingService.consumeFreeTrial(userId, request.pairingType);
         await this.prisma.pairingRequest.update({
           where: { uuid: requestUuid },
-          data: { freeTrial: true },
+          data: { freeTrial: true, isPaid: true },
         });
+        request.isPaid = true;
+        request.freeTrial = true;
       } else {
         throw new BadRequestException('免费次数已用完，请先完成支付');
       }

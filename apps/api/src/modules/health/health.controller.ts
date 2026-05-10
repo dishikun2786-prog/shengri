@@ -1,4 +1,4 @@
-import { Controller, Get, Query, HttpException, Post, Body } from '@nestjs/common';
+import { Controller, Get, Query, HttpException, Post, Body, Logger } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
@@ -9,6 +9,7 @@ import { RedisService } from '../../common/redis/redis.service';
 @Controller('health')
 export class HealthController {
   private calendarUrl: string;
+  private readonly logger = new Logger(HealthController.name);
 
   constructor(
     private config: ConfigService,
@@ -79,10 +80,10 @@ export class HealthController {
         isPaid: options.is_paid,
       });
     } catch (error: any) {
-      throw new HttpException(
-        error.message || 'AI 五运六气生成失败',
-        error.status || 500
-      );
+      const status = error.status || error.statusCode || 500;
+      const message = error.message || 'AI 五运六气生成失败';
+      this.logger.error(`AI五运六气生成失败: status=${status} ${message}`);
+      throw new HttpException(message, status);
     }
   }
 
@@ -217,10 +218,13 @@ export class HealthController {
         options.user_id,
       );
     } catch (error: any) {
-      throw new HttpException(
-        error.message || 'AI 综合五运六气生成失败',
-        error.status || 500
+      const status = error.status || error.statusCode || 500;
+      const message = error.message || 'AI 综合五运六气生成失败';
+      this.logger.error(
+        `AI综合五运六气生成失败: status=${status} message=${message}` +
+        ` stack=${error.stack?.slice(0, 500) || 'N/A'}`,
       );
+      throw new HttpException(message, status);
     }
   }
 

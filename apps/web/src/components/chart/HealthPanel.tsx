@@ -152,7 +152,7 @@ const getLocalUser = (): { id?: number } | null => {
   }
 };
 
-// 调用 AI 生成五运六气分析
+// 调用 AI 生成五运六气分析（fire-and-forget + 轮询，绕过 Cloudflare 100s 超时）
   const generateWithAi = useCallback(async () => {
     const targetDate = getTargetDate();
     if (!targetDate) return;
@@ -169,70 +169,86 @@ const getLocalUser = (): { id?: number } | null => {
     setLoading(true);
     setError(null);
 
-    try {
-      let res;
-
+    const doCall = async () => {
       // 根据选择的层级调用不同的 AI 接口
       if (selectedDay && liunianInfo && liuyueInfo && liuriInfo) {
-        // 综合分析：流年 + 流月 + 流日
-        res = await healthApi.generateComprehensiveWuYunWithAi(
+        return healthApi.generateComprehensiveWuYunWithAi(
           targetDate,
           { gan: liunianInfo.gan, zhi: liunianInfo.zhi, year: selectedYear! },
           { gan: liuyueInfo.gan, zhi: liuyueInfo.zhi, month: selectedMonth! },
           { gan: liuriInfo.gan, zhi: liuriInfo.zhi, day: selectedDay },
           baziJson,
           undefined,
-          effectiveUserId
+          effectiveUserId,
         );
       } else if (selectedDay && liuyueInfo) {
-        // 流日分析
-        res = await healthApi.generateLiuRiWuYunWithAi(
-          targetDate,
-          liuriInfo!.gan,
-          liuriInfo!.zhi,
-          selectedDay,
-          baziJson
+        return healthApi.generateLiuRiWuYunWithAi(
+          targetDate, liuriInfo!.gan, liuriInfo!.zhi, selectedDay, baziJson,
         );
       } else if (selectedMonth && liunianInfo) {
-        // 流月分析
-        res = await healthApi.generateLiuYueWuYunWithAi(
-          targetDate,
-          liuyueInfo!.gan,
-          liuyueInfo!.zhi,
-          selectedMonth!,
-          baziJson
+        return healthApi.generateLiuYueWuYunWithAi(
+          targetDate, liuyueInfo!.gan, liuyueInfo!.zhi, selectedMonth!, baziJson,
         );
       } else if (selectedYear && liunianInfo) {
-        // 流年分析
-        res = await healthApi.generateLiuNianWuYunWithAi(
-          targetDate,
-          liunianInfo.gan,
-          liunianInfo.zhi,
-          selectedYear!,
-          baziJson
-        );
-      } else {
-        // 通用 AI 生成
-        res = await healthApi.generateWuYunWithAi(
-          targetDate,
-          baziJson,
-          liunianInfo?.gan,
-          liunianInfo?.zhi,
-          liuyueInfo?.gan,
-          liuyueInfo?.zhi,
-          liuriInfo?.gan,
-          liuriInfo?.zhi
+        return healthApi.generateLiuNianWuYunWithAi(
+          targetDate, liunianInfo.gan, liunianInfo.zhi, selectedYear!, baziJson,
         );
       }
+      return healthApi.generateWuYunWithAi(
+        targetDate, baziJson,
+        liunianInfo?.gan, liunianInfo?.zhi,
+        liuyueInfo?.gan, liuyueInfo?.zhi,
+        liuriInfo?.gan, liuriInfo?.zhi,
+      );
+    };
 
-      setAiResult(res.data);
-      setHasGenerated(true);
-    } catch (e: any) {
-      console.error('AI 五运六气生成失败:', e);
-      setError(e?.response?.data?.message || e?.message || '生成失败，请稍后重试');
-    } finally {
-      setLoading(false);
-    }
+    // 首次请求；若 Cloudflare 超时则自动轮询（后端异步处理并缓存到 Redis）
+    const attemptOrPoll = async () => {
+      try {
+        const res = await doCall();
+        setAiResult(res.data);
+        setHasGenerated(true);
+        setLoading(false);
+      } catch (e: any) {
+        const status = e?.response?.status;
+        // Cloudflare Tunnel 100s timeout → 524; also treat 500/502/503/504 and network errors
+        // as transient — backend continues processing and caches to Redis
+        const isTimeout =
+          status >= 500 || status === 0 ||
+          e?.code === 'ECONNABORTED' || e?.code === 'ERR_NETWORK' ||
+          e?.code === 'ERR_CANCELED';
+        if (!isTimeout) {
+          console.error('AI 五运六气生成失败:', e);
+          setError(e?.response?.data?.message || e?.message || '生成失败，请稍后重试');
+          setLoading(false);
+          return;
+        }
+        // Cloudflare 100s 超时 — 后端继续处理并缓存，前端轮询
+        let attempts = 0;
+        const maxAttempts = 60; // 3 minutes
+        const interval = setInterval(async () => {
+          attempts++;
+          try {
+            const res = await doCall();
+            if (res?.data) {
+              clearInterval(interval);
+              setAiResult(res.data);
+              setHasGenerated(true);
+              setLoading(false);
+            }
+          } catch {
+            // Still generating
+          }
+          if (attempts >= maxAttempts) {
+            clearInterval(interval);
+            setError('生成超时，报告可能已完成，请在个人中心查看');
+            setLoading(false);
+          }
+        }, 3000);
+      }
+    };
+
+    attemptOrPoll();
   }, [getTargetDate, selectedYear, selectedMonth, selectedDay, liunianInfo, liuyueInfo, liuriInfo, baziJson]);
 
   // 判断是否需要手动触发（未生成时）

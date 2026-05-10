@@ -66,6 +66,18 @@ import AgentReferralsPage from './pages/AgentReferralsPage';
 import AgentSubAgentsPage from './pages/AgentSubAgentsPage';
 import AgentPosterPage from './pages/AgentPosterPage';
 import PairingConfigPage from './pages/PairingConfigPage';
+import SmsConfigPage from './resources/sms-config/SmsConfigPage';
+import SmsIcon from '@mui/icons-material/Sms';
+import XiaoliurenList from './resources/xiaoliuren/XiaoliurenList';
+import XiaoliurenShow from './resources/xiaoliuren/XiaoliurenShow';
+import DigitalEnergyList from './resources/digital-energy/DigitalEnergyList';
+import DigitalEnergyShow from './resources/digital-energy/DigitalEnergyShow';
+import BazhaiList from './resources/bazhai/BazhaiList';
+import BazhaiShow from './resources/bazhai/BazhaiShow';
+import BazhaiReportList from './resources/bazhai-reports/BazhaiReportList';
+import HealthList from './resources/health/HealthList';
+import HealthShow from './resources/health/HealthShow';
+import HealthReportList from './resources/health-reports/HealthReportList';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import DataUsageIcon from '@mui/icons-material/DataUsage';
 import TuneIcon from '@mui/icons-material/Tune';
@@ -217,6 +229,46 @@ const App = () => (
       icon={DataUsageIcon}
       options={{ label: 'Token消耗' }}
     />
+    <Resource
+      name="xiaoliuren_records"
+      list={XiaoliurenList}
+      show={XiaoliurenShow}
+      icon={SmsIcon}
+      options={{ label: '小六壬占卜' }}
+    />
+    <Resource
+      name="digital_energy_records"
+      list={DigitalEnergyList}
+      show={DigitalEnergyShow}
+      icon={DataUsageIcon}
+      options={{ label: '数字能量' }}
+    />
+    <Resource
+      name="bazhai_records"
+      list={BazhaiList}
+      show={BazhaiShow}
+      icon={RuleIcon}
+      options={{ label: '八宅风水' }}
+    />
+    <Resource
+      name="bazhai_reports"
+      list={BazhaiReportList}
+      icon={AssessmentIcon}
+      options={{ label: '八宅报告' }}
+    />
+    <Resource
+      name="health_records"
+      list={HealthList}
+      show={HealthShow}
+      icon={AssessmentIcon}
+      options={{ label: '健康分析' }}
+    />
+    <Resource
+      name="health_reports"
+      list={HealthReportList}
+      icon={AssessmentIcon}
+      options={{ label: '健康报告' }}
+    />
     <CustomRoutes>
       <Route path="/ai-config" element={<AiConfigPage />} />
       <Route path="/site-config" element={<SiteConfigPage />} />
@@ -227,6 +279,7 @@ const App = () => (
       <Route path="/agent-sub-agents" element={<AgentSubAgentsPage />} />
       <Route path="/agent-poster" element={<AgentPosterPage />} />
       <Route path="/pairing-config" element={<PairingConfigPage />} />
+      <Route path="/sms-config" element={<SmsConfigPage />} />
     </CustomRoutes>
   </Admin>
 );

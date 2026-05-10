@@ -336,7 +336,7 @@ export class ChatService {
 
     const report = await this.prisma.analysisReport.findUnique({
       where: { id: session.reportId },
-      include: { chart: true },
+      include: { chart: true, xlrRecord: true },
     });
     if (!report) throw new NotFoundException('关联报告不存在');
 
@@ -800,65 +800,82 @@ export class ChatService {
   private buildSystemPrompt(report: any, layeredMemories: LayeredSearchResult): string {
     const reportContext = buildReportContext(report);
 
-    // Full chart data injection
-    const chart = report.chart;
-    const chartParts: string[] = [];
+    // Build data section based on report type
+    const dataParts: string[] = [];
+    let advisorRole = '你是用户的专属八字命理测算顾问';
+    let analysisRules = '';
 
-    if (chart) {
-      const fourPillars = `${chart.yearGan}${chart.yearZhi} ${chart.monthGan}${chart.monthZhi} ${chart.dayGan}${chart.dayZhi} ${chart.hourGan || ''}${chart.hourZhi || ''}`.trim();
-      chartParts.push(`四柱: ${fourPillars}`);
-      chartParts.push(`日主: ${chart.dayGan} | 身强弱: ${chart.strengthLevel || '未知'}`);
-      if (chart.patternName || chart.patternType) {
-        chartParts.push(`格局: ${chart.patternName || chart.patternType}`);
-      }
-      if (chart.yongShen) chartParts.push(`用神: ${chart.yongShen}`);
-      if (chart.xiShen) chartParts.push(`喜神: ${chart.xiShen}`);
-      if (chart.jiShen) {
-        const ji = Array.isArray(chart.jiShen) ? chart.jiShen.join('、') : JSON.stringify(chart.jiShen);
-        chartParts.push(`忌神: ${ji}`);
-      }
-      if (chart.wuxingScore && typeof chart.wuxingScore === 'object') {
-        const scores = Object.entries(chart.wuxingScore).map(([k, v]) => `${k}:${v}`).join(' ');
-        chartParts.push(`五行评分: ${scores}`);
-      }
-      if (chart.tenGodsMap && typeof chart.tenGodsMap === 'object') {
-        const gods = Object.entries(chart.tenGodsMap).map(([k, v]) => `${k}→${v}`).join('、');
-        chartParts.push(`十神: ${gods}`);
-      }
-      if (chart.shenshaList && Array.isArray(chart.shenshaList) && chart.shenshaList.length > 0) {
-        chartParts.push(`神煞: ${chart.shenshaList.join('、')}`);
-      }
-      if (chart.dayunList && Array.isArray(chart.dayunList)) {
-        const currentYear = new Date().getFullYear();
-        const current = chart.dayunList.find((d: any) =>
-          d.start_year <= currentYear && d.end_year >= currentYear
-        );
-        if (current) {
-          chartParts.push(`当前大运: ${current.gan || ''}${current.zhi || ''}（${current.start_year}-${current.end_year}年）`);
+    if (report.reportType === 'xiaoliuren') {
+      // 小六壬模式
+      advisorRole = '你是用户的小六壬（马前课）占卜顾问，精通小六壬掌诀推算法和六神解读';
+      const xlr = report.xlrRecord;
+      if (xlr) {
+        dataParts.push(`占卜结果: ${xlr.resultName}（第${xlr.resultPosition}位）`);
+        if (xlr.question) dataParts.push(`用户所问: ${xlr.question}`);
+        dataParts.push(`推算方式: ${xlr.inputType === 'time' ? '时间推算' : '随机数推算'}`);
+        if (xlr.inputDetail) {
+          if (xlr.inputType === 'time') {
+            dataParts.push(`输入参数: 月${xlr.inputDetail.month} 日${xlr.inputDetail.day} ${xlr.inputDetail.hourBranch}时`);
+          } else {
+            dataParts.push(`输入参数: 上数${xlr.inputDetail.r1} 中数${xlr.inputDetail.r2} 下数${xlr.inputDetail.r3}`);
+          }
         }
       }
-    }
-
-    // Rule engine summary
-    const ruleSummary = buildRuleSummary(report);
-
-    // Three-layer memory formatted text
-    const memoryText = formatLayeredMemories(layeredMemories);
-
-    return `你是用户的专属八字命理测算顾问，精通《滴天髓》、《渊海子平》、《三命通会》、《子平真诠》等古籍经典。以下是用户的完整命盘数据、分析报告和分层记忆。
-
-## 用户命盘数据
-${chartParts.join('\n') || '无命盘数据'}
-
-## 分析报告摘要
-${reportContext || '无报告摘要'}
-报告类型: ${report.reportType || '未知'}
-
-${ruleSummary ? `## 规则引擎分析\n${ruleSummary}\n` : ''}
-## 分层记忆
-${memoryText}
-
-## 分析规则
+      // 掌诀六神对照
+      const LIUSHEN_MAP: Record<string, string> = {
+        '大安': '青龙·木·大吉', '留连': '玄武·水·凶', '速喜': '朱雀·火·中吉',
+        '赤口': '白虎·金·大凶', '小吉': '六合·水·小吉', '空亡': '勾陈·土·大凶',
+      };
+      if (xlr?.resultName) {
+        dataParts.push(`掌诀属性: ${LIUSHEN_MAP[xlr.resultName] || xlr.resultName}`);
+      }
+      dataParts.push('六掌诀参考: 1.大安(青龙·木·吉) 2.留连(玄武·水·凶) 3.速喜(朱雀·火·吉) 4.赤口(白虎·金·凶) 5.小吉(六合·水·吉) 6.空亡(勾陈·土·凶)');
+      analysisRules = `## 分析规则
+1. **掌诀为核心**: 所有分析必须以掌诀落位为核心依据，结合五行生克和六神属性
+2. **实事求是**: 吉则言吉，凶则言凶，不可过分渲染。凶兆需给出化解方向
+3. **行动导向**: 给出具体可行的建议，包括有利方位、有利时机、注意事项
+4. **专业表达**: 使用小六壬专业术语，语气专业温和
+5. **简洁明了**: 回复控制在 300 字以内
+6. 回答以 JSON 格式输出：{"content": "正文", "citeBooks": ["小六壬断诀"], "suggestedQuestions": ["建议问题1", "建议问题2"]}`;
+    } else {
+      // 八字命理模式
+      const chart = report.chart;
+      if (chart) {
+        const fourPillars = `${chart.yearGan}${chart.yearZhi} ${chart.monthGan}${chart.monthZhi} ${chart.dayGan}${chart.dayZhi} ${chart.hourGan || ''}${chart.hourZhi || ''}`.trim();
+        dataParts.push(`四柱: ${fourPillars}`);
+        dataParts.push(`日主: ${chart.dayGan} | 身强弱: ${chart.strengthLevel || '未知'}`);
+        if (chart.patternName || chart.patternType) {
+          dataParts.push(`格局: ${chart.patternName || chart.patternType}`);
+        }
+        if (chart.yongShen) dataParts.push(`用神: ${chart.yongShen}`);
+        if (chart.xiShen) dataParts.push(`喜神: ${chart.xiShen}`);
+        if (chart.jiShen) {
+          const ji = Array.isArray(chart.jiShen) ? chart.jiShen.join('、') : JSON.stringify(chart.jiShen);
+          dataParts.push(`忌神: ${ji}`);
+        }
+        if (chart.wuxingScore && typeof chart.wuxingScore === 'object') {
+          const scores = Object.entries(chart.wuxingScore).map(([k, v]) => `${k}:${v}`).join(' ');
+          dataParts.push(`五行评分: ${scores}`);
+        }
+        if (chart.tenGodsMap && typeof chart.tenGodsMap === 'object') {
+          const gods = Object.entries(chart.tenGodsMap).map(([k, v]) => `${k}→${v}`).join('、');
+          dataParts.push(`十神: ${gods}`);
+        }
+        if (chart.shenshaList && Array.isArray(chart.shenshaList) && chart.shenshaList.length > 0) {
+          dataParts.push(`神煞: ${chart.shenshaList.join('、')}`);
+        }
+        if (chart.dayunList && Array.isArray(chart.dayunList)) {
+          const currentYear = new Date().getFullYear();
+          const current = chart.dayunList.find((d: any) =>
+            d.start_year <= currentYear && d.end_year >= currentYear
+          );
+          if (current) {
+            dataParts.push(`当前大运: ${current.gan || ''}${current.zhi || ''}（${current.start_year}-${current.end_year}年）`);
+          }
+        }
+      }
+      advisorRole = '你是用户的专属八字命理测算顾问，精通《滴天髓》、《渊海子平》、《三命通会》、《子平真诠》等古籍经典';
+      analysisRules = `## 分析规则
 1. **核心依据**：所有运势判断必须以用户的喜用神/忌神为核心依据。引用《滴天髓》："用神不可损伤，日主无透伤捷。"
 2. **大运参考**：结合当前大运天干地支进行流年分析。引用《三命通会》大运论断法则。
 3. **古籍引用规范**：每使用一个专业术语必须注明出处，如"正官（《渊海子平》）"、"七杀（《渊海子平》）"、"正印（《滴天髓》）"等。
@@ -868,6 +885,28 @@ ${memoryText}
 7. **简洁明了**：回复控制在 300 字以内，引用控制在2-3句以内。
 8. 如用户问到报告未覆盖的维度，可建议购买对应的深度分析
 9. 回答以 JSON 格式输出：{"content": "正文（包含古籍引用）", "citeBooks": ["《滴天髓》", "《渊海子平》"], "suggestedQuestions": ["建议问题1", "建议问题2"]}`;
+    }
+
+    // Rule engine summary
+    const ruleSummary = buildRuleSummary(report);
+
+    // Three-layer memory formatted text
+    const memoryText = formatLayeredMemories(layeredMemories);
+
+    return `${advisorRole}。以下是用户的完整数据、分析报告和分层记忆。
+
+## 用户数据
+${dataParts.join('\n') || '无数据'}
+
+## 分析报告摘要
+${reportContext || '无报告摘要'}
+报告类型: ${report.reportType || '未知'}
+
+${ruleSummary ? `## 规则引擎分析\n${ruleSummary}\n` : ''}
+## 分层记忆
+${memoryText}
+
+${analysisRules}`;
   }
 
   /**

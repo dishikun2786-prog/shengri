@@ -1,25 +1,32 @@
 /** @type {import('next').NextConfig} */
 const apiProxyBase =
   process.env.API_PROXY_TARGET || 'http://127.0.0.1:3000';
-const calendarEngineBase =
-  process.env.CALENDAR_ENGINE_URL || 'http://127.0.0.1:8100';
 
 const nextConfig = {
+  async headers() {
+    return [
+      {
+        source: '/sw.js',
+        headers: [
+          { key: 'Cache-Control', value: 'no-cache, no-store, must-revalidate, max-age=0' },
+          { key: 'Pragma', value: 'no-cache' },
+          { key: 'Expires', value: '0' },
+          { key: 'Content-Type', value: 'application/javascript; charset=utf-8' },
+          { key: 'Service-Worker-Allowed', value: '/' },
+        ],
+      },
+      {
+        source: '/manifest.json',
+        headers: [
+          { key: 'Cache-Control', value: 'no-cache, no-store, must-revalidate' },
+          { key: 'Content-Type', value: 'application/manifest+json' },
+        ],
+      },
+    ];
+  },
   async rewrites() {
     return {
       beforeFiles: [
-        {
-          source: '/api/v1/bazi/liuyue',
-          destination: `${calendarEngineBase}/api/v1/bazi/liuyue`,
-        },
-        {
-          source: '/api/v1/bazi/liuri',
-          destination: `${calendarEngineBase}/api/v1/bazi/liuri`,
-        },
-        {
-          source: '/api/v1/health/:path*',
-          destination: `${calendarEngineBase}/api/v1/health/:path*`,
-        },
         {
           source: '/api/:path*',
           destination: `${apiProxyBase}/api/:path*`,

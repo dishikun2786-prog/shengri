@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { pairingApi } from '@/lib/api';
+import { pairingApi, baziApi, userApi } from '@/lib/api';
 import { PairingChartSelector } from './PairingChartSelector';
+import ChartCreationForm from '@/components/ChartCreationForm';
 
 const PAIRING_TYPES: Record<string, string> = {
   personality: '性格匹配',
@@ -32,6 +33,8 @@ export function PairingRequestModal({
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
+  const [showNewChart, setShowNewChart] = useState(false);
+  const [chartsRefreshKey, setChartsRefreshKey] = useState(0);
 
   if (!visible) return null;
 
@@ -100,14 +103,48 @@ export function PairingRequestModal({
 
         {/* Chart Selection - required */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            选择命盘 <span className="text-red-400">*</span>
-          </label>
-          <PairingChartSelector
-            selectedChartId={selectedChartId}
-            onSelect={(id) => { setSelectedChartId(id); setError(''); }}
-            disabled={sending}
-          />
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-sm font-medium text-gray-700">
+              选择命盘 <span className="text-red-400">*</span>
+            </label>
+            {!showNewChart && (
+              <button
+                type="button"
+                onClick={() => setShowNewChart(true)}
+                className="inline-flex items-center gap-1 px-3 py-1.5 bg-primary-500 text-white
+                  rounded-lg text-xs font-medium hover:bg-primary-600 transition-colors"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                新建命盘
+              </button>
+            )}
+          </div>
+
+          {showNewChart ? (
+            <div className="border border-gray-200 rounded-xl p-4 bg-gray-50/50">
+              <ChartCreationForm
+                compact
+                submitLabel="创建并选择"
+                onSubmit={(payload) => baziApi.saveChart(payload)}
+                onSuccess={(id) => {
+                  setSelectedChartId(id);
+                  setShowNewChart(false);
+                  setChartsRefreshKey(k => k + 1);
+                  setError('');
+                }}
+              />
+            </div>
+          ) : (
+            <PairingChartSelector
+              key={chartsRefreshKey}
+              selectedChartId={selectedChartId}
+              onSelect={(id) => { setSelectedChartId(id); setError(''); }}
+              disabled={sending}
+              onCreateNew={() => setShowNewChart(true)}
+            />
+          )}
         </div>
 
         {/* Message */}

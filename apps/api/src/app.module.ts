@@ -33,6 +33,15 @@ import { ShareModule } from './modules/share/share.module';
 import { PromotionModule } from './modules/promotion/promotion.module';
 import { PairingModule } from './modules/pairing/pairing.module';
 import { NotificationModule } from './modules/notification/notification.module';
+import { XiaoliurenModule } from './modules/xiaoliuren/xiaoliuren.module';
+import { XiaoliurenCommonModule } from './common/xiaoliuren/xiaoliuren.module';
+import { DigitalEnergyCommonModule } from './common/digital-energy/digital-energy.module';
+import { DigitalEnergyModule } from './modules/digital-energy/digital-energy.module';
+import { BazhaiCommonModule } from './common/bazhai/bazhai.module';
+import { BazhaiModule } from './modules/bazhai/bazhai.module';
+import { HealthCommonModule } from './common/health/health.module';
+import { HealthReportModule } from './modules/health-report/health-report.module';
+import { SmsModule } from './common/sms/sms.module';
 
 @Module({
   imports: [
@@ -70,6 +79,15 @@ import { NotificationModule } from './modules/notification/notification.module';
     PromotionModule,
     PairingModule,
     NotificationModule,
+    XiaoliurenCommonModule,
+    XiaoliurenModule,
+    DigitalEnergyCommonModule,
+    DigitalEnergyModule,
+    BazhaiCommonModule,
+    BazhaiModule,
+    HealthCommonModule,
+    HealthReportModule,
+    SmsModule,
   ],
 })
 export class AppModule {}

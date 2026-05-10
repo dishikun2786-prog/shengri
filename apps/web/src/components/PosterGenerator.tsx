@@ -2,14 +2,20 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 
-const BG_IMAGE_PATH = '/images/promotion-poster-bg.jpg';
+const BG_IMAGE_PATH = '/images/promotion-poster-bg.jpg?v=3';
 const CANVAS_WIDTH = 760;
 const CANVAS_HEIGHT = 1013;
-const QR_SIZE = 130;
-// QR blank area: (301,848) to (459,998), center at (380,923)
-const QR_X = 315;
-const QR_Y = 858;
-const QR_COLOR = '#6d2a1c';
+// QR code centered on the poster's built-in white square placeholder (160x121px)
+// White card bounds: (299,865)-(458,985), center: (378,925)
+const QR_SIZE = 115;
+const QR_X = 321;
+const QR_Y = 868;
+const QR_COLOR = '#1c1108';
+
+function isWeChat(): boolean {
+  if (typeof navigator === 'undefined') return false;
+  return /MicroMessenger/i.test(navigator.userAgent);
+}
 
 interface PosterGeneratorProps {
   referralLink: string;
@@ -23,6 +29,7 @@ export default function PosterGenerator({ referralLink, onClose }: PosterGenerat
   const [posterUrl, setPosterUrl] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const inWeChat = isWeChat();
 
   const generatePoster = useCallback(async () => {
     try {
@@ -42,7 +49,7 @@ export default function PosterGenerator({ referralLink, onClose }: PosterGenerat
       });
       ctx.drawImage(bgImg, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-      // Generate QR code
+      // Generate QR code directly on the poster's built-in white placeholder
       const QRCode = (await import('qrcode')).default || (await import('qrcode'));
       const qrDataUrl = await QRCode.toDataURL(referralLink, {
         width: QR_SIZE,
@@ -130,27 +137,41 @@ export default function PosterGenerator({ referralLink, onClose }: PosterGenerat
           {status === 'ready' && posterUrl && (
             <>
               {/* Poster preview */}
-              <div className="rounded-xl overflow-hidden border border-ink-100 bg-ink-50 flex justify-center">
+              <div className="rounded-xl overflow-hidden border border-ink-100 bg-ink-50 flex justify-center relative">
                 <img
                   src={posterUrl}
                   alt="推广海报"
                   className="max-w-full h-auto"
                   style={{ maxHeight: '55vh' }}
                 />
+                {inWeChat && (
+                  <div className="absolute inset-0 bg-black/5 flex items-end justify-center pb-3 pointer-events-none">
+                    <span className="bg-black/60 text-white text-xs px-3 py-1.5 rounded-full">
+                      长按图片保存到相册
+                    </span>
+                  </div>
+                )}
               </div>
-              <p className="text-xs text-ink-400 text-center mt-3 leading-relaxed">
-                长按图片保存到相册，分享给微信好友
-              </p>
 
-              {/* Actions */}
-              <div className="flex gap-2 mt-4">
-                <button
-                  onClick={handleDownload}
-                  className="flex-1 btn-gold py-2.5 text-sm font-medium"
-                >
-                  保存海报
-                </button>
-              </div>
+              {inWeChat ? (
+                <p className="text-sm text-primary-600 text-center mt-3 font-medium leading-relaxed">
+                  长按上方海报图片 → 选择「保存图片」即可保存到相册
+                </p>
+              ) : (
+                <>
+                  <p className="text-xs text-ink-400 text-center mt-3 leading-relaxed">
+                    长按图片保存到相册，分享给微信好友
+                  </p>
+                  <div className="flex gap-2 mt-4">
+                    <button
+                      onClick={handleDownload}
+                      className="flex-1 btn-gold py-2.5 text-sm font-medium"
+                    >
+                      保存海报
+                    </button>
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>

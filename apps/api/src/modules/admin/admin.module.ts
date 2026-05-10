@@ -12,9 +12,10 @@ import { CardKeyModule } from '../card-key/card-key.module';
 
 import { AdminTokenController } from './admin-token.controller';
 import { AdminPairingController } from './admin-pairing.controller';
+import { AdminSmsController } from './admin-sms.controller';
 
 @Module({
   imports: [AiModule, DistributionModule, MasterModule, ChatModule, CardKeyModule],
-  controllers: [AdminDashboardController, AdminAiController, AdminActionsController, AdminConfigController, AdminTokenController, AdminPairingController, AdminController],
+  controllers: [AdminDashboardController, AdminAiController, AdminActionsController, AdminConfigController, AdminTokenController, AdminPairingController, AdminSmsController, AdminController],
 })
 export class AdminModule {}
